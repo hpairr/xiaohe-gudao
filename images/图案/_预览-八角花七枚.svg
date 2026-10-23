@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="200" viewBox="0 0 1260 200"><rect width="100%" height="100%" fill="#F7F4EC"/><g transform="translate(0,0)"><rect class="bg" x="0" y="0" width="160" height="160" fill="#F7F4EC"/>
+<g id="octagon-frame"><path class="frame" d="M 80.00 16.00 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16.00 80.00 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80.00 144.00 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144.00 80.00 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80.00 16.00 Z"/></g>
+<g id="core" transform="translate(80 80) scale(0.7800) translate(-80 -80)">
+<path class="fine" d="M 33.3 59.3 L 131.1 80.1" stroke-dasharray="2 5"/>
+<path class="fine" d="M 126.7 100.7 L 28.9 79.9" stroke-dasharray="2 5"/>
+<path class="fine" d="M 43.0 61.9 L 71.3 67.9 L 70.1 73.8 L 41.7 67.8 Z"/>
+<path class="fine" d="M 73.3 68.3 L 101.6 74.4 L 100.4 80.2 L 72.0 74.2 Z"/>
+<path class="fine" d="M 103.6 74.8 L 132.0 80.8 L 130.7 86.7 L 102.4 80.7 Z"/>
+<path class="fine" d="M 34.7 67.3 L 63.0 73.3 L 61.8 79.2 L 33.4 73.2 Z"/>
+<path class="fine" d="M 65.0 73.7 L 93.3 79.8 L 92.1 85.6 L 63.7 79.6 Z"/>
+<path class="fine" d="M 95.3 80.2 L 123.7 86.2 L 122.4 92.1 L 94.0 86.1 Z"/>
+<path class="fine" d="M 40.0 75.6 L 68.4 81.6 L 67.2 87.5 L 38.8 81.5 Z"/>
+<path class="fine" d="M 70.4 82.0 L 98.7 88.1 L 97.5 93.9 L 69.1 87.9 Z"/>
+<path class="fine" d="M 100.7 88.5 L 129.1 94.5 L 127.8 100.4 L 99.4 94.4 Z"/>
+<path class="accent" d="M 57.9 71.4 A 4.8 4.8 0 1 1 57.9 71.4" stroke-width="3.0"/>
+<circle class="fillr" cx="54.6" cy="74.6" r="1.3"/>
+<path class="accent" d="M 103.5 80.4 A 5.7 5.7 0 1 1 103.5 80.4" stroke-width="3.0"/>
+<circle class="fillr" cx="99.6" cy="84.2" r="1.3"/>
+<path class="accent" d="M 124.9 86.2 A 4.1 4.1 0 1 1 124.9 86.2" stroke-width="3.0"/>
+<circle class="fillr" cx="122.1" cy="88.9" r="1.3"/>
+<rect x="22.7" y="65.1" width="7" height="7" fill="#C3272B" transform="rotate(45 26.2 68.6)"/>
+<rect x="130.3" y="87.9" width="7" height="7" fill="#1F2D3D" transform="rotate(45 133.8 91.4)"/>
+</g>
+</g><g transform="translate(180,0)"><rect class="bg" x="0" y="0" width="160" height="160" fill="#F7F4EC"/>
+<g id="octagon-frame"><path class="frame" d="M 80.00 16.00 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16.00 80.00 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80.00 144.00 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144.00 80.00 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80.00 16.00 Z"/></g>
+<g id="core" transform="translate(80 80) scale(0.8500) translate(-80 -80)">
+<path class="fine" d="M 50.0 36.5 L 61.0 50.0 L 50.0 63.5 L 39.0 50.0 Z"/>
+<circle class="fillq" cx="50.0" cy="48.0" r="2.2"/>
+<circle class="fillq" cx="52.6" cy="53.4" r="1.5"/>
+<path class="fine" d="M 80.0 36.5 L 91.0 50.0 L 80.0 63.5 L 69.0 50.0 Z"/>
+<path class="main" d="M 80.0 42.0 L 80.0 58.0"/>
+<path class="fine" d="M 110.0 36.5 L 121.0 50.0 L 110.0 63.5 L 99.0 50.0 Z"/>
+<path class="main" d="M 104.5 56.5 L 115.5 43.5"/>
+<path class="fine" d="M 50.0 66.5 L 61.0 80.0 L 50.0 93.5 L 39.0 80.0 Z"/>
+<path class="main" d="M 44.5 85.5 Q 52.5 81.5 55.0 74.0"/>
+<path class="fine" d="M 80.0 66.5 L 91.0 80.0 L 80.0 93.5 L 69.0 80.0 Z"/>
+<circle class="fillq" cx="80.0" cy="78.0" r="2.2"/>
+<circle class="fillq" cx="82.6" cy="83.4" r="1.5"/>
+<path class="fine" d="M 110.0 66.5 L 121.0 80.0 L 110.0 93.5 L 99.0 80.0 Z"/>
+<path class="main" d="M 110.0 72.0 L 110.0 88.0"/>
+<path class="fine" d="M 50.0 96.5 L 61.0 110.0 L 50.0 123.5 L 39.0 110.0 Z"/>
+<path class="main" d="M 44.5 116.5 L 55.5 103.5"/>
+<path class="fine" d="M 80.0 96.5 L 91.0 110.0 L 80.0 123.5 L 69.0 110.0 Z"/>
+<path class="main" d="M 74.5 115.5 Q 82.5 111.5 85.0 104.0"/>
+<path class="strokedash" d="M 110.0 96.5 L 121.0 110.0 L 110.0 123.5 L 99.0 110.0 Z"/>
+<circle class="fillr" cx="110.0" cy="110.0" r="1.8"/>
+<rect class="fillr" x="77.0" y="77.0" width="6" height="6" transform="rotate(45 80 80)"/>
+</g>
+</g><g transform="translate(360,0)"><rect class="bg" x="0" y="0" width="160" height="160" fill="#F7F4EC"/>
+<g id="octagon-frame"><path class="frame" d="M 80.00 16.00 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16.00 80.00 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80.00 144.00 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144.00 80.00 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80.00 16.00 Z"/></g>
+<g id="core" transform="translate(80 80) scale(0.9500) translate(-80 -80)">
+<path class="main" d="M 80.0 80.0 Q 86.5 54.9 112.3 60.6 Q 103.9 75.9 88.2 87.4 Z"/>
+<path class="main" d="M 80.0 80.0 Q 73.5 105.1 47.7 99.4 Q 56.1 84.1 88.2 87.4 Z"/>
+<path class="fine" d="M 80.0 60.0 L 80.0 92.0" stroke-dasharray="2 4"/>
+<circle class="fillo" cx="68.0" cy="92.0" r="2.2"/>
+<circle class="fillo" cx="79.0" cy="97.0" r="2.2"/>
+<circle class="fillo" cx="89.0" cy="93.0" r="2.2"/>
+<circle class="fillo" cx="62.0" cy="85.0" r="2.2"/>
+<circle class="fillo" cx="97.0" cy="84.0" r="2.2"/>
+<path class="accent" d="M 61.0 36.0 Q 69.0 54.0 80.0 68.0"/>
+<path class="accent" d="M 99.0 36.0 Q 91.0 54.0 80.0 68.0"/>
+<circle class="fillr" cx="80.0" cy="68.0" r="2.4"/>
+</g>
+</g><g transform="translate(540,0)"><rect class="bg" x="0" y="0" width="160" height="160" fill="#F7F4EC"/>
+<g id="octagon-frame"><path class="frame" d="M 80.00 16.00 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16.00 80.00 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80.00 144.00 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144.00 80.00 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80.00 16.00 Z"/></g>
+<g id="core" transform="translate(80 80) scale(0.8800) translate(-80 -80)">
+<path class="main" d="M 70.0 80.0 C 68.5 64.0 59.0 48.0 59.0 40.0 L 101.0 40.0 C 101.0 48.0 91.5 64.0 90.0 80.0 Z"/>
+<path class="main" d="M 90.0 80.0 C 91.5 96.0 101.0 112.0 101.0 120.0 L 59.0 120.0 C 59.0 112.0 68.5 96.0 70.0 80.0 Z"/>
+<path class="fine" d="M 59.0 40.0 Q 80.0 34.5 101.0 40.0 L 101.0 40.0 Q 80.0 45.5 59.0 40.0"/>
+<path class="fine" d="M 59.0 120.0 Q 80.0 114.5 101.0 120.0 L 101.0 120.0 Q 80.0 125.5 59.0 120.0"/>
+<path class="fine" d="M 70.0 80.0 L 90.0 80.0"/>
+<circle class="fillr" id="beat" cx="50.0" cy="69.0" r="3.4"/>
+<circle class="fillr" id="beat" cx="61.0" cy="95.0" r="3.4"/>
+<circle class="fillr" id="beat" cx="99.0" cy="71.0" r="3.4"/>
+<circle class="fillr" id="beat" cx="110.0" cy="94.0" r="3.4"/>
+<path class="strokedash" d="M 42.0 82.0 A 38 38 0 0 1 118.0 82.0"/>
+<circle class="fillq" cx="44.3" cy="78.2" r="2.3"/>
+<circle class="fillq" cx="65.0" cy="71.9" r="2.3"/>
+<circle class="fillq" cx="95.1" cy="71.9" r="2.3"/>
+<circle class="fillq" cx="115.7" cy="78.3" r="2.3"/>
+<path class="accent" d="M 72.0 60.0 C 86.0 74.0 74.0 86.0 88.0 100.0"/>
+</g>
+</g><g transform="translate(720,0)"><rect class="bg" x="0" y="0" width="160" height="160" fill="#F7F4EC"/>
+<g id="octagon-frame"><path class="frame" d="M 80.00 16.00 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16.00 80.00 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80.00 144.00 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144.00 80.00 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80.00 16.00 Z"/></g>
+<g id="core" transform="translate(80 80) scale(0.8000) translate(-80 -80)">
+<path class="main" d="M 38.0 77.0 A 13.0 13.0 0 0 1 38.0 77.0"/>
+<path class="fine" d="M 38.0 77.0 L 38.0 98.0"/>
+<path class="fine" d="M 38.0 77.0 L 38.0 98.0"/>
+<path class="main" d="M 62.0 77.0 A 22.0 22.0 0 0 1 98.0 77.0"/>
+<path class="fine" d="M 62.0 77.0 L 62.0 98.0"/>
+<path class="fine" d="M 98.0 77.0 L 98.0 98.0"/>
+<path class="main" d="M 122.0 77.0 A 13.0 13.0 0 0 1 122.0 77.0"/>
+<path class="fine" d="M 122.0 77.0 L 122.0 98.0"/>
+<path class="fine" d="M 122.0 77.0 L 122.0 98.0"/>
+<path class="main" d="M 34.0 98.0 L 126.0 98.0"/>
+<rect class="main" x="42.0" y="54.0" width="76.0" height="16.0"/>
+<path class="fine" d="M 50.0 54.0 L 50.0 70.0"/>
+<path class="fine" d="M 70.0 54.0 L 70.0 70.0"/>
+<path class="fine" d="M 90.0 54.0 L 90.0 70.0"/>
+<path class="fine" d="M 110.0 54.0 L 110.0 70.0"/>
+<path class="main" d="M 53.0 54.0 L 65.2 43.0 L 69.7 54.0"/>
+<path class="main" d="M 53.0 54.0 L 49.0 49.0 L 65.2 43.0"/>
+<path class="main" d="M 107.0 54.0 L 94.8 43.0 L 90.3 54.0"/>
+<path class="main" d="M 107.0 54.0 L 111.0 49.0 L 94.8 43.0"/>
+<path class="main" d="M 61.0 32.0 L 69.5 21.0 L 72.8 32.0"/>
+<path class="main" d="M 61.0 32.0 L 55.4 25.0 L 69.5 21.0"/>
+<path class="main" d="M 99.0 32.0 L 90.5 21.0 L 87.2 32.0"/>
+<path class="main" d="M 99.0 32.0 L 104.6 25.0 L 90.5 21.0"/>
+<path class="fine" d="M 70.0 54.0 L 72.0 36.0 L 88.0 36.0 L 90.0 54.0"/>
+<path class="fine" d="M 80.0 26.0 L 80.0 22.0"/>
+<path class="fine" d="M 46.0 103.0 Q 63.0 99.0 80.0 103.0 T 114.0 103.0"/>
+<path class="fine" d="M 54.0 108.0 Q 67.0 104.0 80.0 108.0 T 106.0 108.0"/>
+</g>
+</g><g transform="translate(900,0)"><rect class="bg" x="0" y="0" width="160" height="160" fill="#1A1F2B"/>
+<g id="octagon-frame"><path class="frame" d="M 80.00 16.00 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16.00 80.00 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80.00 144.00 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144.00 80.00 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80.00 16.00 Z"/></g>
+<g id="core" transform="translate(80 80) scale(0.8200) translate(-80 -80)">
+<path class="accent" d="M 91.86,47.36 108.64,64.14 108.64,87.86 91.86,104.64 68.14,104.64 51.36,87.86 51.36,64.14 68.14,47.36 Z"/>
+<path class="fine" d="M 87.27,58.45 97.55,68.73 97.55,83.27 87.27,93.55 72.73,93.55 62.45,83.27 62.45,68.73 72.73,58.45 Z"/>
+<path class="fine" d="M 87.3 58.4 L 91.9 47.4"/>
+<path class="fine" d="M 97.6 68.7 L 108.6 64.1"/>
+<path class="fine" d="M 97.6 83.3 L 108.6 87.9"/>
+<path class="fine" d="M 87.3 93.6 L 91.9 104.6"/>
+<path class="fine" d="M 72.7 93.6 L 68.1 104.6"/>
+<path class="fine" d="M 62.4 83.3 L 51.4 87.9"/>
+<path class="fine" d="M 62.4 68.7 L 51.4 64.1"/>
+<path class="fine" d="M 72.7 58.4 L 68.1 47.4"/>
+<circle class="fillr" id="spark" cx="108.0" cy="36.0" r="4.00"/>
+<circle class="fillo" id="spark" cx="101.2" cy="41.1" r="3.91"/>
+<circle class="fillo" id="spark" cx="94.6" cy="46.0" r="3.82"/>
+<circle class="fillr" id="spark" cx="88.0" cy="51.0" r="3.73"/>
+<circle class="fillo" id="spark" cx="80.5" cy="56.4" r="3.64"/>
+<circle class="fillo" id="spark" cx="73.3" cy="61.7" r="3.55"/>
+<circle class="fillr" id="spark" cx="66.0" cy="67.0" r="3.46"/>
+<circle class="fillo" id="spark" cx="61.9" cy="73.1" r="3.37"/>
+<circle class="fillo" id="spark" cx="58.0" cy="79.1" r="3.28"/>
+<circle class="fillr" id="spark" cx="54.0" cy="85.0" r="3.19"/>
+<circle class="fillo" id="spark" cx="59.4" cy="90.8" r="3.11"/>
+<circle class="fillo" id="spark" cx="64.7" cy="96.4" r="3.02"/>
+<circle class="fillr" id="spark" cx="70.0" cy="102.0" r="2.93"/>
+<circle class="fillo" id="spark" cx="78.5" cy="105.1" r="2.84"/>
+<circle class="fillo" id="spark" cx="86.8" cy="108.0" r="2.75"/>
+<circle class="fillr" id="spark" cx="95.0" cy="111.0" r="2.66"/>
+<circle class="fillo" id="spark" cx="101.1" cy="116.1" r="2.57"/>
+<circle class="fillo" id="spark" cx="107.1" cy="121.0" r="2.48"/>
+<circle class="fillr" id="spark" cx="113.0" cy="126.0" r="2.39"/>
+<circle class="fillr" cx="108.0" cy="36.0" r="6.0"/>
+<circle class="fillo" cx="111.4" cy="34.5" r="2.2"/>
+<path class="fine" d="M 113.0 88.2 L 128.5 92.1" stroke="#C3272B"/>
+<path class="fine" d="M 104.5 103.6 L 116.0 114.7" stroke="#C3272B"/>
+<path class="fine" d="M 89.4 112.7 L 93.8 128.1" stroke="#C3272B"/>
+<path class="fine" d="M 71.8 113.0 L 67.9 128.5" stroke="#C3272B"/>
+<path class="fine" d="M 56.4 104.5 L 45.3 116.0" stroke="#C3272B"/>
+<path class="fine" d="M 47.3 89.4 L 31.9 93.8" stroke="#C3272B"/>
+<path class="fine" d="M 47.0 71.8 L 31.5 67.9" stroke="#C3272B"/>
+<path class="fine" d="M 55.5 56.4 L 44.0 45.3" stroke="#C3272B"/>
+<path class="fine" d="M 70.6 47.3 L 66.2 31.9" stroke="#C3272B"/>
+<path class="fine" d="M 88.2 47.0 L 92.1 31.5" stroke="#C3272B"/>
+<path class="fine" d="M 103.6 55.5 L 114.7 44.0" stroke="#C3272B"/>
+<path class="fine" d="M 112.7 70.6 L 128.1 66.2" stroke="#C3272B"/>
+</g>
+</g><g transform="translate(1080,0)"><rect class="bg" x="0" y="0" width="160" height="160" fill="#F7F4EC"/>
+<g id="octagon-frame"><path class="frame" d="M 80.00 16.00 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16.00 80.00 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80.00 144.00 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144.00 80.00 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80.00 16.00 Z"/></g>
+<g id="core" transform="translate(80 80) scale(0.7200) translate(-80 -80)">
+<rect class="main" x="42.0" y="42.0" width="76.0" height="76.0"/>
+<rect class="fine" x="47.0" y="47.0" width="66.0" height="66.0"/>
+<path class="main" d="M 89.95,55.98 104.02,70.05 104.02,89.95 89.95,104.02 70.05,104.02 55.98,89.95 55.98,70.05 70.05,55.98 Z"/>
+<path class="fine" d="M 85.36,67.07 92.93,74.64 92.93,85.36 85.36,92.93 74.64,92.93 67.07,85.36 67.07,74.64 74.64,67.07 Z"/>
+<path class="accent" d="M 80.0 69.5 L 87.5 80.0 L 80.0 90.5 L 72.5 80.0 Z"/>
+<path class="fine" d="M 51.0 51.0 L 56.0 51.0 L 56.0 56.0 L 61.0 56.0 L 61.0 51.0"/>
+<path class="fine" d="M 109.0 51.0 L 104.0 51.0 L 104.0 56.0 L 99.0 56.0 L 99.0 51.0"/>
+<path class="fine" d="M 109.0 109.0 L 104.0 109.0 L 104.0 104.0 L 99.0 104.0 L 99.0 109.0"/>
+<path class="fine" d="M 51.0 109.0 L 56.0 109.0 L 56.0 104.0 L 61.0 104.0 L 61.0 109.0"/>
+</g>
+</g></svg>

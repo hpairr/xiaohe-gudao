@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="潇贺古道">
+<!-- 潇贺古道 -->
+<defs><style>
+  .bg{fill:none}
+  .frame{fill:none;stroke:#1F2D3D;stroke-width:2.2;stroke-linejoin:round}
+  .main{fill:none;stroke:#3A5BA0;stroke-width:3.0;stroke-linecap:round;stroke-linejoin:round}
+  .accent{fill:none;stroke:#C3272B;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .fine{fill:none;stroke:#1F2D3D;stroke-width:1.6;stroke-linecap:round}
+  .fillq{fill:#3A5BA0}.fillr{fill:#C3272B}.fillg{fill:#D9A13B}.fillt{fill:#5CAC9E}.fillo{fill:#D9A13B}
+  .strokedash{stroke:#1F2D3D;stroke-width:1.6;stroke-dasharray:3 4;fill:none}
+</style></defs>
+<rect class="bg" x="0" y="0" width="160" height="160" fill="#F7F4EC"/>
+<g id="octagon-frame"><path class="frame" d="M 80.00 16.00 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16.00 80.00 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80.00 144.00 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144.00 80.00 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80.00 16.00 Z"/></g>
+<g id="core" transform="translate(80 80) scale(0.7800) translate(-80 -80)">
+<path class="fine" d="M 33.3 59.3 L 131.1 80.1" stroke-dasharray="2 5"/>
+<path class="fine" d="M 126.7 100.7 L 28.9 79.9" stroke-dasharray="2 5"/>
+<path class="fine" d="M 43.0 61.9 L 71.3 67.9 L 70.1 73.8 L 41.7 67.8 Z"/>
+<path class="fine" d="M 73.3 68.3 L 101.6 74.4 L 100.4 80.2 L 72.0 74.2 Z"/>
+<path class="fine" d="M 103.6 74.8 L 132.0 80.8 L 130.7 86.7 L 102.4 80.7 Z"/>
+<path class="fine" d="M 34.7 67.3 L 63.0 73.3 L 61.8 79.2 L 33.4 73.2 Z"/>
+<path class="fine" d="M 65.0 73.7 L 93.3 79.8 L 92.1 85.6 L 63.7 79.6 Z"/>
+<path class="fine" d="M 95.3 80.2 L 123.7 86.2 L 122.4 92.1 L 94.0 86.1 Z"/>
+<path class="fine" d="M 40.0 75.6 L 68.4 81.6 L 67.2 87.5 L 38.8 81.5 Z"/>
+<path class="fine" d="M 70.4 82.0 L 98.7 88.1 L 97.5 93.9 L 69.1 87.9 Z"/>
+<path class="fine" d="M 100.7 88.5 L 129.1 94.5 L 127.8 100.4 L 99.4 94.4 Z"/>
+<path class="accent" d="M 57.9 71.4 A 4.8 4.8 0 1 1 57.9 71.4" stroke-width="3.0"/>
+<circle class="fillr" cx="54.6" cy="74.6" r="1.3"/>
+<path class="accent" d="M 103.5 80.4 A 5.7 5.7 0 1 1 103.5 80.4" stroke-width="3.0"/>
+<circle class="fillr" cx="99.6" cy="84.2" r="1.3"/>
+<path class="accent" d="M 124.9 86.2 A 4.1 4.1 0 1 1 124.9 86.2" stroke-width="3.0"/>
+<circle class="fillr" cx="122.1" cy="88.9" r="1.3"/>
+<rect x="22.7" y="65.1" width="7" height="7" fill="#C3272B" transform="rotate(45 26.2 68.6)"/>
+<rect x="130.3" y="87.9" width="7" height="7" fill="#1F2D3D" transform="rotate(45 133.8 91.4)"/>
+</g>
+</svg>

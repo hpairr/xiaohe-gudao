@@ -1,0 +1,332 @@
+﻿/* ============================================================
+   专题页 · 与首页章节同一套语言
+   ------------------------------------------------------------
+   首页章节：整屏色块 / 巨字 / 元信息 / 事实栏 / 细线；专题页沿用，
+   正文回到宣纸，资料来源与页脚用墨底。所有颜色取页面 :root 的
+   --main / --accent / --deep / --on，不在本文件里另造色。
+   不新画任何图形：母题与照片都来自页面已有内容。
+   ============================================================ */
+
+:root{
+  --paper:#F2EDE2;
+  --paper-2:#E6DDCC;
+  --ink:#141A16;
+  --ink-soft:#4C574F;
+  --line:rgba(20,26,22,.16);
+  --line-light:rgba(242,237,226,.22);
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',STSong,serif;
+  --sans:'Noto Sans SC','Source Han Sans SC','Microsoft YaHei',sans-serif;
+  --pad:clamp(20px,4.2vw,64px);
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+*{box-sizing:border-box}
+html{background:#0A0E0C}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:none}
+h1,h2,h3{font-weight:700}
+.wrap{width:min(100%,1440px);margin:0 auto;padding:0 var(--pad)}
+::selection{background:var(--main);color:var(--on)}
+
+/* ---------- 顶栏：压在色块上，不另起白条 ---------- */
+.nav{
+  position:absolute;top:0;left:0;right:0;z-index:6;
+  display:flex;align-items:center;gap:24px;height:auto;
+  padding:22px var(--pad);color:var(--on);
+  background:transparent!important;border:0!important;box-shadow:none!important;
+  font:10px/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;
+}
+.nav .back{display:inline-flex;align-items:center;gap:10px;opacity:.75;transition:opacity .25s;color:var(--on)}
+.nav .back:hover{opacity:1}
+.nav .back svg{width:16px;height:16px}
+.nav .site{font-family:var(--serif);font-size:12px;letter-spacing:.18em;text-transform:none;opacity:.6;margin-inline:auto;color:var(--on)}
+.nav .idx{opacity:.55;color:var(--on)}
+
+/* ---------- 首屏：和首页章节同一块色 ---------- */
+.hero{
+  position:relative;min-height:94vh;display:flex;align-items:center;
+  background:var(--main);color:var(--on);overflow:hidden;
+  border:0;padding:0;
+}
+.hero::before{display:none!important}
+.hero .wrap{position:relative;z-index:2;width:100%;padding:clamp(110px,16vh,180px) var(--pad) clamp(48px,7vh,86px)}
+.hero-inner{
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);
+  gap:clamp(28px,5vw,80px);align-items:end;
+}
+.hero-title{display:none!important}
+.hero-chapter{
+  display:flex;gap:20px;flex-wrap:wrap;
+  font:10px/1.5 var(--sans);letter-spacing:.24em;text-transform:uppercase;
+  opacity:.62;margin-bottom:clamp(18px,3.6vh,36px);
+}
+.hero-cn{
+  margin:0;font-family:var(--serif);font-weight:700;
+  font-size:clamp(52px,7.6vw,120px);line-height:.95;letter-spacing:-.02em;
+  color:var(--on);white-space:nowrap;
+}
+.hero-en{
+  margin-top:18px;font:500 12px/1.5 var(--sans);letter-spacing:.28em;
+  text-transform:uppercase;opacity:.68;color:var(--on);
+}
+.hero-lead{
+  max-width:34em;margin-top:clamp(18px,2.6vh,28px);
+  font-size:clamp(14px,1.08vw,16px);line-height:2.05;opacity:.84;color:var(--on);
+}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:clamp(20px,3vh,30px)}
+.hero-badges,.figure-cap{color:var(--on)}
+.badge{
+  display:inline-block;border:0;border-bottom:1px solid currentColor;border-radius:0;
+  background:transparent;padding:3px 0;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;opacity:.55;color:var(--on);
+}
+.hero-figure .motif-slot{
+  display:block;background:var(--paper);color:var(--ink);
+  padding:clamp(14px,2vw,28px);border:1px solid rgba(20,26,22,.18);
+}
+.hero-figure .motif-slot svg{width:100%;height:auto;display:block}
+.badge.hot{opacity:.95;border-bottom-color:var(--accent);color:var(--on)}
+
+.hero-figure{position:relative;align-self:end}
+.hero-figure .motif,
+.hero-figure img{
+  display:block;width:100%;height:auto;max-height:58vh;object-fit:cover;
+  border:1px solid color-mix(in srgb,currentColor 30%,transparent);
+  border-radius:0;box-shadow:none;background:transparent;padding:0;
+}
+.hero-figure .motif{
+  padding:clamp(16px,2.4vw,30px);
+  background:color-mix(in srgb,var(--on) 6%,transparent);
+}
+.motif-slot{display:block}
+.motif-slot svg{width:100%;height:auto;display:block}
+.figure-cap{
+  margin-top:10px;padding-top:8px;
+  border-top:1px solid color-mix(in srgb,currentColor 30%,transparent);
+  font:10px/1.7 var(--sans);letter-spacing:.08em;opacity:.55;
+}
+
+/* ---------- 正文：宣纸上的长文 ---------- */
+.sec{
+  padding:clamp(56px,8vh,96px) 0;
+  border-bottom:1px solid var(--line);
+  background:var(--paper);color:var(--ink);
+}
+.sec-head{
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;
+  border-top:1px solid var(--ink);padding-top:14px;margin-bottom:clamp(20px,3vh,30px);
+}
+.sec-no{
+  font-family:var(--sans);font-size:10px;letter-spacing:.2em;
+  color:var(--accent);font-weight:600;
+}
+.sec-head h2{
+  margin:0;font-family:var(--serif);font-size:clamp(26px,3.2vw,44px);
+  letter-spacing:.02em;line-height:1.25;
+}
+.sec-head .en-tag{
+  margin-inline-start:auto;font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+.sec-note{max-width:62em;font-size:12.5px;line-height:1.9;color:var(--ink-soft)}
+
+.prose p{max-width:40em;font-size:15.5px;line-height:2.05;margin:0 0 1.2em}
+.prose p.soft{color:var(--ink-soft)}
+.prose b{font-weight:600}
+
+/* 解释卡 / 节点卡：只有上边线，没有盒子 */
+.grid2,.grid3{display:grid;gap:0 40px}
+.grid2{grid-template-columns:repeat(2,1fr)}
+.grid3{grid-template-columns:repeat(3,1fr)}
+.card{
+  background:transparent;border:0;border-top:1px solid var(--line);
+  border-radius:0;box-shadow:none;padding:16px 0 22px;
+}
+.card h3{font-family:var(--serif);font-size:19px;letter-spacing:.03em;margin:0 0 8px}
+.card p{font-size:14px;line-height:1.95;color:var(--ink-soft);margin:0}
+
+/* 数字带 */
+.figrow{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px 40px;
+  border-top:1px solid var(--ink);padding-top:18px;
+}
+.fig .n{font-family:var(--serif);font-size:clamp(28px,3.2vw,44px);line-height:1;color:var(--accent)}
+.fig .l{margin-top:8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.fig .s{margin-top:4px;font-size:10.5px;line-height:1.7;color:var(--ink-soft);max-width:20em}
+
+/* 资料来源：校勘表，不是后台表格 */
+table.src{
+  width:100%;border-collapse:collapse;font-size:12.5px;
+  border-top:1px solid var(--ink);
+}
+table.src th,table.src td{
+  border:0;border-bottom:1px solid var(--line);
+  padding:11px 14px 11px 0;text-align:left;vertical-align:top;
+}
+table.src th{
+  background:transparent;font-family:var(--sans);font-size:9.5px;
+  font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-soft);white-space:nowrap;
+}
+table.src td.g{font-weight:500;color:var(--ink);white-space:nowrap}
+table.src code{font-size:11px;color:var(--ink-soft)}
+.lvl{display:none!important}
+.files-h,.files{display:none!important}
+
+/* ---------- 页脚：墨底 ---------- */
+.foot{
+  background:var(--ink);color:var(--paper);
+  padding:clamp(48px,7vh,80px) 0 clamp(28px,4vh,44px);
+}
+.foot h3{
+  margin:0 0 20px;font-family:var(--serif);font-size:13px;
+  letter-spacing:.24em;font-weight:500;color:rgba(242,237,226,.55);
+  text-transform:uppercase;
+}
+.sibs{display:grid;grid-template-columns:repeat(6,1fr);gap:0 18px}
+.sib{
+  display:block;background:transparent!important;border:0;border-top:1px solid var(--line-light);
+  border-radius:0;box-shadow:none;padding:14px 0 12px;color:var(--paper);
+  transition:border-color .25s,color .25s;
+}
+.sib:hover,.sib.on{border-top-color:var(--accent);background:transparent!important}
+.sib b{display:block;font:10px/1.4 var(--sans);letter-spacing:.16em;color:rgba(242,237,226,.62);font-weight:400;margin-bottom:6px}
+.sib.on b{color:var(--accent)}
+.fine{
+  max-width:82em;margin:clamp(28px,4vh,44px) 0 0;
+  font-size:11.5px;line-height:1.95;color:rgba(242,237,226,.64);
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:1100px){
+  .hero-inner{grid-template-columns:1fr;gap:36px}
+  .hero-figure{max-width:560px}
+  .sibs{grid-template-columns:repeat(3,1fr)}
+  .figrow{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:760px){
+  .nav .site{display:none}
+  .hero{min-height:0}
+  .hero .wrap{padding-top:96px;padding-bottom:44px}
+  .hero-cn{font-size:clamp(52px,15vw,84px)}
+  .hero-figure{max-width:none}
+  .hero-figure .motif,.hero-figure img{max-height:none}
+  .sec{padding:44px 0}
+  .grid2,.grid3{grid-template-columns:1fr;gap:0}
+  .figrow{grid-template-columns:1fr 1fr;gap:20px 24px}
+  .sibs{grid-template-columns:repeat(2,1fr)}
+  table.src{display:block;overflow-x:auto}
+  table.src th,table.src td{min-width:120px;white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  .sib,.nav .back{transition:none}
+}
+
+/* ============================================================
+   2026-10-23 · 统一修订
+   ------------------------------------------------------------
+   1) 首屏图版：取消白色卡片与自制 SVG 纹样，改成版面内的图版位。
+      图版是「等一张照片」的位置，不是一块被供起来的空白。
+   2) 中文短标题禁止在词内断行，避免三字词掉一个字到下一行。
+   3) 页脚六题与总述／附页使用同一套入口。
+   ============================================================ */
+
+/* ---------- 图版位 ---------- */
+.hero-inner{grid-template-columns:minmax(0,1.18fr) minmax(280px,.82fr)}
+.hero-figure{position:relative;align-self:end;min-width:0}
+.plate{margin:0;display:block;min-width:0}
+.plate-frame{
+  position:relative;display:block;aspect-ratio:4/3;overflow:hidden;
+  border:1px solid color-mix(in srgb,currentColor 42%,transparent);
+  background:color-mix(in srgb,currentColor 4%,transparent);
+}
+.plate-frame::before{
+  content:"";position:absolute;inset:9px;pointer-events:none;
+  border:1px solid color-mix(in srgb,currentColor 14%,transparent);
+}
+.plate-frame::after{
+  content:"";position:absolute;left:50%;top:50%;width:15px;height:15px;
+  transform:translate(-50%,-50%);pointer-events:none;opacity:.34;
+  background:
+    linear-gradient(currentColor,currentColor) center/1px 100% no-repeat,
+    linear-gradient(currentColor,currentColor) center/100% 1px no-repeat;
+}
+.plate-kicker,.plate-state{
+  position:absolute;top:13px;z-index:2;
+  font:9.5px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;
+  color:currentColor;opacity:.8;
+}
+.plate-kicker{left:15px}
+.plate-state{right:15px}
+.plate-note{
+  position:absolute;left:15px;bottom:13px;z-index:2;
+  font:9.5px/1.5 var(--sans);letter-spacing:.08em;color:currentColor;opacity:.64;
+}
+.plate-media{position:absolute;inset:0}
+.plate-media img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.86) contrast(1.03)}
+.plate-filled .plate-frame{background:var(--ink)}
+.plate-filled .plate-kicker,.plate-filled .plate-state,
+.plate-filled .plate-note{color:var(--paper);opacity:.8;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.plate-cap{
+  display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  margin-top:10px;padding-top:8px;
+  border-top:1px solid color-mix(in srgb,currentColor 30%,transparent);
+  font:10px/1.7 var(--sans);letter-spacing:.04em;opacity:.8;
+}
+.plate-cap b{font-family:var(--serif);font-size:12px;font-weight:500;letter-spacing:.08em;opacity:.95}
+.plate-cap span{text-align:right;white-space:nowrap;opacity:.8}
+.plate-cap .long{white-space:normal;text-align:right;max-width:24em}
+
+/* ---------- 短标题与页脚：词内不断行 ---------- */
+.hero-cn,.sec-head h2,.card h3,.sib,.badge,.plate-cap b{word-break:keep-all;overflow-wrap:normal}
+.hero-cn,.sec-head h2,.card h3{text-wrap:balance}
+.prose p,.sec-note,.hero-lead,.fine{text-wrap:pretty;line-break:strict}
+.sib{white-space:nowrap}
+.foot-extra{
+  display:flex;align-items:center;gap:10px 22px;flex-wrap:wrap;
+  margin-top:14px;padding-top:12px;border-top:1px solid var(--line-light);
+  font-size:11px;letter-spacing:.06em;color:rgba(242,237,226,.6);
+}
+.foot-extra a{color:rgba(242,237,226,.82);border-bottom:1px solid rgba(242,237,226,.28);padding-bottom:2px}
+.foot-extra a:hover{color:var(--paper);border-bottom-color:var(--accent);text-decoration:none}
+.foot-extra .sep{opacity:.35}
+
+@media (max-width:1100px){
+  .hero-inner{grid-template-columns:1fr;gap:36px}
+  .hero-figure{max-width:560px}
+  .plate-cap span{white-space:normal}
+}
+@media (max-width:760px){
+  .plate-frame{aspect-ratio:4/3}
+  .plate-cap{font-size:10.5px}
+  .plate-cap b{font-size:12px}
+  .plate-cap span{display:none}
+}
+
+/* 长题名（富川瑶族织锦）不压到图版；手机上仍保持一行。 */
+.hero-cn{font-size:clamp(48px,6.4vw,104px)}
+@media (max-width:760px){.hero-cn{font-size:clamp(44px,14vw,76px)}}
+
+.hero-lead{text-wrap:balance;line-break:strict}
+
+@media (max-width:760px){
+  .nav .site{display:block;font-size:11px;letter-spacing:.08em}
+  .nav .idx{display:none}
+}
+
+/* 2026-10-23 · 与首页/数据库统一右上角导航 */
+.nav .nav-links{display:flex;align-items:center;gap:clamp(10px,1.4vw,20px);flex:none}
+.nav .nav-links a{
+  font:10px/1.4 var(--sans);letter-spacing:.08em;color:var(--on);
+  opacity:.62;white-space:nowrap;border-bottom:1px solid transparent;padding-bottom:2px;
+}
+.nav .nav-links a:hover{opacity:1;border-bottom-color:currentColor;text-decoration:none}
+@media (max-width:980px){
+  .nav .nav-links{display:none}
+}
