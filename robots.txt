@@ -1,0 +1,7 @@
+# 潇贺古道有声文化数据库 · https://hpairr.github.io/xiaohe-gudao/
+# 站点根目录发布；sitemap 列出首页、数据库与 8 个专题页
+
+User-agent: *
+Allow: /
+
+Sitemap: https://hpairr.github.io/xiaohe-gudao/sitemap.xml
