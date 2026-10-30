@@ -1,0 +1,424 @@
+/* ==========================================================================
+   女书专题 · 展开的女书字典 / 字帘
+   --------------------------------------------------------------------------
+   只在 02-女书.html 使用。帘上 144 个女书字由 nushu-dict.js 注入，
+   每个女书字形只出现一次；点击后字飞进右侧「字格」，显示对应汉字、
+   江永方言读音与一句释义。窄屏时字格变成底部滑出的纸卡。
+   颜色全部来自页面 :root（--main / --on / --accent / --surface / --paper / --ink）。
+   ========================================================================== */
+
+@font-face{
+  font-family:'Nushu Curtain';
+  src:url('NotoSansNushu-Dict.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:block;
+}
+
+.lex-section{
+  --lex-card-w:clamp(300px,24vw,344px);
+  --lex-row:clamp(40px,3.55vw,52px);
+  --lex-glyph:clamp(21px,2.35vw,34px);
+  --lex-slot:clamp(168px,15vw,218px);
+  position:relative;
+  overflow:clip;
+  scroll-margin-top:92px;
+  padding:clamp(76px,12vh,142px) 0 clamp(66px,10vh,112px);
+  background:var(--surface);color:var(--on);
+  border-top:1px solid var(--line-soft);
+}
+
+/* 巨型「字」水印：与正文各节的 01/02/03 数字水印同一语言 */
+/* （本节的「字」已由左侧 story-rail 承担，不再叠一层巨型底纹） */
+
+.lex-lede{
+  max-width:52em;
+  margin:clamp(18px,2.6vh,28px) 0 clamp(26px,4.2vh,44px);
+  font-size:clamp(14px,1.02vw,16.5px);line-height:2;
+  color:var(--on);opacity:.92;
+  text-wrap:pretty;line-break:strict;
+}
+
+.lex-stage{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) var(--lex-card-w);
+  gap:clamp(24px,3.2vw,46px);
+  align-items:start;
+}
+
+/* --------------------------------------------------------------------------
+   CURTAIN / 帘子：12 列 × 12 行（窄屏 8 × 18），每列一条会轻轻摆的布条
+   -------------------------------------------------------------------------- */
+.lex-curtain-wrap{min-width:0}
+
+.lex-bar{
+  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
+  border-top:1px solid var(--line);padding-top:11px;
+  margin-bottom:clamp(18px,2.6vh,26px);
+  font-size:9px;line-height:1.6;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--on);opacity:.86;
+}
+.lex-bar span:last-child{text-align:right;white-space:nowrap;opacity:.9}
+
+.lex-curtain{
+  --cols:12;--rows:12;
+  position:relative;
+  display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));
+  align-items:start;
+  min-height:calc(var(--lex-row) * var(--rows) + 64px);
+}
+.lex-curtain::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:color-mix(in srgb,var(--on) 26%,transparent);
+  pointer-events:none;
+}
+
+.lex-col{
+  --drop:12px;--sway-dur:12s;--sway-delay:0s;--enter-delay:0ms;
+  position:relative;
+  display:flex;flex-direction:column;align-items:stretch;
+  margin-top:var(--drop);
+  transform-origin:50% calc(var(--drop) * -1);
+  rotate:0deg;
+  opacity:0;
+  animation:lexSway var(--sway-dur) ease-in-out var(--sway-delay) infinite alternate;
+  transition:opacity .9s ease var(--enter-delay);
+  will-change:rotate;
+}
+.lex-curtain.is-in .lex-col{opacity:1}
+
+/* 从横杆垂到第一颗字的那段线 */
+.lex-col::before{
+  content:"";position:absolute;left:50%;top:calc(var(--drop) * -1);
+  width:1px;height:var(--drop);
+  background:color-mix(in srgb,var(--on) 22%,transparent);
+  transform:translateX(-50%);
+  pointer-events:none;
+}
+
+@keyframes lexSway{
+  from{rotate:-.28deg}
+  to{rotate:.34deg}
+}
+
+/* 键盘焦点进入时暂停该列；鼠标划过不停，才看得见轻摆 */
+.lex-col:has(.lex-glyph:focus-visible){animation-play-state:paused}
+
+.lex-glyph{
+  position:relative;
+  display:grid;place-items:center;
+  width:100%;height:var(--lex-row);padding:0;border:0;
+  background:transparent;color:color-mix(in srgb,var(--on) 90%,transparent);
+  font-family:'Nushu Curtain','Noto Sans Nushu',var(--serif);
+  font-size:var(--lex-glyph);line-height:1;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.lex-glyph .lex-g{
+  display:block;
+  transition:transform .28s var(--ease),color .2s ease;
+}
+.lex-glyph:hover,.lex-glyph:focus-visible{z-index:3}
+.lex-glyph:hover .lex-g,.lex-glyph:focus-visible .lex-g{
+  transform:scale(1.42);
+  color:var(--accent);
+}
+.lex-glyph:focus-visible{outline:none}
+
+/* 已被取走、还没飞回来的那格：只留空位，不加虚线框/圆点 */
+.lex-glyph.is-out .lex-g{opacity:0;transform:scale(.55)}
+.lex-glyph.is-out:hover .lex-g,.lex-glyph.is-out:focus-visible .lex-g{opacity:0;transform:scale(.55);color:inherit}
+
+.lex-noscript{
+  margin-top:18px;padding:18px;
+  border:1px dashed var(--line);
+  font-size:12px;line-height:1.9;
+}
+.lex-noscript a{text-decoration:underline;text-underline-offset:3px}
+
+/* 无 JS：收起空帘子与空纸卡，只留说明，不制造一块 600px 的空白 */
+.no-js .lex-curtain,
+.no-js .lex-sr,
+.no-js .lex-card{display:none}
+.no-js .lex-stage{grid-template-columns:1fr}
+.no-js .lex-bar span:last-child{display:none}
+
+.lex-sr{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+/* --------------------------------------------------------------------------
+   CARD / 字格纸卡
+   -------------------------------------------------------------------------- */
+.lex-card{
+  position:sticky;top:104px;align-self:start;
+  display:flex;flex-direction:column;
+  min-width:0;
+  padding:clamp(18px,1.6vw,24px);
+  background:var(--paper);color:var(--ink);
+  border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+  border-top:3px solid var(--main);
+  box-shadow:0 26px 60px -30px rgba(0,0,0,.62);
+}
+
+.lex-card-head{
+  display:flex;align-items:center;gap:10px;
+  padding-bottom:11px;
+  border-bottom:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+}
+.lex-kicker{
+  font-size:8.5px;line-height:1.4;letter-spacing:.18em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--ink) 70%,transparent);
+}
+.lex-serial{
+  margin-inline-start:auto;
+  font-family:var(--serif);font-size:11px;line-height:1.4;letter-spacing:.07em;
+  color:var(--main);white-space:nowrap;
+}
+.lex-close{
+  display:grid;place-items:center;
+  width:30px;height:30px;flex:none;padding:0;
+  border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);
+  background:transparent;color:var(--ink);
+  font-family:var(--sans);font-size:18px;line-height:1;
+  cursor:pointer;
+  transition:background .2s ease,color .2s ease,border-color .2s ease;
+}
+.lex-close:hover,.lex-close:focus-visible{
+  background:var(--main);border-color:var(--main);color:var(--paper);outline:none;
+}
+
+.lex-slot{
+  position:relative;align-self:center;
+  width:min(100%,var(--lex-slot));aspect-ratio:1;
+  margin:clamp(18px,2.4vh,26px) auto clamp(14px,2.2vh,20px);
+  display:grid;place-items:center;
+  border:1px dashed color-mix(in srgb,var(--main) 46%,transparent);
+  background:
+    linear-gradient(color-mix(in srgb,var(--main) 5%,transparent),transparent 58%),
+    var(--paper);
+  overflow:hidden;
+  transition:border-color .3s ease,border-style .3s ease;
+}
+.lex-card.is-filled .lex-slot{
+  border-style:solid;
+  border-color:color-mix(in srgb,var(--accent) 82%,var(--main));
+}
+
+.lex-slot-glyph{
+  font-family:'Nushu Curtain','Noto Sans Nushu',var(--serif);
+  font-size:clamp(72px,7vw,106px);line-height:1;
+  color:var(--main);
+  opacity:0;transform:scale(.72);
+  transition:opacity .3s ease,transform .45s var(--ease);
+}
+.lex-card.is-filled .lex-slot-glyph{opacity:1;transform:none}
+.lex-card.is-pending .lex-slot-glyph{opacity:0;transform:scale(.72)}
+
+.lex-slot-hint{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:84%;text-align:center;
+  font-size:11px;line-height:1.9;letter-spacing:.08em;
+  color:color-mix(in srgb,var(--ink) 70%,transparent);
+  transition:opacity .25s ease;
+}
+.lex-slot-hint b{
+  display:block;font-weight:500;color:var(--main);letter-spacing:.06em;
+}
+.lex-card.is-filled .lex-slot-hint{opacity:0}
+
+.lex-corner{
+  position:absolute;width:11px;height:11px;
+  border:1px solid color-mix(in srgb,var(--main) 52%,transparent);
+  pointer-events:none;
+}
+.lex-corner--tl{left:8px;top:8px;border-right:0;border-bottom:0}
+.lex-corner--tr{right:8px;top:8px;border-left:0;border-bottom:0}
+.lex-corner--bl{left:8px;bottom:8px;border-right:0;border-top:0}
+.lex-corner--br{right:8px;bottom:8px;border-left:0;border-top:0}
+
+.lex-read{
+  padding-top:13px;
+  border-top:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+  min-height:84px;
+}
+.lex-focus-row{display:flex;align-items:baseline;gap:11px;min-width:0}
+.lex-focus{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(38px,3.6vw,52px);line-height:1;letter-spacing:-.02em;
+  color:var(--main);
+}
+.lex-focus-label{
+  font-size:8.5px;line-height:1.4;letter-spacing:.16em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--ink) 70%,transparent);
+  white-space:nowrap;
+}
+.lex-card:not(.is-filled) .lex-focus-row,
+.lex-card:not(.is-filled) .lex-pron-row{display:none}
+
+.lex-pron-row{
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:7px;
+  margin-top:7px;
+}
+.lex-pron{
+  font-family:var(--serif);font-size:18px;line-height:1.3;letter-spacing:.04em;
+  color:var(--ink);
+}
+.lex-tone{
+  font-family:var(--serif);font-size:11px;line-height:1;
+  color:var(--main);letter-spacing:.02em;
+  align-self:flex-start;padding-top:.1em;
+}
+.lex-pron-note{
+  font-size:8px;line-height:1.4;letter-spacing:.15em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--ink) 70%,transparent);
+}
+.lex-gloss{
+  margin-top:11px;
+  font-size:13px;line-height:1.95;letter-spacing:.01em;
+  color:color-mix(in srgb,var(--ink) 90%,transparent);
+  text-wrap:pretty;line-break:strict;
+}
+
+.lex-all{
+  margin-top:12px;padding-top:10px;
+  border-top:1px solid color-mix(in srgb,var(--ink) 13%,transparent);
+}
+.lex-all summary{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  list-style:none;cursor:pointer;
+  font-size:9px;line-height:1.6;letter-spacing:.11em;
+  color:color-mix(in srgb,var(--ink) 70%,transparent);
+}
+.lex-all summary::-webkit-details-marker{display:none}
+.lex-all summary::after{content:"＋";font-size:12px;line-height:1;color:var(--main)}
+.lex-all[open] summary::after{content:"－"}
+.lex-han-list{
+  display:flex;flex-wrap:wrap;gap:2px 7px;
+  margin-top:9px;
+  font-family:var(--serif);font-size:16px;line-height:1.55;
+  color:var(--ink);
+}
+.lex-han{white-space:nowrap}
+.lex-han.is-focus{
+  color:var(--main);
+  border-bottom:1px solid color-mix(in srgb,var(--main) 65%,transparent);
+}
+
+.lex-card-foot{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin-top:16px;padding-top:10px;
+  border-top:1px solid color-mix(in srgb,var(--ink) 13%,transparent);
+  font-size:8px;line-height:1.5;letter-spacing:.13em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--ink) 70%,transparent);
+}
+.lex-card-link{text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.lex-card-link:hover{color:var(--main)}
+
+/* --------------------------------------------------------------------------
+   FOOT / 凡例与来源
+   -------------------------------------------------------------------------- */
+.lex-foot{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:28px;
+  margin-top:clamp(24px,4vh,42px);padding-top:14px;
+  border-top:1px solid var(--line-soft);
+  font-size:10.5px;line-height:1.95;letter-spacing:.01em;
+  color:color-mix(in srgb,var(--on) 82%,transparent);
+}
+.lex-foot p{max-width:64em;text-wrap:pretty}
+.lex-foot b{font-weight:500;color:var(--on);letter-spacing:.08em}
+.lex-foot a{white-space:nowrap;text-decoration:underline;text-underline-offset:3px}
+.lex-nb{white-space:nowrap}
+
+/* 飞字：一个 fixed 定位的临时字形，从帘上飞到字格，颜色由米白过渡到朱红 */
+.lex-fly{
+  position:fixed;left:0;top:0;z-index:180;
+  display:grid;place-items:center;
+  pointer-events:none;
+  font-family:'Nushu Curtain','Noto Sans Nushu',var(--serif);
+  line-height:1;color:var(--on);
+  will-change:transform,color;
+}
+
+/* 窄屏纸卡打开时压暗背景，让纸卡成为唯一焦点 */
+.lex-scrim{
+  position:fixed;inset:0;z-index:135;
+  background:rgba(26,10,8,.46);
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease;
+}
+.lex-scrim.is-on{opacity:1;pointer-events:auto}
+@media (min-width:1181px){.lex-scrim{display:none}}
+
+/* --------------------------------------------------------------------------
+   响应式：<=1180 字格改为底部纸卡；<=720 帘子 8 列 × 18 行
+   -------------------------------------------------------------------------- */
+@media (max-width:1180px){
+  .lex-stage{grid-template-columns:minmax(0,1fr)}
+  .lex-close{width:34px;height:34px;font-size:19px}
+  .lex-card{
+    position:fixed;left:12px;right:12px;bottom:12px;top:auto;z-index:140;
+    max-height:min(74svh,560px);overflow:auto;overscroll-behavior:contain;
+    padding:20px 18px 16px;
+    border-top-width:2px;
+    transform:translateY(calc(100% + 24px));
+    visibility:hidden;
+    transition:transform .46s var(--ease),visibility 0s .46s;
+  }
+  .lex-card.is-open{
+    transform:none;visibility:visible;
+    transition:transform .46s var(--ease),visibility 0s 0s;
+  }
+  .lex-slot{width:min(100%,148px);margin:14px auto 14px}
+  .lex-slot-glyph{font-size:66px}
+  .lex-focus{font-size:40px}
+  .lex-read{min-height:0}
+  .lex-card-foot{margin-top:12px}
+  .lex-foot{flex-direction:column;align-items:flex-start;gap:10px}
+}
+
+/* 平板：字格纸卡居中，字格与释义左右排，不拉成一张 100% 宽的空纸 */
+@media (min-width:721px) and (max-width:1180px){
+  .lex-card{
+    left:0;right:0;margin-inline:auto;
+    width:min(620px,calc(100% - 32px));
+    display:grid;
+    grid-template-columns:190px minmax(0,1fr);
+    grid-template-areas:"head head" "slot read" "foot foot";
+    column-gap:22px;
+    padding:20px 22px 16px;
+  }
+  .lex-card-head{grid-area:head}
+  .lex-slot{grid-area:slot;width:190px;margin:16px 0 0;justify-self:start}
+  .lex-slot-glyph{font-size:88px}
+  .lex-read{
+    grid-area:read;min-height:0;
+    padding:16px 0 0 22px;
+    border-top:0;border-left:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+  }
+  .lex-focus{font-size:44px}
+  .lex-card-foot{grid-area:foot}
+}
+
+@media (max-width:720px){
+  .lex-section{--lex-row:clamp(38px,10.4vw,46px);--lex-glyph:clamp(22px,5.8vw,27px)}
+  .lex-curtain{--cols:8;--rows:18}
+  .lex-bar{font-size:8px;letter-spacing:.1em;gap:10px}
+  .lex-bar span:last-child{white-space:normal;text-align:right}
+  .lex-lede{font-size:13.5px;line-height:1.95}
+  .lex-card{left:8px;right:8px;bottom:8px;padding:18px 15px 14px;max-height:78svh}
+  .lex-slot{width:min(100%,124px);margin:12px auto}
+  .lex-slot-glyph{font-size:56px}
+  .lex-focus{font-size:36px}
+  .lex-gloss{font-size:12.5px;line-height:1.9}
+  .lex-foot{font-size:10px}
+}
+
+@media (max-width:720px){
+  .lex-curtain{min-height:calc(var(--lex-row) * 18 + 58px)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .lex-col{animation:none!important;opacity:1!important;transition:none!important}
+  .lex-glyph .lex-g{transition:none!important}
+  .lex-slot-glyph{transition:none!important}
+  .lex-card{transition:none!important}
+}

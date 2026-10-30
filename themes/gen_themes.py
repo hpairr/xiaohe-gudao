@@ -9,8 +9,11 @@
 用法：
     python gen_themes.py
 产物：
-    themes/02-女书.html … themes/07-富川织锦.html（五个生成页；
-    盘王大歌为手写页，潇贺古道 / 上灯炸龙为归档页，不在此脚本重写）
+    themes/02-女书.html … themes/07-富川织锦.html（六章专题页，统一由本脚本生成；
+    潇贺古道 / 上灯炸龙为归档页，不在此脚本重写）
+
+版式：Chromatic Field —— 一整屏主题色、可切换纹样工作台、现场图版、
+      声纹条与六章色带；正文保留事实与出处，但不再做白色文档页。
 
 依据：
     · 版式与配色  docs/06-技术方案/06-主页纹样与主题页设计说明.md
@@ -24,22 +27,141 @@ from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
+# 站点根地址。换仓库名时：先跑 tools/set-site-url.mjs，再改这里这一处，然后重新生成本文件。
+SITE = "https://hpairr.github.io/xiaohe-gudao/"
+
 # ---------------------------------------------------------------- 公共部件
 
-SIBLINGS = [
-    ("02-女书.html", "壹", "女书"),
-    ("03-蝴蝶歌.html", "贰", "蝴蝶歌"),
-    ("04-长鼓舞.html", "叁", "长鼓舞"),
-    ("05-风雨桥.html", "肆", "风雨桥"),
-    ("06-盘王大歌.html", "伍", "盘王大歌"),
-    ("07-富川织锦.html", "陆", "富川织锦"),
+CHAPTERS = [
+    dict(href="02-女书.html", no="壹", num="01", cn="女书", en="Nüshu", key="nushu",
+         color="#A9362E", fg="#F2EDE2", surface="#661E19", place="湖南 · 江永"),
+    dict(href="03-蝴蝶歌.html", no="贰", num="02", cn="蝴蝶歌", en="Butterfly Song", key="butterfly",
+         color="#2C5A4E", fg="#F2EDE2", surface="#18392F", place="广西 · 富川"),
+    dict(href="04-长鼓舞.html", no="叁", num="03", cn="长鼓舞", en="Long Drum Dance", key="drum",
+         color="#C08A2E", fg="#141A16", surface="#E8C982", place="湘桂 · 瑶族地区"),
+    dict(href="05-风雨桥.html", no="肆", num="04", cn="富川风雨桥", en="Wind-Rain Bridge", key="bridge",
+         color="#1D2652", fg="#F2EDE2", surface="#0B1028", place="广西 · 富川"),
+    dict(href="06-盘王大歌.html", no="伍", num="05", cn="盘王大歌", en="Panwang Da Ge", key="panwang",
+         color="#15120F", fg="#F2EDE2", surface="#070504", place="湖南 · 江华"),
+    dict(href="07-富川织锦.html", no="陆", num="06", cn="瑶族织锦", en="Yao Brocade", key="brocade",
+         color="#1E2B26", fg="#F2EDE2", surface="#101815", place="广西 · 富川"),
 ]
 
+# 每章的视觉转译说明：不是新增史料，而是解释本章界面为什么这样构成。
+THEME_NOTES = {
+    "nushu": dict(
+        tagline="长菱形字格 · 点 / 竖 / 斜 / 弧",
+        lab_title="把长菱形字格，拆成一套会呼吸的图形系统。",
+        lab_copy="外框是八角连弧，内芯随题材替换；字格提供节奏，点、竖、斜、弧构成最小笔画单位。"
+                 "工作台把它拆成骨架、单元与连续三种读法。",
+        spec=[("01", "字格", "长菱形 · 左低右高"), ("02", "笔画", "点 / 竖 / 斜 / 弧"),
+              ("03", "纹样", "八角连弧 · 内芯可变")],
+        field_title="纸上的字，墙上的字",
+        field_copy="手稿、博物馆展墙与女书墙，让同一套字形在不同尺度里被重新观看。"),
+    "butterfly": dict(
+        tagline="二声部 · 同起同收 · 大二度 → 同度",
+        lab_title="让两条声部线，在同一个呼吸里合拢。",
+        lab_copy="同起同收、大小三度为骨，长时值大二度解决到同度。界面把两条旋律线转成一组会合拢的双线，"
+                 "并用留白控制呼吸。",
+        spec=[("01", "声部", "2 / 双线并行"), ("02", "关系", "同起同收"),
+              ("03", "转折", "大二度 → 同度")],
+        field_title="歌会、舞台与村口",
+        field_copy="从传承人群合影到演出现场，蝴蝶歌始终是一种由两个人共同完成的现场。"),
+    "drum": dict(
+        tagline="细腰鼓身 · 七十二套动作 · 曲身拧转",
+        lab_title="把鼓点的强弱，写成可以旋转的同心节奏。",
+        lab_copy="鼓身细长、中腰收束，动作以围圈与转身展开。界面把鼓面、束腰和舞步压成同心圆与径向线，"
+                 "滚动时像一次缓慢的击鼓。",
+        spec=[("01", "鼓身", "细长 · 中腰束腰"), ("02", "动作", "据载 72 套"),
+              ("03", "姿态", "曲身拧转")],
+        field_title="从高台到圆场",
+        field_copy="连南的围圈、富川的高台与舞台演出，让长鼓舞的身体在不同场地里形成不同半径。"),
+    "bridge": dict(
+        tagline="三孔石拱 · 廊 / 亭 / 阁 · 水纹",
+        lab_title="从拱、廊、亭、阁，抽出可叠合的秩序。",
+        lab_copy="三孔石拱、桥廊、桥亭与阁楼在立面上层层叠合。界面以拱线、檐线与水纹三层重构这种剖面关系，"
+                 "桥不只是被介绍的对象，也是版式的结构。",
+        spec=[("01", "桥体", "三孔石拱"), ("02", "构造", "廊 / 亭 / 阁"),
+              ("03", "群数", "现存 27 座")],
+        field_title="桥在溪上，也在村落之间",
+        field_copy="回澜、青龙与富川桥群：桥体、廊屋和水面共同构成一处可以停留的公共空间。"),
+    "panwang": dict(
+        tagline="方印 · 八角 · 歌行 · 七任曲",
+        lab_title="把方印、八角与歌行，压成一枚当代章节印记。",
+        lab_copy="方印、八角、竖行歌本与七任曲，是本章四个视觉锚点。界面把歌行变成可滚动的文本织体，"
+                 "把「唱」转译成节拍与留白。",
+        spec=[("01", "歌本", "约 8000 行"), ("02", "曲牌", "七任曲"),
+              ("03", "版本", "36 / 24 / 12 段")],
+        field_title="抄本、祭场与歌本",
+        field_copy="盘王印、江永盘王节与祭祀现场：史诗不只存在于字里，也存在于仪式与声音里。"),
+    "brocade": dict(
+        tagline="经纬显花 · 二方 / 四方连续 · 五色",
+        lab_title="把经纬、重复与色彩，织成可滚动的纹样界面。",
+        lab_copy="二方连续、四方连续，与对称、中心、围合、套嵌的构图，构成可复用的织纹语法。"
+                 "页面把经纬线、显花单元与色带做成可以切换的图形系统。",
+        spec=[("01", "显花", "经纬显花"), ("02", "构图", "对称 / 中心 / 围合 / 套嵌"),
+              ("03", "组织", "二方 / 四方连续")],
+        field_title="衣物、被面与织机",
+        field_copy="服饰、万字纹被面与织机，把纹样放回它被使用、被触摸的材料现场。"),
+}
 
-def nav(idx, cn, en):
-    return """<nav class="nav">
-  <a class="back" href="../index.html"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8H3M7 3L2 8l5 5"/></svg>返回</a>
-  <span class="site">潇贺古道有声文化数据库</span>
+# 现场图版：生成时直接写入 HTML，图片不依赖 JS 才出现。
+GALLERY = {
+    "nushu": [
+        dict(src="../assets/img/nushu.jpg", w=1100, h=826, caption="女书手稿", source="本站资料图",
+             alt="江永女书手稿，竖行墨书女书字符与汉字对照"),
+        dict(src="../images/主题图版/女书-博物馆.jpg", w=1000, h=667, caption="江永女书生态博物馆",
+             source="永州政府网 · CICPHOTO", alt="江永女书生态博物馆内，讲解员向观众介绍女书卷轴"),
+        dict(src="../images/主题图版/女书-墙.jpg", w=1000, h=667, caption="女书墙",
+             source="永州政府网 · CICPHOTO", alt="江永女书墙，白底墨书女书字符"),
+    ],
+    "butterfly": [
+        dict(src="../assets/img/butterfly.jpg", w=550, h=366, caption="蝴蝶歌传承人群", source="本站资料图",
+             alt="富川瑶族蝴蝶歌传承人群合影"),
+        dict(src="../images/主题图版/蝴蝶歌-演出现场.jpg", w=1600, h=897, caption="富川演出现场",
+             source="贺州新闻网", alt="富川瑶族蝴蝶歌演出现场，歌手穿蓝色瑶族服饰"),
+        dict(src="../images/主题图版/蝴蝶歌-秀水村.jpg", w=1500, h=843, caption="秀水村合唱",
+             source="新浪财经", alt="秀水村牌楼前，瑶族群众合唱蝴蝶歌"),
+    ],
+    "drum": [
+        dict(src="../assets/img/drum.jpg", w=1200, h=828, caption="瑶族长鼓舞", source="本站资料图",
+             alt="瑶族长鼓舞表演，舞者手持长鼓腾跃"),
+        dict(src="../images/主题图版/长鼓舞-连南.jpg", w=1600, h=1200, caption="连南瑶寨展演",
+             source="南方+", alt="连南瑶寨长鼓舞展演，舞者围圈击鼓"),
+        dict(src="../images/主题图版/长鼓舞-舞台.jpg", w=1600, h=1200, caption="长鼓舞舞台",
+             source="南方+", alt="长鼓舞舞台演出，演员在圆形舞台上击鼓"),
+    ],
+    "bridge": [
+        dict(src="../assets/img/bridge.jpg", w=1100, h=774, caption="富川风雨桥", source="本站资料图",
+             alt="富川瑶族风雨桥，三孔石拱上架桥廊与桥亭"),
+        dict(src="../images/主题图版/风雨桥-回澜.jpg", w=1080, h=640, caption="回澜 · 青龙风雨桥",
+             source="百度百科", alt="富川回澜风雨桥与青龙风雨桥"),
+        dict(src="../images/主题图版/风雨桥-群桥.jpg", w=1600, h=1089, caption="富川风雨桥群",
+             source="百度百科", alt="富川瑶族风雨桥群，多座桥廊沿溪而建"),
+    ],
+    "panwang": [
+        dict(src="../assets/img/panwang.jpg", w=810, h=810, caption="盘王印", source="本站资料图",
+             alt="盘王印方形绣片，红底几何纹"),
+        dict(src="../images/主题图版/盘王-江永.jpg", w=1600, h=1065, caption="江永盘王节",
+             source="搜狐 · 江永", alt="江永瑶族盘王节祭祀典礼，盘王雕像前的人群"),
+        dict(src="../images/主题图版/盘王-祭祀.jpg", w=1600, h=1067, caption="盘王节祭祀",
+             source="永州政府网", alt="江永盘王节祭祀表演，红毯与盘王像"),
+    ],
+    "brocade": [
+        dict(src="../assets/img/brocade.jpg", w=640, h=465, caption="瑶族服饰", source="本站资料图",
+             alt="富川瑶族传统服饰，妇女在门前合影"),
+        dict(src="../images/主题图版/织锦-万字纹.jpg", w=1600, h=1067, caption="万字纹被面",
+             source="百度百科", alt="富川瑶族织锦万字纹被面，几何纹样"),
+        dict(src="../images/主题图版/织锦-织机.jpg", w=1080, h=608, caption="织锦技艺",
+             source="新浪", alt="瑶族妇女在织机前织锦"),
+    ],
+}
+
+
+def nav():
+    return """<nav class="top-nav" id="themeNav" aria-label="主导航">
+  <a class="back" href="../index.html#index"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8H3M7 3L2 8l5 5"/></svg>返回六章</a>
+  <a class="site" href="../index.html">潇贺古道有声文化数据库</a>
   <div class="nav-links">
     <a href="../index.html">首页</a>
     <a href="../database.html#/archive">文化档案</a>
@@ -52,57 +174,80 @@ def nav(idx, cn, en):
 
 
 def hero(m, ratio_note, no=""):
-    # 首屏不再放自制 SVG 纹样。需要图像的位置统一做成版面内的「图版位」：
-    # 有资料图就填图，没有就明确标成待补，不拿生成的图形冒充实物。
-    plate_no, plate_title, plate_note = m.get(
-        "plate", (no, m.get("motif", m["cn"]), "影像位 / 4:3 · 待补"))
-    if m.get("figure"):
-        img = m["figure"].strip()
-        figure = """<figure class="plate plate-filled">
-        <div class="plate-frame">
-          <div class="plate-media">%s</div>
-          <span class="plate-kicker">图版 %s</span>
-          <span class="plate-state">资料图</span>
-        </div>
-        <figcaption class="plate-cap"><b>%s</b><span>资料图</span></figcaption>
-      </figure>""" % (img, plate_no, plate_title)
-    else:
-        figure = """<figure class="plate">
-        <div class="plate-frame">
-          <span class="plate-kicker">图版 %s</span>
-          <span class="plate-state">待补</span>
-          <span class="plate-note">%s</span>
-        </div>
-        <figcaption class="plate-cap"><b>%s</b></figcaption>
-      </figure>""" % (plate_no, plate_note, plate_title)
-    return """<header class="hero">
-  <div class="wrap hero-inner">
-    <div>
-      <div class="hero-chapter"><span>CHAPTER %s / 06</span><span>%s</span></div>
-      <h1 class="hero-cn">%s</h1>
-      <div class="hero-en">%s</div>
-      <p class="hero-lead">%s</p>
-      <div class="hero-badges">%s</div>
+    """整屏主题色场：巨字 + 可驱动的纹样 + 一段可读导语。"""
+    chapter = next(c for c in CHAPTERS if c["key"] == m["key"])
+    notes = THEME_NOTES[m["key"]]
+    badges = "".join(
+        '<span class="badge%s">%s</span>' % (" hot" if i == 0 else "", b)
+        for i, b in enumerate(m["badges"]))
+    title_class = "hero-title hero-title--long" if len(m["cn"]) >= 4 else "hero-title"
+    return """<header class="theme-hero" data-theme-key="%(key)s">
+  <div class="wrap hero-layout">
+    <div class="hero-copy">
+      <div class="hero-chapter"><span>CHAPTER %(no)s / 06</span><span>%(en_upper)s</span></div>
+      <h1 class="%(title_class)s" id="themeTitle">%(cn)s</h1>
+      <div class="hero-en">%(en)s</div>
+      <p class="hero-lead">%(lead)s</p>
+      <div class="hero-badges">%(badges)s</div>
     </div>
-    <div class="hero-figure">
-      %s
+    <div class="hero-art">
+      <div class="motif-unit" data-motif-unit aria-hidden="true"></div>
+      <span class="hero-art-caption">VISUAL TRANSLATION / 非传统纹样复原</span>
     </div>
   </div>
-</header>""" % (no, m["en"].upper(), m["cn"], m["en"], m["lead"],
-                "".join('<span class="badge%s">%s</span>' % (" hot" if i == 0 else "", b)
-                        for i, b in enumerate(m["badges"])),
-                figure)
+  <div class="wrap hero-footer">
+    <span>%(tagline)s</span>
+    <span class="hero-coord">%(place)s · %(no)s / 06</span>
+    <span class="hero-place">SCROLL / 继续向下 <span class="scroll-note" aria-hidden="true"></span></span>
+  </div>
+</header>""" % dict(
+        key=m["key"], no=chapter["num"],
+        en_upper=m["en"].upper(), cn=m["cn"], en=m["en"], lead=m["lead"],
+        badges=badges, title_class=title_class, tagline=notes["tagline"], place=chapter["place"])
 
 
 def sec(no, cn, en, body, note=""):
+    """正文是「色场里的版面」，不是白色文档页。
+
+    资料来源默认折叠：保留可核对的出处，但不让考据表压住视觉叙事。
+    """
     n = '<p class="sec-note">%s</p>' % note if note else ""
-    return """<section class="sec">
+    if cn == "资料来源":
+        return """<section class="story-block story-block--sources" data-step="%(no)s" id="sources">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-no">%s</span><h2>%s</h2><span class="en-tag">%s</span></div>
-    %s
-    %s
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">%(no)s</span>
+        <span class="story-en">SOURCES / 出处</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <details class="source-fold">
+          <summary>
+            <span>资料来源 / Sources</span>
+            <span class="src-action">展开核对表 <span class="src-toggle" aria-hidden="true">＋</span></span>
+          </summary>
+          <div class="source-body">%(body)s%(note)s</div>
+        </details>
+      </div>
+    </div>
   </div>
-</section>""" % (no, cn, en, n, body)
+</section>""" % dict(no=no, body=body, note=n)
+    return """<section class="story-block" data-step="%(no)s" id="story-%(no)s">
+  <div class="wrap">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">%(no)s</span>
+        <span class="story-en">%(en)s</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <div class="story-head"><h2>%(cn)s</h2><span class="en-tag">%(en)s</span></div>
+        <div class="story-body">%(body)s</div>
+      </div>
+    </div>
+  </div>
+</section>""" % dict(no=no, cn=cn, en=en, body=body)
 
 
 def facts(items):
@@ -147,35 +292,156 @@ def srctable(rows):
     return ('<table class="src"><tr><th>内容</th><th>说明</th><th>来源</th></tr>%s</table>' % tr)
 
 
-def foot(current):
-    sibs = "".join(
-        '<a class="sib%s" href="%s"><b>%s</b>%s</a>' % (" on" if href == current else "", href, no, cn)
-        for (href, no, cn) in SIBLINGS)
-    return """<footer class="foot">
+def visual_lab(m):
+    notes = THEME_NOTES[m["key"]]
+    spec = "".join(
+        '<div class="spec-row"><dt>%s</dt><dd><b>%s</b><span>%s</span></dd></div>'
+        % (no, label, value) for no, label, value in notes["spec"])
+    return """<section class="pattern-lab" id="pattern" aria-labelledby="labTitle">
   <div class="wrap">
-    <h3>沿线六章</h3>
-    <div class="sibs">%s</div>
-    <div class="foot-extra">
-      <a href="01-潇贺古道.html">总述 · 潇贺古道</a><span class="sep">/</span>
-      <a href="08-上灯炸龙.html">附 · 上灯炸龙</a><span class="sep">/</span>
-      <a href="../database.html#/archive">文化档案</a>
+    <div class="lab-head">
+      <div>
+        <p class="eyebrow"><i></i>PATTERN SYSTEM / 纹样系统</p>
+        <h2 id="labTitle">%(title)s</h2>
+      </div>
+      <p class="lab-lede">%(copy)s</p>
     </div>
-    <p class="fine">
-      本栏目收录潇贺古道沿线六项文化遗产：女书、蝴蝶歌、长鼓舞、风雨桥、盘王大歌、富川瑶族织锦。
-      古道总述见「潇贺古道」，年节民俗「上灯炸龙」列为附页。<br>
-      图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示；引用请回到各页「资料来源」。<br>
-      潇贺古道有声文化数据库 · 贺州学院视觉传达设计 2026
-    </p>
+    <div class="pattern-workbench">
+      <div class="pattern-stage" id="patternStage" data-mode="unit" aria-label="%(cn)s纹样构成工作台">
+        <span class="stage-label">FIG. 01 / PATTERN STUDY</span>
+        <span class="stage-mode">UNIT / 单元</span>
+        <div class="stage-plane">
+          <div class="motif-unit" data-motif-unit aria-hidden="true"></div>
+          <div class="motif-repeat" data-motif-repeat aria-hidden="true"></div>
+        </div>
+        <span class="stage-coords">FRAME / OCTAGON · 8 SIDES<br>CORE / %(key_upper)s</span>
+      </div>
+      <div class="lab-side">
+        <div class="mode-switch" role="tablist" aria-label="纹样视图切换">
+          <button type="button" role="tab" data-view="unit" aria-selected="true">UNIT / 单元</button>
+          <button type="button" role="tab" data-view="frame" aria-selected="false" tabindex="-1">FRAME / 骨架</button>
+          <button type="button" role="tab" data-view="repeat" aria-selected="false" tabindex="-1">REPEAT / 连续</button>
+        </div>
+        <dl class="spec-list">%(spec)s</dl>
+        <p class="lab-note"><b>视觉转译说明 /</b> 工作台中的几何为本站转译，不是对传统纹样的考古复原；
+        切换视图看的是结构关系，而不是给纹样重新命名。</p>
+      </div>
+    </div>
   </div>
-</footer>""" % sibs
+</section>""" % dict(title=notes["lab_title"], copy=notes["lab_copy"], cn=m["cn"],
+                     spec=spec, key_upper=m["key"].upper())
+
+
+def field_section(m):
+    notes = THEME_NOTES[m["key"]]
+    items = GALLERY[m["key"]]
+    figures = []
+    for idx, item in enumerate(items, 1):
+        figures.append(
+            '<figure class="field-card">'
+            '<span class="field-no">PLATE %02d</span>'
+            '<div class="field-media"><img src="%s" width="%s" height="%s" alt="%s" loading="lazy" decoding="async"></div>'
+            '<figcaption><b>%s</b><span>%s</span></figcaption>'
+            '</figure>'
+            % (idx, item["src"], item["w"], item["h"], item["alt"], item["caption"], item["source"]))
+    count = "01—%02d / %02d 张图版" % (len(items), len(items))
+    return """<section class="field-section" id="field" aria-labelledby="fieldTitle">
+  <div class="wrap">
+    <div class="field-head">
+      <div>
+        <p class="eyebrow"><i></i>FIELD PLATES / 现场图版</p>
+        <h2 id="fieldTitle">%(title)s</h2>
+        <p>%(copy)s</p>
+      </div>
+      <span class="field-count">%(count)s</span>
+    </div>
+    <div class="field-track" aria-label="%(cn)s现场图片">
+      %(figures)s
+    </div>
+  </div>
+</section>""" % dict(title=notes["field_title"], copy=notes["field_copy"],
+                     cn=m["cn"], count=count, figures="\n      ".join(figures))
+
+
+def sound_line(m):
+    return """<section class="sound-line" id="sound" aria-labelledby="soundTitle">
+  <div class="wrap sound-grid">
+    <div class="sound-copy">
+      <p class="eyebrow"><i></i>SOUND TRACE / 声音轨迹</p>
+      <h2 id="soundTitle">听见这一章</h2>
+      <p>播放的是本章对应的真实音频短片段。波形由 Web Audio API 对正在播放的声音实时分析，
+      未播放时保持静止；完整录音与来源说明见声音数据库。</p>
+      <a class="sound-cta" href="../database.html#/sounds"><b>继续查看声音档案</b><span>↗</span></a>
+    </div>
+    <div class="sound-player-wrap">
+      <div class="audio-player audio-player--theme" data-audio-player data-key="%(key)s"></div>
+    </div>
+  </div>
+</section>""" % dict(key=m["key"])
+
+
+def foot(current):
+    idx = next(i for i, c in enumerate(CHAPTERS) if c["href"] == current)
+    next_ch = CHAPTERS[(idx + 1) % len(CHAPTERS)]
+    chips = []
+    for c in CHAPTERS:
+        cls = " is-current" if c["href"] == current else ""
+        aria = ' aria-current="page"' if c["href"] == current else ""
+        chips.append(
+            '<a class="%s" href="%s" style="--chip:%s;--chip-fg:%s"%s>'
+            '<span class="cs-no">%s / 06</span><span class="cs-cn">%s</span>'
+            '<span class="cs-en">%s</span></a>'
+            % (cls.strip(), c["href"], c["color"], c["fg"], aria,
+               c["num"], c["cn"], c["en"]))
+    return """<footer class="theme-foot">
+  <div class="wrap">
+    <div class="next-chapter">
+      <div>
+        <span class="next-label">NEXT CHAPTER / 下一章</span>
+        <a class="next-link" href="%(next_href)s">
+          <span>
+            <span class="next-index">%(next_num)s / 06 · %(next_en)s</span>
+            <strong>%(next_cn)s</strong>
+          </span>
+          <span class="next-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="next-note">继续查看下一章，或从下方的六章色带跳转。</p>
+    </div>
+    <nav class="chapter-strip" aria-label="六章色带">
+      %(chips)s
+    </nav>
+    <div class="foot-meta">
+      <p>本站收录潇贺古道沿线六项文化遗产。图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示；
+      引用请回到各页「资料来源」。<br><a href="01-潇贺古道.html">总述 · 潇贺古道</a> /
+      <a href="08-上灯炸龙.html">附 · 上灯炸龙</a> /
+      <a href="../database.html#/archive">文化档案</a></p>
+      <p class="foot-credit">潇贺古道有声文化数据库<br>贺州学院视觉传达设计 / 2026</p>
+    </div>
+  </div>
+</footer>""" % dict(next_href=next_ch["href"], next_num=next_ch["num"],
+                     next_en=next_ch["en"], next_cn=next_ch["cn"], chips="\n      ".join(chips))
 
 
 # ---------------------------------------------------------------- 页面外壳
 
 PAGE = """<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="no-js">
 <head>
 <meta charset="utf-8">
+<script>
+document.documentElement.classList.remove('no-js');
+document.documentElement.classList.add('js');
+if(location.search.indexOf('arrive=')>-1){
+  document.documentElement.classList.add('is-arriving');
+  window.setTimeout(function(){
+    document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
+    var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
+    if(v)v.style.display='none';
+    if(t)t.style.display='none';
+  },3600);
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>%%CN%% · 潇贺古道有声文化数据库</title>
 <meta name="description" content="%%DESC%%">
@@ -185,7 +451,7 @@ PAGE = """<!DOCTYPE html>
 <meta property="og:title" content="%%CN%% · 潇贺古道有声文化数据库">
 <meta property="og:description" content="%%DESC%%">
 <meta property="og:url" content="%%SELFURL%%">
-<meta property="og:image" content="https://USERNAME.github.io/REPO/assets/img/og-cover.jpg">
+<meta property="og:image" content="https://hpairr.github.io/xiaohe-gudao/assets/img/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="zh_CN">
@@ -199,39 +465,110 @@ PAGE = """<!DOCTYPE html>
 @font-face{font-family:'Noto Sans SC';src:url('../assets/fonts/site/NotoSansSC-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'Noto Sans SC';src:url('../assets/fonts/site/NotoSansSC-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
 @font-face{font-family:'Noto Sans Nushu';src:url('../assets/fonts/site/NotoSansNushu-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
-:root{--main:%%MAIN%%;--accent:%%ACCENT%%;--deep:%%DEEP%%;--on:%%ON%%}
-.nushu{font-family:'Noto Sans Nushu',serif}
-.hero .wrap{position:relative;z-index:2}
-.hero::before{content:"";position:absolute;inset:0;background-image:var(--lattice);pointer-events:none}
-.hero-figure{position:relative}
-.hero-figure .motif{background:#fff;border:1px solid var(--line);border-radius:16px;
-  box-shadow:0 10px 30px rgba(31,45,61,.07);padding:14px;display:block}
-.figure-cap{margin-top:12px;font-size:12.5px;color:var(--ink-soft);line-height:1.8;text-align:center}
-.motif-slot{display:block}
-.motif-slot svg{width:100%;height:auto;display:block}
-%%EXTRA_CSS%%
-:root{--main:%%MAIN%%;--accent:%%ACCENT%%;--deep:%%DEEP%%;--on:%%ON%%}
 </style>
-<link rel="stylesheet" href="editorial.css">
+<link rel="stylesheet" href="theme-experience.css">
+<link rel="stylesheet" href="../assets/audio-player.css">
+%%EXTRA_HEAD%%
+<style>:root{--main:%%MAIN%%;--on:%%ON%%;--accent:%%ACCENT%%;--surface:%%SURFACE%%;--deep:%%DEEP%%}</style>
 </head>
-<body>
+<body class="theme-page" data-theme="%%KEY%%" data-audio-base="../assets/audio/">
+<a class="skip-link" href="#main">跳到正文</a>
+<div class="arrival-veil" id="arrivalVeil" aria-hidden="true"></div>
+<div class="arrival-title%%ARRIVAL_LONG%%" id="arrivalTitle" aria-hidden="true">%%CN%%</div>
 %%NAV%%
+<main id="main">
 %%HERO%%
+%%PRELUDE%%
 %%SECTIONS%%
+%%SOUND%%
+</main>
 %%FOOT%%
+<script src="../assets/audio-player.js" defer></script>
+<script src="assets/motifs.js" defer></script>
+<script src="experience.js" defer></script>
+%%EXTRA_SCRIPTS%%
 </body>
 </html>
 """
 
-BAND_CSS = ""
+# ---------------------------------------------------------------- 女书字帘
+#
+# 只在 02-女书.html 首页下方插入。帘子的 144 个女书字由
+# themes/assets/nushu-dict.js 提供（见 themes/scripts/build_nushu_dict.py），
+# 交互在 themes/assets/nushu-curtain.js；这里只保留无 JS 也能读的骨架。
 
+LEXICON = """<section class="lex-section" id="lexicon" data-step="字" aria-labelledby="lexTitle">
+  <div class="wrap">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">字</span>
+        <span class="story-en">Lexicon</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <div class="story-head">
+          <h2 id="lexTitle">展开的女书字典</h2>
+          <span class="en-tag">A dictionary, unfolded</span>
+        </div>
+        <p class="lex-lede">女书是表音文字：一个字代表一个音节，常可记写一组同音汉字。帘上从 Unicode 女书标准字表的 396 个女书字中取了 144 个，每个只出现一次。点任意一字，它会落进字格——对应汉字、江永方言读音与释义随字展开。</p>
+        <div class="lex-stage" id="lexStage">
+          <div class="lex-curtain-wrap">
+            <div class="lex-bar">
+              <span>帘上 144 字 · 每字只出现一次</span>
+              <span>点击 / Enter 查阅</span>
+            </div>
+            <div class="lex-curtain" id="lexCurtain" role="group" aria-label="女书字帘：144 个女书字，每个只出现一次" aria-describedby="lexHelp"></div>
+            <p class="lex-sr" id="lexHelp">用方向键在字帘上移动，按回车查阅当前字；也可以直接点击任意一个字。</p>
+            <noscript><p class="lex-noscript">字帘需要 JavaScript。可先前往 <a href="https://nushuscript.org/">在线女书字典</a> 查询；完整字表见页面底部来源。</p></noscript>
+          </div>
+          <aside class="lex-card" id="lexCard" aria-label="女书字义查阅卡">
+            <div class="lex-card-head">
+              <span class="lex-kicker">LOOKUP / 字格</span>
+              <span class="lex-serial" id="lexSerial">— / 396</span>
+              <button class="lex-close" id="lexClose" type="button" aria-label="放回帘上并关闭" hidden>×</button>
+            </div>
+            <div class="lex-slot" id="lexSlot" aria-hidden="true">
+              <span class="lex-slot-glyph" id="lexSlotGlyph"></span>
+              <span class="lex-slot-hint" id="lexSlotHint">点帘上任意一字<br><b>它会落进这个方格</b></span>
+              <i class="lex-corner lex-corner--tl"></i><i class="lex-corner lex-corner--tr"></i>
+              <i class="lex-corner lex-corner--bl"></i><i class="lex-corner lex-corner--br"></i>
+            </div>
+            <div class="lex-read" id="lexRead" aria-live="polite" aria-atomic="true">
+              <div class="lex-focus-row">
+                <span class="lex-focus" id="lexFocus">—</span>
+                <span class="lex-focus-label">本页取义</span>
+              </div>
+              <div class="lex-pron-row">
+                <span class="lex-pron" id="lexPron">—</span>
+                <span class="lex-tone" id="lexTone"></span>
+                <span class="lex-pron-note">江永方言</span>
+              </div>
+              <p class="lex-gloss" id="lexGloss">女书一个字对应一个音节，常可记写多个同音汉字。选一个字，看看它能写什么。</p>
+              <details class="lex-all" id="lexAll" hidden>
+                <summary>全部对应汉字 <span id="lexHanCount"></span></summary>
+                <div class="lex-han-list" id="lexHanList"></div>
+              </details>
+            </div>
+            <div class="lex-card-foot">
+              <span class="lex-card-src">NUSHU / UNICODE</span>
+              <a class="lex-card-link" href="https://nushuscript.org/" target="_blank" rel="noopener">字表来源 ↗</a>
+            </div>
+          </aside>
+        </div>
+        <div class="lex-foot">
+          <p><b>凡例</b> 女书一字一音，可记写多个同音汉字；卡上的「本页取义」只取其中一个常用义，不是唯一解释。读音后的数字为江永方言调值<span class="lex-nb">（5 度制）</span>。字表据赵丽明、徐焰编纂《女书规范字书法字帖》（Unicode 标准），由 Nushu Developers Workgroup 整理为在线字表；字形为 Noto Sans Nüshu（SIL OFL）。</p>
+          <a href="https://nushuscript.org/" target="_blank" rel="noopener">nushuscript.org ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>"""
 
 # ---------------------------------------------------------------- 六页内容
 #
 # 文案口径（重要）：
-#   本栏目是面向公众的官方网站，读者是普通浏览者与研究者，不是评审。
-#   因此正文只写「这是什么、有什么依据、能查到什么」，不写创作过程、
-#   不写版式或图形如何生成、不使用「本站／本页／转译／辨识焦点」这类内部说法。
+#   事实层与视觉转译层分开写：史实、名录、数据仍按来源核对；
+#   纹样工作台中的几何明确标为「本站视觉转译，不是传统纹样复原」。
 #   每条事实都标出处；出处分级 A 官方 / B 学术 / C 媒体 / D 公众（仅作认知参考）。
 # 待核对项集中在该主题来源节的「说明」一栏，用 ⚠ 标出。
 
@@ -696,7 +1033,7 @@ def page_panwang():
              "2014 年 7 月列入第四批国家级非物质文化遗产名录（民间文学类），保护主体为江华瑶族自治县文化馆。",
         badges=["国家级非遗 · 2014 第四批", "省级非遗 · 2008 第二批", "歌本约八千行", "三十六歌 · 七任曲"],
         motif="盘王歌印：方印、七分环与抄本页框",
-        main="#2F4A73", accent="#C3272B", deep="#1A1F2B")
+        main="#15120F", accent="#D2A03F", deep="#0A0806", on="#F2EDE2")
     secs = []
 
     secs.append(sec("01", "这是什么", "What it is",
@@ -774,7 +1111,7 @@ def page_panwang():
 
 def page_jinzhi():
     m = dict(
-        cn="富川瑶族织锦", en="Fuchuan Yao Brocade", key="",
+        cn="富川织锦", en="Fuchuan Yao Brocade", key="brocade",
         plate=("06", "富川平地瑶织锦与服饰", "富川平地瑶聚居区"),
         lead="流传于广西富川瑶族自治县平地瑶居住区的一种传统织锦技艺。以植物染色的经纬线织出几何纹样，"
              "用于被面、枕头、花带、口水围、头帕与服饰。2018 年列入广西壮族自治区级非物质文化遗产代表性项目名录。",
@@ -840,20 +1177,16 @@ PAGES = [
     ("03-蝴蝶歌.html", page_butterfly),
     ("04-长鼓舞.html", page_drum),
     ("05-风雨桥.html", page_bridge),
+    ("06-盘王大歌.html", page_panwang),
     ("07-富川织锦.html", page_jinzhi),
 ]
 
 
 def build(name, fn):
     m, secs = fn()
-    # 把 theme.css 直接内联进页面：
-    #  ① 六页各自双击就能独立看，不依赖别处文件（本地 file:// 下最稳）
-    #  ② 避免外链样式在部分环境里被拦，导致整页版式塌成默认样式
-    with io.open(os.path.join(HERE, "assets", "theme.css"), encoding="utf-8") as f:
-        base_css = f.read()
-    extra_css = base_css + BAND_CSS
-    # 用 %%KEY%% 做占位替换（不用 % 格式化）：内联进来的 CSS 里有大量 %，
-    # 与 % 格式化的 %s / %d 会撞车，直接报 "not enough arguments for format string"。
+    chapter = next(c for c in CHAPTERS if c["href"] == name)
+    m["key"] = chapter["key"]
+    # 用 %%KEY%% 做占位替换：页面里 CSS / SVG 有大量 %，不走 % 格式化。
     subs = {
         "%%CN%%": m["cn"],
         "%%DESC%%": m["lead"][:150].replace('"', "「"),
@@ -861,14 +1194,26 @@ def build(name, fn):
         "%%ACCENT%%": m["accent"],
         "%%DEEP%%": m["deep"],
         "%%ON%%": m.get("on", "#F2EDE2"),
-        "%%EXTRA_CSS%%": extra_css,
+        "%%SURFACE%%": chapter["surface"],
+        "%%KEY%%": chapter["key"],
+        "%%ARRIVAL_LONG%%": " arrival-title--long" if len(m["cn"]) >= 4 else "",
         "%%SELF%%": name,
-        "%%SELFURL%%": "https://USERNAME.github.io/REPO/themes/" + quote(name),
-        "%%NAV%%": nav(next(no for (h, no, c) in SIBLINGS if h == name), m["cn"], m["en"]),
-        "%%HERO%%": hero(m, m["motif"], {"壹":"01","贰":"02","叁":"03","肆":"04","伍":"05","陆":"06"}[next(no for (h, no, c) in SIBLINGS if h == name)]),
+        "%%SELFURL%%": SITE + "themes/" + quote(name),
+        "%%NAV%%": nav(),
+        "%%HERO%%": hero(m, m.get("motif", ""), chapter["num"]),
+        "%%PRELUDE%%": "",
+        "%%EXTRA_HEAD%%": "",
+        "%%EXTRA_SCRIPTS%%": "",
         "%%SECTIONS%%": "\n".join(secs),
+        "%%SOUND%%": sound_line(m),
         "%%FOOT%%": foot(name),
     }
+    if name == "02-女书.html":
+        subs["%%PRELUDE%%"] = LEXICON
+        subs["%%EXTRA_HEAD%%"] = '<link rel="stylesheet" href="assets/nushu-curtain.css">'
+        subs["%%EXTRA_SCRIPTS%%"] = (
+            '<script src="assets/nushu-dict.js" defer></script>\n'
+            '<script src="assets/nushu-curtain.js" defer></script>')
     html = PAGE
     for k, v in subs.items():
         html = html.replace(k, v)

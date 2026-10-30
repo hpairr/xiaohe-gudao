@@ -1,0 +1,76 @@
+/* ==========================================================================
+   首页六章 · 滚动驱动的竖向图版
+   --------------------------------------------------------------------------
+   三张图纵向排列为一条轨道；章节 sticky 后，页面滚动时轨道上下滑动换图。
+   不使用交叉淡化，也不使用滚轮吸附。
+   ========================================================================== */
+@media (min-width:761px){.chapter{height:100vh}}
+@media (max-width:760px){.chapter{height:100vh}}
+
+.ch-media{
+  isolation:isolate;
+  height:min(72vh,720px);
+  min-height:360px;
+}
+.ch-media img{transform:none!important}
+.ch-media-track{
+  height:auto;
+  gap:0;
+  transition:none;
+  will-change:transform;
+}
+.ch-media-slide{
+  flex:0 0 auto;
+  width:100%;
+  height:clamp(190px,30vh,300px);
+}
+.ch-media-track{
+  position:absolute;top:0;left:0;width:100%;height:300%;
+  display:flex;flex-direction:column;
+  transform:translate3d(0,0,0);
+}
+.ch-media-slide{
+  position:relative;flex:0 0 33.3333%;width:100%;height:33.3333%;
+  overflow:hidden;
+}
+.ch-media-slide img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  transform:none;
+  filter:saturate(.84) contrast(1.05);
+}
+.ch-media::after{z-index:2}
+.ch-media .ch-cap{z-index:3}
+.ch-media-counter{
+  position:absolute;right:14px;top:13px;z-index:4;
+  display:flex;align-items:baseline;gap:5px;
+  padding:6px 8px 5px;
+  border:1px solid rgba(242,237,226,.16);
+  background:rgba(10,14,12,.42);
+  color:rgba(242,237,226,.92);
+  font-family:var(--f-serif,serif);font-variant-numeric:tabular-nums;
+  text-shadow:0 1px 8px rgba(0,0,0,.35);
+}
+.ch-media-counter b{font-size:clamp(22px,2.2vw,34px);font-weight:400;line-height:1;letter-spacing:-.02em}
+.ch-media-counter span{font:8px/1 var(--f-en,sans-serif);letter-spacing:.16em;opacity:.7}
+@media (max-width:900px){
+  .ch-media-counter{right:10px;top:10px}
+  .ch-media-counter b{font-size:24px}
+}
+@media (max-width:760px){
+  .ch-media-counter{right:8px;top:8px}
+  .ch-media-counter b{font-size:21px}
+}
+
+
+@media (max-width:1100px){
+  .ch-media{height:min(66vh,620px);min-height:340px}
+  .ch-media-slide{height:clamp(180px,29vh,280px)}
+}
+@media (max-width:860px){
+  .ch-media{height:min(40vh,360px);min-height:240px}
+  .ch-media-slide{height:clamp(150px,26vh,240px)}
+}
+@media (max-width:600px){
+  .ch-media{height:min(38vh,320px);min-height:230px}
+  .ch-media-slide{height:clamp(140px,25vh,220px)}
+}

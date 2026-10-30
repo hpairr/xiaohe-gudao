@@ -1,0 +1,270 @@
+/* ==========================================================================
+   风雨桥 · 一场雨（05-风雨桥.html 专用）
+   --------------------------------------------------------------------------
+   目的：不靠名词解释「风雨桥」，而是让雨落一次——廊顶挡住的那一段桥面是干的。
+   几何全部为示意线稿（非某座桥的测绘图）；颜色取页面 :root，不硬编码。
+   ========================================================================== */
+
+.rain-section{
+  position:relative;
+  scroll-margin-top:92px;
+  padding:clamp(72px,11vh,132px) 0 clamp(64px,9vh,104px);
+  background:var(--surface);
+  color:var(--on);
+  border-top:1px solid var(--line-soft);
+}
+
+.rain-lede{
+  max-width:46em;
+  margin:clamp(16px,2.4vh,26px) 0 clamp(22px,3.4vh,34px);
+  font-size:clamp(15px,1.1vw,18px);
+  line-height:1.95;
+  opacity:.94;
+  text-wrap:pretty;
+}
+
+/* --------------------------------------------------------------------------
+   舞台：SVG 画桥，canvas 画雨，两层共用一个 1200:460 的坐标框
+   -------------------------------------------------------------------------- */
+.rain-stage{
+  position:relative;
+  border:1px solid var(--line);
+  overflow-x:auto;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+
+.rain-inner{
+  position:relative;
+  min-width:720px;
+  aspect-ratio:1200 / 460;
+}
+
+.rain-svg,
+.rain-canvas{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+.rain-svg{color:var(--on)}
+.rain-svg text{
+  font-family:var(--sans);
+  font-size:13px;
+  letter-spacing:.18em;
+  fill:currentColor;
+  opacity:.62;
+}
+
+.rain-canvas{touch-action:none;cursor:ew-resize}
+.rain-canvas:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+
+/* 廊下＝干：只在雨落廊顶时出现 */
+.rain-svg .r-dry{opacity:0;transition:opacity .45s var(--ease)}
+.rain-stage.is-dry .rain-svg .r-dry{opacity:1}
+
+/* --------------------------------------------------------------------------
+   控制条
+   -------------------------------------------------------------------------- */
+.rain-controls{
+  display:flex;
+  align-items:center;
+  gap:clamp(12px,1.6vw,20px);
+  flex-wrap:wrap;
+  margin-top:14px;
+  font-size:10.5px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  opacity:.86;
+}
+
+.rain-range{
+  flex:1 1 240px;
+  min-width:150px;
+  height:22px;
+  margin:0;
+  accent-color:var(--accent);
+  background:transparent;
+  cursor:ew-resize;
+}
+
+.rain-read{
+  flex:0 0 auto;
+  min-width:11em;
+  letter-spacing:.1em;
+  text-transform:none;
+  font-size:11.5px;
+  opacity:.9;
+  font-variant-numeric:tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   先体验，后命名
+   -------------------------------------------------------------------------- */
+.rain-naming{
+  max-width:44em;
+  margin:clamp(26px,3.6vh,40px) 0 0;
+  padding-top:clamp(16px,2.2vh,22px);
+  border-top:1px solid var(--line);
+  font-family:var(--serif);
+  font-size:clamp(16px,1.35vw,21px);
+  line-height:1.85;
+  text-wrap:pretty;
+}
+.rain-naming b{font-weight:700}
+.rain-naming .rain-term{font-family:var(--sans);font-size:.78em;letter-spacing:.06em;opacity:.72}
+
+.rain-facts{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;
+  margin-top:clamp(22px,3vh,32px);
+  border:1px solid var(--line);
+  background:var(--line);
+}
+.rain-fact{
+  background:var(--surface);
+  padding:clamp(13px,1.3vw,18px) clamp(14px,1.4vw,20px);
+}
+.rain-fact b{
+  display:block;
+  font-family:var(--serif);
+  font-size:clamp(21px,1.9vw,28px);
+  line-height:1.2;
+  letter-spacing:.02em;
+}
+.rain-fact span{
+  display:block;
+  margin-top:6px;
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:.62;
+}
+
+.rain-fold{
+  margin-top:clamp(20px,2.6vh,28px);
+  border-top:1px solid var(--line-soft);
+}
+.rain-fold>summary{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 0;
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  opacity:.8;
+  cursor:pointer;
+  list-style:none;
+}
+.rain-fold>summary::-webkit-details-marker{display:none}
+.rain-fold>summary::after{content:"＋";opacity:.7}
+.rain-fold[open]>summary::after{content:"－"}
+.rain-fold-body{
+  padding-bottom:6px;
+  font-size:12.5px;
+  line-height:1.95;
+  opacity:.82;
+  text-wrap:pretty;
+}
+.rain-fold-body dl{
+  display:grid;
+  grid-template-columns:6.4em minmax(0,1fr);
+  gap:6px 14px;
+  margin:10px 0 0;
+}
+.rain-fold-body dt{font-size:11px;letter-spacing:.08em;opacity:.66}
+.rain-fold-body dd{margin:0}
+
+/* 27 座名录 */
+.rain-stat{
+  margin:0 0 4px;
+  font-size:11.5px;
+  line-height:1.9;
+  letter-spacing:.02em;
+  opacity:.72;
+  font-variant-numeric:tabular-nums;
+}
+
+.rain-table-wrap{overflow-x:auto}
+
+.rain-table{
+  width:100%;
+  min-width:560px;
+  border-collapse:collapse;
+  font-size:12.5px;
+  line-height:1.7;
+}
+.rain-table caption{
+  padding:12px 0 10px;
+  text-align:start;
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:.58;
+}
+.rain-table th,
+.rain-table td{
+  padding:6px 12px 6px 0;
+  text-align:start;
+  vertical-align:top;
+  font-weight:400;
+  border-top:1px solid var(--line-soft);
+}
+.rain-table thead th{
+  padding-bottom:8px;
+  border-top:0;
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  opacity:.58;
+}
+.rain-table tbody th{
+  font-family:var(--serif);
+  font-weight:700;
+  letter-spacing:.02em;
+  white-space:nowrap;
+}
+.rain-table td:nth-child(3){font-variant-numeric:tabular-nums;white-space:nowrap}
+.rain-table td:last-child{opacity:.82}
+.rain-table tr.grp td{
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  opacity:.72;
+}
+.rain-table tr.grp:first-child td{padding-top:8px;border-top:0}
+
+.rain-src{
+  margin:14px 0 0;
+  font-size:11px;
+  line-height:1.85;
+  opacity:.6;
+  text-wrap:pretty;
+}
+
+.rain-foot{
+  max-width:54em;
+  margin-top:clamp(24px,3.4vh,36px);
+  padding-top:12px;
+  border-top:1px solid var(--line-soft);
+  font-size:11.5px;
+  line-height:1.9;
+  opacity:.66;
+  text-wrap:pretty;
+}
+
+@media (max-width:900px){
+  .rain-read{min-width:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .rain-canvas{cursor:default}
+  .rain-svg .r-dry{transition:none}
+}

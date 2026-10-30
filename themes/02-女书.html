@@ -1,7 +1,20 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="no-js">
 <head>
 <meta charset="utf-8">
+<script>
+document.documentElement.classList.remove('no-js');
+document.documentElement.classList.add('js');
+if(location.search.indexOf('arrive=')>-1){
+  document.documentElement.classList.add('is-arriving');
+  window.setTimeout(function(){
+    document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
+    var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
+    if(v)v.style.display='none';
+    if(t)t.style.display='none';
+  },3600);
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>女书 · 潇贺古道有声文化数据库</title>
 <meta name="description" content="流传于湖南江永一带的女性专用文字，2006 年列入第一批国家级非物质文化遗产名录。字形纤瘦右斜、菱角分明，基本笔画只有点、竖、斜、弧四种，写在纸扇、手帕和三朝书上。">
@@ -25,220 +38,19 @@
 @font-face{font-family:'Noto Sans SC';src:url('../assets/fonts/site/NotoSansSC-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'Noto Sans SC';src:url('../assets/fonts/site/NotoSansSC-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
 @font-face{font-family:'Noto Sans Nushu';src:url('../assets/fonts/site/NotoSansNushu-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
-:root{--main:#A9362E;--accent:#D2A03F;--deep:#7A1F1A;--on:#F2EDE2}
-.nushu{font-family:'Noto Sans Nushu',serif}
-.hero .wrap{position:relative;z-index:2}
-.hero::before{content:"";position:absolute;inset:0;background-image:var(--lattice);pointer-events:none}
-.hero-figure{position:relative}
-.hero-figure .motif{background:#fff;border:1px solid var(--line);border-radius:16px;
-  box-shadow:0 10px 30px rgba(31,45,61,.07);padding:14px;display:block}
-.figure-cap{margin-top:12px;font-size:12.5px;color:var(--ink-soft);line-height:1.8;text-align:center}
-.motif-slot{display:block}
-.motif-slot svg{width:100%;height:auto;display:block}
-/* 潇贺古道有声文化数据库 · 主题页共用样式
-   配色与大站保持一致：宣纸白 / 月白 / 鸦青 / 黛蓝灰 / 群青 / 天水碧 / 朱砂 / 秋香黄
-   每页在 <style> 里覆盖 --main / --accent / --deep 三个变量即可换主题色。 */
-
-:root{
-  --paper:#F7F4EC;          /* 宣纸白 */
-  --moon:#EFF4F8;           /* 月白 */
-  --ink:#1F2D3D;            /* 鸦青 */
-  --ink-soft:#5B6B7C;       /* 黛蓝灰 */
-  --qun:#3A5BA0;            /* 群青 */
-  --tianshui:#5CAC9E;       /* 天水碧 */
-  --cinnabar:#C3272B;       /* 朱砂红 */
-  --gold:#D9A13B;           /* 秋香黄 */
-  --line:rgba(31,45,61,.12);
-
-  /* 每页覆盖这三个即可 */
-  --main:var(--qun);
-  --accent:var(--cinnabar);
-  --deep:var(--ink);
-
-  /* 菱形格底纹 */
-  --lattice:repeating-linear-gradient(45deg,rgba(29,38,82,.055) 0 1px,transparent 1px 12px),
-            repeating-linear-gradient(-45deg,rgba(29,38,82,.04) 0 1px,transparent 1px 12px);
-  --stitch:repeating-linear-gradient(90deg,var(--ink) 0 7px,transparent 7px 14px);
-
-  --serif:"Noto Serif SC","Source Han Serif SC","Songti SC",STSong,"SimSun",serif;
-  --sans:"Noto Sans SC","Source Han Sans SC","Microsoft YaHei","PingFang SC",sans-serif;
-}
-
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  font-family:var(--sans);color:var(--ink);line-height:1.6;background-color:var(--paper);
-  background-image:var(--lattice);-webkit-font-smoothing:antialiased;
-}
-h1,h2,h3,.serif{font-family:var(--serif)}
-a{color:var(--main);text-decoration:none}
-a:hover{text-decoration:underline}
-img,svg{max-width:100%}
-
-.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
-
-/* ------------------------------------------------------------------ 顶栏 */
-.nav{
-  position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:18px;
-  height:62px;padding:0 24px;background:rgba(247,244,236,.94);
-  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
-}
-.nav .back{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink);min-height:40px}
-.nav .back:hover{color:var(--accent);text-decoration:none}
-.nav .back svg{width:15px;height:15px;flex:none}
-.nav .site{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.08em;margin-inline-start:auto}
-.nav .idx{font-size:12.5px;color:var(--ink-soft);letter-spacing:.16em;white-space:nowrap}
-
-/* ------------------------------------------------------------------ 首屏 */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);padding:52px 0 44px}
-.hero-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,440px);gap:52px;align-items:center}
-.hero-title{writing-mode:vertical-rl;text-orientation:upright;font-family:var(--serif);
-  font-size:clamp(38px,4.6vw,58px);font-weight:700;letter-spacing:.28em;line-height:1.5;color:var(--ink)}
-.hero-cn{font-family:var(--serif);font-size:clamp(22px,3vw,34px);font-weight:700;letter-spacing:.16em;margin-top:2px}
-.hero-en{font-size:12.5px;color:var(--ink-soft);letter-spacing:.22em;text-transform:uppercase;margin-top:10px}
-.hero-lead{margin-top:20px;font-size:15.5px;line-height:2.05;color:var(--ink-soft);max-width:34em}
-.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-.badge{font-size:12px;letter-spacing:.06em;padding:5px 12px;border:1px solid var(--line);
-  border-radius:999px;background:rgba(255,255,255,.7);color:var(--ink-soft)}
-.badge.hot{border-color:var(--accent);color:var(--accent)}
-
-/* ------------------------------------------------------------------ 纹样图 */
-.motif{display:block;width:100%;height:auto}
-.motif *{vector-effect:non-scaling-stroke}
-.motif .sway{transform-box:fill-box;transform-origin:50% 50%}
-.motif .drop{transform-box:fill-box;transform-origin:50% 0%}
-.motif .spin{transform-box:fill-box;transform-origin:50% 50%}
-
-@keyframes draw{from{stroke-dashoffset:var(--len,1200)}to{stroke-dashoffset:0}}
-.motif .draw{stroke-dasharray:var(--len,1200);stroke-dashoffset:var(--len,1200);
-  animation:draw 2.4s cubic-bezier(.3,.9,.3,1) forwards}
-@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.motif .pop{animation:pop .7s cubic-bezier(.2,1.35,.4,1) both}
-@keyframes beat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-.motif .beat{animation:beat var(--dur,1.1s) ease-in-out infinite;animation-delay:var(--delay,0s)}
-@keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-.motif .sway{animation:sway var(--dur,4s) ease-in-out infinite;animation-delay:var(--delay,0s)}
-@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.motif .rise{animation:rise .8s ease-out both;animation-delay:var(--delay,0s)}
-@keyframes fizz{0%,100%{opacity:.28}45%{opacity:1}}
-.motif .fizz{animation:fizz var(--dur,1s) ease-in-out infinite;animation-delay:var(--delay,0s)}
-@keyframes turn{to{transform:rotate(360deg)}}
-.motif .turn{animation:turn var(--dur,60s) linear infinite}
-@keyframes converge{0%{transform:translateY(-9px)}100%{transform:translateY(0)}}
-@media (prefers-reduced-motion:reduce){
-  .motif *{animation:none !important}
-  .motif .draw{stroke-dashoffset:0}
-}
-
-/* ------------------------------------------------------------------ 排版区块 */
-.sec{padding:58px 0;border-bottom:1px solid var(--line)}
-.sec:last-of-type{border-bottom:0}
-.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:26px}
-.sec-no{font-family:var(--serif);font-size:15px;color:var(--accent);letter-spacing:.2em;flex:none}
-.sec-head h2{font-family:var(--serif);font-size:clamp(22px,2.6vw,30px);font-weight:700;letter-spacing:.12em}
-.sec-head .en-tag{font-size:12px;color:var(--ink-soft);letter-spacing:.18em;text-transform:uppercase}
-.sec-note{font-size:13px;color:var(--ink-soft);line-height:1.9;max-width:60em;margin-bottom:22px}
-
-.prose p{font-size:15.5px;line-height:2.05;color:var(--ink);margin-bottom:16px;max-width:44em}
-.prose p.soft{color:var(--ink-soft)}
-.prose b{color:var(--ink)}
-.prose em{font-style:normal;color:var(--accent);padding:0 2px}
-
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;
-  box-shadow:0 4px 18px rgba(31,45,61,.05)}
-.card h3{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:.06em;margin-bottom:10px}
-.card p{font-size:14px;line-height:1.95;color:var(--ink-soft)}
-.card .k{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--accent);line-height:1.2}
-
-ul.facts{list-style:none;display:flex;flex-direction:column;gap:11px}
-ul.facts li{font-size:14.5px;line-height:1.9;color:var(--ink);padding-left:20px;position:relative}
-ul.facts li::before{content:"";position:absolute;left:0;top:.72em;width:7px;height:7px;
-  background:var(--accent);transform:rotate(45deg)}
-ul.facts li span.src{color:var(--ink-soft);font-size:12.5px}
-
-/* 数据条 */
-.figrow{display:flex;flex-wrap:wrap;gap:30px 52px;margin:6px 0 4px}
-.fig{display:flex;flex-direction:column;gap:6px}
-.fig .n{font-family:var(--serif);font-size:clamp(28px,3.4vw,40px);font-weight:700;color:var(--main);line-height:1}
-.fig .l{font-size:12.5px;color:var(--ink-soft);letter-spacing:.06em}
-.fig .s{font-size:11.5px;color:var(--ink-soft);opacity:.85}
-
-/* 构造过程 */
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.step{text-align:center}
-.step svg{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px}
-.step figcaption{font-size:12.5px;color:var(--ink-soft);line-height:1.7;margin-top:9px}
-.step b{display:block;color:var(--ink);font-size:13px;margin-bottom:2px}
-
-/* 变体一排 */
-.variants{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.variant{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
-.variant span{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.7}
-
-/* 表格 */
-table.src{width:100%;border-collapse:collapse;font-size:13.5px}
-table.src th,table.src td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
-table.src th{background:var(--moon);font-weight:500;white-space:nowrap;letter-spacing:.04em}
-table.src td.g{white-space:nowrap;color:var(--accent);font-weight:500}
-table.src a{word-break:break-all}
-.lvl{display:inline-block;font-size:11.5px;padding:1px 7px;border-radius:4px;border:1px solid var(--line);color:var(--ink-soft)}
-.lvl.a{border-color:var(--main);color:var(--main)}
-.lvl.b{border-color:var(--gold);color:var(--gold)}
-
-/* 页脚 */
-.foot{padding:52px 0 60px;border-top:1px solid var(--line);background:var(--moon)}
-.foot h3{font-family:var(--serif);font-size:15px;letter-spacing:.1em;margin-bottom:18px}
-.sibs{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
-.sib{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 8px;
-  text-align:center;color:var(--ink);font-size:13px;transition:transform .25s,border-color .25s}
-.sib:hover{transform:translateY(-3px);border-color:var(--accent);text-decoration:none}
-.sib b{display:block;font-family:var(--serif);font-size:12px;color:var(--ink-soft);letter-spacing:.1em;margin-bottom:5px;font-weight:400}
-.sib.on{border-color:var(--accent);background:#fff}
-.foot .fine{margin-top:26px;font-size:12px;color:var(--ink-soft);line-height:1.9}
-
-/* 参考图清单（部分主题直接列出素材目录中的可用图片） */
-.files-h{font-family:var(--serif);font-size:15px;letter-spacing:.06em;margin:26px 0 12px}
-ul.files{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 20px}
-ul.files li{font-size:13px;line-height:1.8;color:var(--ink-soft);padding-left:14px;position:relative}
-ul.files li::before{content:"";position:absolute;left:0;top:.72em;width:5px;height:5px;background:var(--line);transform:rotate(45deg)}
-ul.files li.soft{color:var(--ink-soft);opacity:.8}
-
-/* ------------------------------------------------------------------ 响应式 */
-@media (max-width:960px){
-  .hero-inner{grid-template-columns:1fr;gap:28px}
-  .hero-title{writing-mode:horizontal-tb;letter-spacing:.16em;font-size:clamp(30px,7vw,44px)}
-  .steps{grid-template-columns:repeat(2,1fr)}
-  .sibs{grid-template-columns:repeat(3,1fr)}
-}
-@media (max-width:680px){
-  .grid2,.grid3,.variants{grid-template-columns:1fr}
-  .wrap{padding:0 18px}
-  .sec{padding:44px 0}
-  .nav .idx{display:none}
-}
-@media print{
-  .nav{position:static}
-  .sec{break-inside:avoid}
-}
-
-/* --------------------------------------------------- 各页专属纹样：共用工具 */
-/* 菱形格（45°）—— 与主页、女书同源 */
-.lat-bg{position:absolute;inset:0;background-image:var(--lattice);pointer-events:none}
-/* 通高侧栏纹样 */
-.rail{position:absolute;top:0;bottom:0;width:56px;pointer-events:none;opacity:.5}
-.rail.l{left:0}
-.rail.r{right:0}
-
-:root{--main:#A9362E;--accent:#D2A03F;--deep:#7A1F1A;--on:#F2EDE2}
 </style>
-<link rel="stylesheet" href="editorial.css">
+<link rel="stylesheet" href="theme-experience.css">
+<link rel="stylesheet" href="../assets/audio-player.css">
+<link rel="stylesheet" href="assets/nushu-curtain.css">
+<style>:root{--main:#A9362E;--on:#F2EDE2;--accent:#D2A03F;--surface:#661E19;--deep:#7A1F1A}</style>
 </head>
-<body>
-<nav class="nav">
-  <a class="back" href="../index.html"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8H3M7 3L2 8l5 5"/></svg>返回</a>
-  <span class="site">潇贺古道有声文化数据库</span>
+<body class="theme-page" data-theme="nushu" data-audio-base="../assets/audio/">
+<a class="skip-link" href="#main">跳到正文</a>
+<div class="arrival-veil" id="arrivalVeil" aria-hidden="true"></div>
+<div class="arrival-title" id="arrivalTitle" aria-hidden="true">女书</div>
+<nav class="top-nav" id="themeNav" aria-label="主导航">
+  <a class="back" href="../index.html"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8H3M7 3L2 8l5 5"/></svg>返回主页</a>
+  <a class="site" href="../index.html">潇贺古道有声文化数据库</a>
   <div class="nav-links">
     <a href="../index.html">首页</a>
     <a href="../database.html#/archive">文化档案</a>
@@ -248,46 +60,123 @@ ul.files li.soft{color:var(--ink-soft);opacity:.8}
     <a href="../database.html#/about">关于与来源</a>
   </div>
 </nav>
-<header class="hero">
-  <div class="wrap hero-inner">
-    <div>
+<main id="main">
+<header class="theme-hero" data-theme-key="nushu">
+  <div class="wrap hero-layout">
+    <div class="hero-copy">
       <div class="hero-chapter"><span>CHAPTER 01 / 06</span><span>NÜSHU</span></div>
-      <h1 class="hero-cn">女书</h1>
+      <h1 class="hero-title" id="themeTitle">女书</h1>
       <div class="hero-en">Nüshu</div>
       <p class="hero-lead">流传于湖南江永一带的女性专用文字，2006 年列入第一批国家级非物质文化遗产名录。字形纤瘦右斜、菱角分明，基本笔画只有点、竖、斜、弧四种，写在纸扇、手帕和三朝书上。</p>
       <div class="hero-badges"><span class="badge hot">国家级非遗 · 2006 第一批</span><span class="badge">目前已知唯一女性文字</span><span class="badge">已入 Unicode</span><span class="badge">载体：扇书 · 帕书 · 三朝书</span></div>
     </div>
-    <div class="hero-figure">
-      <figure class="plate">
-        <div class="plate-frame">
-          <span class="plate-kicker">图版 01</span>
-          <span class="plate-state">待补</span>
-          <span class="plate-note">江永女书生态博物馆藏件</span>
-        </div>
-        <figcaption class="plate-cap"><b>女书手稿、扇书与三朝书内页</b></figcaption>
-      </figure>
+    <div class="hero-art">
+      <div class="motif-unit" data-motif-unit aria-hidden="true"></div>
     </div>
   </div>
+  <div class="wrap hero-footer">
+    <span>长菱形字格 · 点 / 竖 / 斜 / 弧</span>
+    <span class="hero-coord">湖南 · 江永 · 01 / 06</span>
+  </div>
 </header>
-<section class="sec">
+<section class="lex-section" id="lexicon" data-step="字" aria-labelledby="lexTitle">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-no">01</span><h2>女书是什么</h2><span class="en-tag">What it is</span></div>
-    
-    <div class="prose">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">字</span>
+        <span class="story-en">Lexicon</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <div class="story-head">
+          <h2 id="lexTitle">女书字典</h2>
+          <span class="en-tag">Nüshu Lexicon</span>
+        </div>
+        <p class="lex-lede">女书是表音文字：一个字代表一个音节，常可记写一组同音汉字。字帘取自 Unicode 女书标准字表的 396 个字，收录 144 个。</p>
+        <div class="lex-stage" id="lexStage">
+          <div class="lex-curtain-wrap">
+            <div class="lex-bar">
+              <span>144 字 / 396</span>
+            </div>
+            <div class="lex-curtain" id="lexCurtain" role="group" aria-label="女书字帘：144 字，取自 Unicode 字表" aria-describedby="lexHelp"></div>
+            <p class="lex-sr" id="lexHelp">方向键移动，回车查阅。</p>
+            <noscript><p class="lex-noscript">字帘需要 JavaScript。可先前往 <a href="https://nushuscript.org/">在线女书字典</a> 查询；完整字表见页面底部来源。</p></noscript>
+          </div>
+          <aside class="lex-card" id="lexCard" aria-label="女书字义查阅卡">
+            <div class="lex-card-head">
+              <span class="lex-kicker">LOOKUP / 字格</span>
+              <span class="lex-serial" id="lexSerial">— / 396</span>
+              <button class="lex-close" id="lexClose" type="button" aria-label="放回帘上并关闭" hidden>×</button>
+            </div>
+            <div class="lex-slot" id="lexSlot" aria-hidden="true">
+              <span class="lex-slot-glyph" id="lexSlotGlyph"></span>
+              <span class="lex-slot-hint" id="lexSlotHint">未选字</span>
+              <i class="lex-corner lex-corner--tl"></i><i class="lex-corner lex-corner--tr"></i>
+              <i class="lex-corner lex-corner--bl"></i><i class="lex-corner lex-corner--br"></i>
+            </div>
+            <div class="lex-read" id="lexRead" aria-live="polite" aria-atomic="true">
+              <div class="lex-focus-row">
+                <span class="lex-focus" id="lexFocus">—</span>
+                <span class="lex-focus-label">取义</span>
+              </div>
+              <div class="lex-pron-row">
+                <span class="lex-pron" id="lexPron">—</span>
+                <span class="lex-tone" id="lexTone"></span>
+                <span class="lex-pron-note">江永方言</span>
+              </div>
+              <p class="lex-gloss" id="lexGloss">一字一音，常可记写多个同音汉字。</p>
+              <details class="lex-all" id="lexAll" hidden>
+                <summary>全部对应汉字 <span id="lexHanCount"></span></summary>
+                <div class="lex-han-list" id="lexHanList"></div>
+              </details>
+            </div>
+            <div class="lex-card-foot">
+              <span class="lex-card-src">NUSHU / UNICODE</span>
+              <a class="lex-card-link" href="https://nushuscript.org/" target="_blank" rel="noopener">字表来源 ↗</a>
+            </div>
+          </aside>
+        </div>
+        <div class="lex-foot">
+          <p><b>凡例</b> 女书一字一音，可记写多个同音汉字；卡上只列一个常用义，不是唯一解释。读音后的数字为江永方言调值<span class="lex-nb">（5 度制）</span>。字表据赵丽明、徐焰编纂《女书规范字书法字帖》（Unicode 标准），由 Nushu Developers Workgroup 整理为在线字表；字形为 Noto Sans Nüshu（SIL OFL）。</p>
+          <a href="https://nushuscript.org/" target="_blank" rel="noopener">nushuscript.org ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="story-block" data-step="01" id="story-01">
+  <div class="wrap">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">01</span>
+        <span class="story-en">What it is</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <div class="story-head"><h2>女书是什么</h2><span class="en-tag">What it is</span></div>
+        <div class="story-body"><div class="prose">
         <p>女书，又名「女字」，是<b>目前已知世界上唯一由女性专门使用的文字</b>，
         长期流传于湖南省江永县及其邻近地区。它记录的是当地汉语方言，字字独立、成篇成章，
         可以唱读，也可以书写。</p>
         <p>字形<b>呈长菱形，左低右高</b>，笔画纤细。结构上，
-        女书的笔画只有<em>点、竖、斜、弧</em>四种，形态统一，辨识度较高。</p>
+        女书的笔画只有<em>点、竖、斜、弧</em>四种，形态统一。</p>
         <p class="soft">研究者把女书称为「双体系」：它既是一套文字符号，也有一套以「八角花」为代表的装饰图案。</p>
-        </div>
+        </div></div>
+      </div>
+    </div>
   </div>
 </section>
-<section class="sec">
+<section class="story-block" data-step="02" id="story-02">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-no">02</span><h2>书写与传承</h2><span class="en-tag">Script and transmission</span></div>
-    
-    <div class="prose">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">02</span>
+        <span class="story-en">Script and transmission</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <div class="story-head"><h2>书写与传承</h2><span class="en-tag">Script and transmission</span></div>
+        <div class="story-body"><div class="prose">
         <p>女书主要用于<b>女性之间的通信与记录</b>。使用者用它写结交书、记姊妹往来，也记录心事。
         女书在女性之间代代相传，往往由母亲教给女儿，或由年长的姊妹传授。</p>
         <p>书写载体以三种最为典型：<b>扇书</b>（写在纸扇上）、<b>帕书</b>（写在手帕上）、
@@ -302,42 +191,98 @@ ul.files li.soft{color:var(--ink-soft);opacity:.8}
           四周书写女书文字，内容多为姊妹间的劝慰与祝福。</p></div>
           <div class="card"><h3>唱读</h3>
           <p>女书可以按固定曲调唱读。唱读时音调高低起伏，与书写同为女书传承的一部分。</p></div>
-        </div>
-  </div>
-</section>
-<section class="sec">
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-no">03</span><h2>八角花</h2><span class="en-tag">The octagonal flower motif</span></div>
-    
-    <div class="prose">
-        <p>八角花的外廓为八角八边，由八条连弧纹构成，八个夹角内常绘有长短横式的符号；外廓形态与战国楚铜镜背面的菱形纹样相近，被认为一脉相承。</p>
-        <p>内芯的题材很多：牡丹、莲花、蝴蝶、凤鸟、鱼龙等吉祥纹样都可入内。学者统计，女书原件上的八角花纹样有 30 余种。外框基本固定，内芯随题材变化，这是女书装饰图案的一个特点。</p>
-        </div><div class="grid3"><div class="card"><h3>分布位置</h3><p>八角花多居于三朝书内页正中，四周书写女书文字；扇书、帕书同样如此。</p></div><div class="card"><h3>内芯题材</h3><p>不同类别的八角花内部构成不尽相同，但都取自民间吉祥纹样。</p></div><div class="card"><h3>学术研究</h3><p>《艺术探索》2009 年第 1 期《女书与「八角花」图案》将女书定义为「文字符号体系 + 装饰性图案文化符号体系」双体系。</p></div></div>
-  </div>
-</section>
-<section class="sec">
-  <div class="wrap">
-    <div class="sec-head"><span class="sec-no">04</span><h2>资料来源</h2><span class="en-tag">Sources</span></div>
-    
-    <table class="src"><tr><th>内容</th><th>说明</th><th>来源</th></tr><tr><td class="g">名录级别</td><td>女书习俗列入第一批国家级非物质文化遗产名录（2006）</td><td>中国非物质文化遗产网 <code>ihchina.cn</code></td></tr><tr><td class="g">字形结构</td><td>长菱形、左低右高、瘦长；笔画仅有点、竖、斜、弧四种</td><td>《女书字体特点》等公开资料</td></tr><tr><td class="g">双体系定义</td><td>「文字符号体系 + 装饰性图案文化符号体系」</td><td>《女书与「八角花」图案》，《艺术探索》2009 年第 1 期</td></tr><tr><td class="g">八角花外框</td><td>八角八边连弧纹；「八角花」即「八卦花」（当地方言同音）</td><td>《女书文化：织锦、刺绣、八角花篇》，搜狐 2018</td></tr><tr><td class="g">八角花内芯</td><td>原件纹样 30 余种，不同类别内部构成不尽相同，皆取自民间吉祥纹样</td><td>知网空间「三朝书」词条；万方《江永〈三朝书〉中图案研究及服装创新设计》</td></tr><tr><td class="g">与楚文化关联</td><td>外廓八条连弧与战国楚铜镜背面菱形纹一脉相承</td><td>《女书文化：织锦、刺绣、八角花篇》</td></tr><tr><td class="g">三朝书形制</td><td>内页正中绘八角花、四周书写女书文字</td><td>《女书「三朝书」探析》，《民族艺术》2013 年第 3 期</td></tr><tr><td class="g">传承与当代实践</td><td>传承人以设计与文创作品推动女书进入现代生活</td><td>中新网 2023-11-09《世界唯一女性文字「走」出纸张》；央广网 2023-11-08</td></tr><tr><td class="g">字形数据</td><td>女书已纳入 Unicode；Noto Sans Nüshu 采用 SIL OFL 授权</td><td><code>github.com/arrowtype/noto-sans-nushu</code></td></tr></table>
-  </div>
-</section>
-<footer class="foot">
-  <div class="wrap">
-    <h3>沿线六章</h3>
-    <div class="sibs"><a class="sib on" href="02-女书.html"><b>壹</b>女书</a><a class="sib" href="03-蝴蝶歌.html"><b>贰</b>蝴蝶歌</a><a class="sib" href="04-长鼓舞.html"><b>叁</b>长鼓舞</a><a class="sib" href="05-风雨桥.html"><b>肆</b>风雨桥</a><a class="sib" href="06-盘王大歌.html"><b>伍</b>盘王大歌</a><a class="sib" href="07-富川织锦.html"><b>陆</b>富川织锦</a></div>
-    <div class="foot-extra">
-      <a href="01-潇贺古道.html">总述 · 潇贺古道</a><span class="sep">/</span>
-      <a href="08-上灯炸龙.html">附 · 上灯炸龙</a><span class="sep">/</span>
-      <a href="../database.html#/archive">文化档案</a>
+        </div></div>
+      </div>
     </div>
-    <p class="fine">
-      本栏目收录潇贺古道沿线六项文化遗产：女书、蝴蝶歌、长鼓舞、风雨桥、盘王大歌、富川瑶族织锦。
-      古道总述见「潇贺古道」，年节民俗「上灯炸龙」列为附页。<br>
-      图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示；引用请回到各页「资料来源」。<br>
-      潇贺古道有声文化数据库 · 贺州学院视觉传达设计 2026
-    </p>
+  </div>
+</section>
+<section class="story-block" data-step="03" id="story-03">
+  <div class="wrap">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">03</span>
+        <span class="story-en">The octagonal flower motif</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <div class="story-head"><h2>八角花</h2><span class="en-tag">The octagonal flower motif</span></div>
+        <div class="story-body"><div class="prose">
+        <p>八角花的外廓为八角八边，由八条连弧纹构成，八个夹角内常绘有长短横式的符号；外廓形态与战国楚铜镜背面的菱形纹样相近，被认为一脉相承。</p>
+        <p>内芯的题材很多：牡丹、莲花、蝴蝶、凤鸟、鱼龙等吉祥纹样都可入内。学者统计，女书原件上的八角花纹样有 30 余种。外框基本固定，内芯随题材变化。</p>
+        </div><div class="grid3"><div class="card"><h3>分布位置</h3><p>八角花多居于三朝书内页正中，四周书写女书文字；扇书、帕书同样如此。</p></div><div class="card"><h3>内芯题材</h3><p>不同类别的八角花内部构成不尽相同，但都取自民间吉祥纹样。</p></div><div class="card"><h3>学术研究</h3><p>《艺术探索》2009 年第 1 期《女书与「八角花」图案》将女书定义为「文字符号体系 + 装饰性图案文化符号体系」双体系。</p></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="story-block story-block--sources" data-step="04" id="sources">
+  <div class="wrap">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">04</span>
+        <span class="story-en">SOURCES / 出处</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <details class="source-fold">
+          <summary>
+            <span>资料来源 / Sources</span>
+            <span class="src-action">核对表 <span class="src-toggle" aria-hidden="true">＋</span></span>
+          </summary>
+          <div class="source-body"><table class="src"><tr><th>内容</th><th>说明</th><th>来源</th></tr><tr><td class="g">名录级别</td><td>女书习俗列入第一批国家级非物质文化遗产名录（2006）</td><td>中国非物质文化遗产网 <code>ihchina.cn</code></td></tr><tr><td class="g">字形结构</td><td>长菱形、左低右高、瘦长；笔画仅有点、竖、斜、弧四种</td><td>《女书字体特点》等公开资料</td></tr><tr><td class="g">双体系定义</td><td>「文字符号体系 + 装饰性图案文化符号体系」</td><td>《女书与「八角花」图案》，《艺术探索》2009 年第 1 期</td></tr><tr><td class="g">八角花外框</td><td>八角八边连弧纹；「八角花」即「八卦花」（当地方言同音）</td><td>《女书文化：织锦、刺绣、八角花篇》，搜狐 2018</td></tr><tr><td class="g">八角花内芯</td><td>原件纹样 30 余种，不同类别内部构成不尽相同，皆取自民间吉祥纹样</td><td>知网空间「三朝书」词条；万方《江永〈三朝书〉中图案研究及服装创新设计》</td></tr><tr><td class="g">与楚文化关联</td><td>外廓八条连弧与战国楚铜镜背面菱形纹一脉相承</td><td>《女书文化：织锦、刺绣、八角花篇》</td></tr><tr><td class="g">三朝书形制</td><td>内页正中绘八角花、四周书写女书文字</td><td>《女书「三朝书」探析》，《民族艺术》2013 年第 3 期</td></tr><tr><td class="g">传承与当代实践</td><td>传承人以设计与文创作品推动女书进入现代生活</td><td>中新网 2023-11-09《世界唯一女性文字「走」出纸张》；央广网 2023-11-08</td></tr><tr><td class="g">字形数据</td><td>女书已纳入 Unicode；Noto Sans Nüshu 采用 SIL OFL 授权</td><td><code>github.com/arrowtype/noto-sans-nushu</code></td></tr></table></div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sound-line" id="sound" aria-labelledby="soundTitle">
+  <div class="wrap sound-grid">
+    <div class="sound-copy">
+      <p class="eyebrow"><i></i>SOUND TRACE / 声音轨迹</p>
+      <h2 id="soundTitle">听见这一章</h2>
+      <p>本章录音片段。完整录音与来源见声音数据库。</p>
+      <a class="sound-cta" href="../database.html#/sounds"><b>查看声音档案</b><span>↗</span></a>
+    </div>
+    <div class="sound-player-wrap">
+      <div class="audio-player audio-player--theme" data-audio-player data-key="nushu"></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="theme-foot">
+  <div class="wrap">
+    <div class="next-chapter">
+      <div>
+        <span class="next-label">NEXT CHAPTER / 下一章</span>
+        <a class="next-link" href="03-蝴蝶歌.html">
+          <span>
+            <span class="next-index">02 / 06 · Butterfly Song</span>
+            <strong>蝴蝶歌</strong>
+          </span>
+          <span class="next-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="next-note">富川多声部民歌，两个声部同起同收。</p>
+    </div>
+    <nav class="chapter-strip" aria-label="六章色带">
+      <a class="is-current" href="02-女书.html" style="--chip:#A9362E;--chip-fg:#F2EDE2" aria-current="page"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
+      <a class="" href="03-蝴蝶歌.html" style="--chip:#2C5A4E;--chip-fg:#F2EDE2"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
+      <a class="" href="04-长鼓舞.html" style="--chip:#C08A2E;--chip-fg:#141A16"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
+      <a class="" href="05-风雨桥.html" style="--chip:#1D2652;--chip-fg:#F2EDE2"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
+      <a class="" href="06-盘王大歌.html" style="--chip:#15120F;--chip-fg:#F2EDE2"><span class="cs-no">05 / 06</span><span class="cs-cn">盘王大歌</span><span class="cs-en">Panwang Da Ge</span></a>
+      <a class="" href="07-富川织锦.html" style="--chip:#1E2B26;--chip-fg:#F2EDE2"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Fuchuan Brocade</span></a>
+    </nav>
+    <div class="foot-meta">
+      <p>本站收录潇贺古道沿线六项文化遗产。图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示。<br><a href="01-潇贺古道.html">总述 · 潇贺古道</a> /
+      <a href="08-上灯炸龙.html">附 · 上灯炸龙</a> /
+      <a href="../database.html#/archive">文化档案</a></p>
+      <p class="foot-credit">潇贺古道有声文化数据库<br>贺州学院视觉传达设计 / 2026</p>
+    </div>
   </div>
 </footer>
+<script src="../assets/audio-player.js" defer></script>
+<script src="assets/motifs.js" defer></script>
+<script src="experience.js" defer></script>
+<script src="assets/nushu-dict.js" defer></script>
+<script src="assets/nushu-curtain.js" defer></script>
 </body>
 </html>

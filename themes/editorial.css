@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    专题页 · 与首页章节同一套语言
    ------------------------------------------------------------
    首页章节：整屏色块 / 巨字 / 元信息 / 事实栏 / 细线；专题页沿用，
@@ -330,3 +330,54 @@ table.src code{font-size:11px;color:var(--ink-soft)}
 @media (max-width:980px){
   .nav .nav-links{display:none}
 }
+
+/* 2026-10-24 · 主题图版：竖向滚动换图 */
+.hero--gallery{
+  display:block;min-height:0;height:calc(100vh + (var(--gallery-n,3) - 1) * 70vh);
+  overflow:visible;padding:0;
+}
+.hero--gallery .hero-inner{
+  position:sticky;top:0;min-height:100vh;align-items:center;
+  padding-top:clamp(86px,12vh,128px);padding-bottom:clamp(36px,6vh,72px);
+}
+.hero--gallery .hero-figure{align-self:center}
+.plate-gallery .plate-frame{background:var(--ink)}
+.plate-stack{position:absolute;inset:0;display:flex;flex-direction:column;will-change:transform}
+.plate-stack img{
+  flex:0 0 100%;width:100%;height:100%;object-fit:cover;display:block;
+  filter:saturate(.88) contrast(1.03);
+}
+.plate-shade{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.34),transparent 18%,transparent 80%,rgba(0,0,0,.42));
+}
+.plate-gallery .plate-state{font-variant-numeric:tabular-nums;letter-spacing:.14em}
+.plate-gallery .plate-kicker,
+.plate-gallery .plate-state,
+.plate-gallery .plate-cap,
+.plate-gallery .plate-cap b,
+.plate-gallery .plate-cap span{color:var(--on)}
+.plate-gallery .plate-cap{opacity:.9}
+.plate-progress{
+  position:absolute;left:15px;right:15px;bottom:12px;height:1px;z-index:2;
+  background:color-mix(in srgb,currentColor 22%,transparent);
+}
+.plate-progress i{
+  display:block;height:100%;background:currentColor;opacity:.8;
+  transform:scaleX(var(--p,0));transform-origin:0 50%;
+}
+.plate-gallery .plate-note{display:none}
+
+/* 移动端 / 减弱动态：不吸顶，三张图静态竖排 */
+.hero--static{display:block;height:auto;min-height:0;padding:44px 0;overflow:visible}
+.hero--static .hero-inner{position:static;min-height:0;padding-top:0;padding-bottom:0}
+.plate-gallery--static .plate-frame{aspect-ratio:auto;overflow:visible;border:0;background:none}
+.plate-gallery--static .plate-stack{position:static;display:grid;gap:10px}
+.plate-gallery--static .plate-stack img{height:auto;aspect-ratio:4/3;flex:none}
+.plate-gallery--static .plate-kicker,
+.plate-gallery--static .plate-state,
+.plate-gallery--static .plate-progress,
+.plate-gallery--static .plate-shade{display:none}
+.plate-gallery--static .plate-frame::before,
+.plate-gallery--static .plate-frame::after{display:none}
+

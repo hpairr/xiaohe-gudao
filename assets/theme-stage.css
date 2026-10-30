@@ -1,0 +1,205 @@
+.theme-stage{overflow-anchor:none}
+/* ==========================================================================
+   六章：连续滚轮舞台
+   ========================================================================== */
+.theme-stage{
+  position:relative;height:1400vh;
+  background:var(--paper);color:var(--ink);
+}
+.stage-pin{
+  position:sticky;top:0;height:100vh;height:100svh;
+  overflow:hidden;isolation:isolate;
+  background:var(--paper);
+}
+.stage-bg{
+  position:absolute;inset:0;z-index:0;overflow:hidden;
+  background:var(--stage-bg,var(--paper));color:var(--stage-fg,var(--ink));
+  transition:none;
+}
+.stage-bg-next{z-index:1;background:transparent}
+/* 擦除用"圆形容器缩放 + 内部反向缩放"：只动 transform，不再重画背景 */
+.stage-bg-circle{
+  position:absolute;border-radius:50%;overflow:hidden;visibility:hidden;
+  transform-origin:50% 50%;will-change:transform;pointer-events:none;
+}
+.stage-bg-inner{
+  position:absolute;transform-origin:0 0;will-change:transform;
+  background:var(--stage-bg,var(--paper));
+}
+.stage-bg-word{
+  position:absolute;right:-4vw;top:4vh;
+  font-family:var(--f-brush);font-size:clamp(180px,29vw,500px);
+  line-height:.82;letter-spacing:-.03em;white-space:nowrap;
+  color:var(--stage-fg,currentColor);opacity:.085;
+  pointer-events:none;user-select:none;
+}
+.stage-bg-svg{
+  position:absolute;right:-7vw;bottom:-12vh;width:min(56vw,760px);
+  color:var(--stage-accent,currentColor);opacity:.16;
+  pointer-events:none;
+}
+.stage-bg-svg svg{display:block;width:100%;height:auto}
+
+.stage-images{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none}
+/* 整组图片靠 opacity 交接（visibility 延迟到淡出结束），避免整组硬切 */
+.stage-image-track{position:absolute;inset:0}
+.stage-image-set{
+  position:absolute;inset:0;opacity:0;visibility:hidden;
+  transition:opacity .52s ease,visibility 0s linear .52s;
+}
+.stage-image-set.is-visible{
+  opacity:1;visibility:visible;
+  transition:opacity .52s ease,visibility 0s;
+}
+.stage-image{
+  position:absolute;left:0;top:38%;z-index:1;
+  width:clamp(180px,22vw,360px);aspect-ratio:4/3;
+  overflow:hidden;background:var(--paper);transform-origin:50% 50%;
+  box-shadow:0 16px 40px rgba(8,12,10,.18),0 3px 12px rgba(8,12,10,.1);
+  opacity:0;backface-visibility:hidden;
+  /* 缓动在 theme-stage.js 里用阻尼做：这里不能开 transition，
+     否则每帧写新值都会重启过渡，反而卡顿 */
+  transition:none;
+}
+/* 只有当前可见的那一组升合成层：24 张卡片全部 will-change 会吃显存 */
+.stage-image.is-live{will-change:transform}
+.stage-image img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* 圆形擦除的硬切边：主轨只显示圆外，内层只显示圆内。
+   半径/圆心由 theme-stage.js 每帧写成 --wipe-x / --wipe-y / --wipe-r。 */
+.stage-image-incoming{
+  position:absolute;inset:0;z-index:1;display:none;pointer-events:none;
+}
+.stage-image-track.is-wiping{
+  -webkit-mask-image:radial-gradient(circle var(--wipe-r) at var(--wipe-x) var(--wipe-y),transparent 0,transparent calc(var(--wipe-r) - 1px),#000 calc(var(--wipe-r) - 1px));
+  mask-image:radial-gradient(circle var(--wipe-r) at var(--wipe-x) var(--wipe-y),transparent 0,transparent calc(var(--wipe-r) - 1px),#000 calc(var(--wipe-r) - 1px));
+}
+.stage-image-incoming.is-wiping{
+  -webkit-mask-image:radial-gradient(circle var(--wipe-r) at var(--wipe-x) var(--wipe-y),#000 0,#000 calc(var(--wipe-r) - 1px),transparent calc(var(--wipe-r) - 1px));
+  mask-image:radial-gradient(circle var(--wipe-r) at var(--wipe-x) var(--wipe-y),#000 0,#000 calc(var(--wipe-r) - 1px),transparent calc(var(--wipe-r) - 1px));
+}
+
+.stage-title{
+  position:absolute;left:var(--pad);right:var(--pad);top:clamp(150px,23vh,240px);
+  z-index:140;pointer-events:none;color:var(--ink);
+}
+.stage-title-text{
+  transition:color .45s linear;
+  position:absolute;top:0;left:0;right:auto;width:max-content;
+  font-family:var(--f-serif);font-weight:700;
+  font-size:clamp(80px,12.5vw,220px);line-height:.82;letter-spacing:-.025em;
+  white-space:nowrap;text-shadow:0 1px 0 rgba(0,0,0,.04);
+  will-change:transform,translate,opacity;
+}
+
+
+
+.stage-copy{
+  transition:color .45s linear;
+  position:absolute;inset:0;z-index:150;
+  opacity:0;visibility:hidden;pointer-events:none;
+  will-change:opacity;
+}
+.stage-copy.is-active{visibility:visible}
+.stage-copy-top{
+  position:absolute;left:var(--pad);right:var(--pad);top:clamp(84px,11vh,128px);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:20px;
+  font:8px/1.55 var(--f-en);letter-spacing:.16em;text-transform:uppercase;
+  color:currentColor;opacity:.64;
+}
+.stage-copy-top span:nth-child(2){text-align:center}
+.stage-copy-top span:last-child{text-align:right}
+.stage-copy-body{
+  position:absolute;left:var(--pad);bottom:clamp(26px,5vh,52px);
+  width:min(46vw,620px);color:currentColor;
+}
+.stage-lede{
+  max-width:32em;margin:0;
+  font:500 clamp(13px,1.04vw,16px)/1.9 var(--f-serif);
+  letter-spacing:.02em;color:currentColor;opacity:.86;
+}
+.stage-audio{
+  width:100%;max-width:580px;margin-top:clamp(14px,2.2vh,22px);
+  color:currentColor;pointer-events:auto;
+}
+.stage-audio .audio-player__wave{height:30px}
+.stage-audio .audio-player__head b{font-size:13px}
+.stage-audio .audio-player__head span{font-size:8px}
+.stage-audio .audio-player__credit{display:none}
+.stage-audio .audio-player__time{display:none}
+.stage-more{
+  position:absolute;right:var(--pad);bottom:clamp(26px,5vh,52px);
+  display:inline-flex;align-items:center;gap:12px;
+  padding:12px 18px 11px;border:1px solid color-mix(in srgb,currentColor 46%,transparent);
+  font:500 11px/1 var(--f-sans);letter-spacing:.18em;
+  color:currentColor;background:transparent;text-decoration:none;
+  pointer-events:auto;transition:background-color .22s ease,color .22s ease,border-color .22s ease;
+}
+.stage-more span{padding-top:1px}
+.stage-more i{
+  font-style:normal;font-family:var(--f-en);font-size:13px;line-height:1;
+  transition:transform .22s ease;
+}
+.stage-more:hover{
+  background:var(--stage-fg,#F2EDE2);color:var(--stage-bg,#141A16);
+  border-color:var(--stage-fg,#F2EDE2);
+}
+.stage-more:hover i{transform:translate(2px,-2px)}
+.stage-more:focus-visible{outline:1px solid currentColor;outline-offset:3px}
+
+.stage-anchor{
+  position:absolute;left:0;z-index:0;width:1px;height:1px;
+  top:calc(var(--i, 0) * 216.667vh);
+}
+
+@media (max-width:1100px){
+  .stage-title-text{font-size:clamp(72px,12vw,166px)}
+  .stage-copy-body{width:min(52vw,540px)}
+}
+@media (max-width:860px){
+  .stage-bg-word{font-size:clamp(120px,38vw,290px);right:-12vw;top:8vh}
+  .stage-bg-svg{width:82vw;right:-24vw;bottom:-3vh;opacity:.12}
+  .stage-title{
+    left:clamp(16px,5vw,24px);right:clamp(16px,5vw,24px);
+    top:clamp(120px,17vh,170px);
+  }
+  .stage-title-text{font-size:clamp(54px,17vw,104px)}
+  .stage-copy-top{
+    left:clamp(16px,5vw,24px);right:clamp(16px,5vw,24px);
+    top:clamp(76px,9.5vh,100px);gap:8px;font-size:6.8px;letter-spacing:.1em;
+  }
+  .stage-copy-top span:nth-child(2){text-align:right}
+  .stage-copy-top span:last-child{display:none}
+  .stage-copy-body{
+    left:clamp(16px,5vw,24px);right:calc(clamp(16px,5vw,24px) + 118px);
+    bottom:clamp(18px,3.2vh,28px);width:auto;
+  }
+  .stage-lede{font-size:12.5px;line-height:1.7;max-width:none}
+  .stage-audio{margin-top:10px}
+  .stage-more{
+    right:clamp(16px,5vw,24px);bottom:clamp(18px,3.2vh,28px);
+    padding:9px 12px;font-size:9.5px;gap:7px;
+  }
+  .stage-audio .audio-player__toggle{width:40px;height:40px}
+  .stage-audio .audio-player__head b{font-size:12px}
+  .stage-audio .audio-player__head span{font-size:7px}
+  .stage-audio .audio-player__wave{height:24px}
+  .stage-image{width:44vw;max-width:240px}
+}
+@media (prefers-reduced-motion:reduce){
+  .stage-bg-next{transition:none!important}
+  .stage-image-set,.stage-image,.stage-title,.stage-copy{transition:none!important}
+}
+
+/* 诊断：?stage-lite 关掉投影与图层提升，用来判断卡顿是否来自合成/栅格 */
+html.stage-lite .stage-image{box-shadow:none!important;will-change:auto!important}
+
+/* 二分法：?off=imgshadow 去掉图片投影，用来验证投影是否拖垮栅格化 */
+html.off-img-shadow .stage-image{box-shadow:none!important}
+
+/* 当前背景层：平铺内层，不带圆形容器（否则大字/线稿会被藏掉） */
+.stage-bg-inner--plain{position:absolute;inset:0;width:auto!important;height:auto!important;transform:none!important}
+
+/* 只有当前稳定主题的「进入专题」可点；切换过程中整组按钮隐藏 */
+#stageCopies.is-transitioning .stage-more,
+.stage-copy:not(.is-active) .stage-more{opacity:0;pointer-events:none;visibility:hidden}

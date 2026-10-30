@@ -1,0 +1,432 @@
+/* ==========================================================================
+   长鼓舞 · 基础教学台（04-长鼓舞.html 专用）
+   --------------------------------------------------------------------------
+   教学片是母版，二十一个动作是刻度：左边一块屏，右边三列动作表。
+   点动作 → 视频跳到该秒；播放 → 当前动作、所在组、刻度同步亮起。
+   颜色只取页面 :root（--surface / --on / --accent / --line），不另造色。
+   无 JS 时：动作表与时间码照常可读，视频保留封面图（渐进增强）。
+   ========================================================================== */
+
+.bs-section{
+  position:relative;
+  scroll-margin-top:92px;
+  padding:clamp(66px,9.5vh,118px) 0 clamp(60px,8.5vh,96px);
+  background:var(--surface);
+  color:var(--on);
+  border-top:1px solid var(--line-soft);
+}
+
+.bs-lede{
+  max-width:48em;
+  margin:clamp(16px,2.4vh,24px) 0 clamp(24px,3.4vh,36px);
+  font-size:clamp(14.5px,1.05vw,17px);
+  line-height:1.95;
+  opacity:.94;
+  text-wrap:pretty;
+}
+
+/* --------------------------------------------------------------------------
+   讲台：屏 + 动作表
+   -------------------------------------------------------------------------- */
+.bs-console{
+  display:grid;
+  grid-template-columns:minmax(0,1.62fr) minmax(0,1fr);
+  gap:clamp(22px,2.6vw,42px);
+  align-items:start;
+}
+
+.bs-screen{position:relative;min-width:0}
+
+/* 影片 */
+.bs-film{
+  position:relative;
+  margin:0;
+  background:#0A0E0C;
+  border:1px solid color-mix(in srgb,var(--on) 52%,transparent);
+}
+
+.bs-video{
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:16 / 9;
+  background:#0A0E0C;
+  object-fit:contain;
+  vertical-align:top;
+}
+
+.bs-vfallback{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background:rgba(10,14,12,.94);
+  color:var(--surface);
+  text-align:center;
+  font-size:12.5px;
+  line-height:1.9;
+}
+.bs-vfallback[hidden]{display:none}
+.bs-vfallback a{
+  color:var(--surface);
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+/* 图注 */
+.bs-cap{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:4px 18px;
+  margin:10px 0 0;
+  font-size:9.5px;
+  line-height:1.7;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  opacity:.74;
+}
+.bs-cap span:last-child{
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+
+/* 刻度尺：二十一格，按动作起点分布 */
+.bs-tape{
+  position:relative;
+  height:52px;
+  margin-top:18px;
+}
+
+.bs-zone{
+  position:absolute;
+  top:0;
+  bottom:0;
+}
+.bs-zone::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:18px;
+  bottom:0;
+  width:1px;
+  background:var(--line);
+}
+.bs-zone b{
+  position:absolute;
+  left:6px;
+  top:0;
+  font:500 9px/1.4 var(--sans);
+  letter-spacing:.16em;
+  white-space:nowrap;
+  opacity:.74;
+  transition:opacity .25s ease,color .25s ease;
+}
+.bs-zone[data-on="true"] b{
+  opacity:1;
+  color:var(--accent);
+}
+
+.bs-tape::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:1px;
+  background:var(--line);
+}
+
+.bs-tick{
+  position:absolute;
+  bottom:0;
+  width:1px;
+  height:9px;
+  background:color-mix(in srgb,var(--on) 55%,transparent);
+  transition:height .28s var(--ease),background .2s ease;
+}
+.bs-tick[data-passed="true"]{
+  height:13px;
+  background:color-mix(in srgb,var(--on) 78%,transparent);
+}
+.bs-tick[data-on="true"]{
+  width:2px;
+  height:20px;
+  background:var(--accent);
+}
+
+.bs-fill{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:2px;
+  background:var(--accent);
+  transform:scaleX(var(--bs-p,0));
+  transform-origin:0 50%;
+  pointer-events:none;
+}
+
+.bs-play{
+  position:absolute;
+  top:18px;
+  bottom:0;
+  width:1px;
+  left:calc(var(--bs-p,0) * 100%);
+  background:var(--on);
+  opacity:.5;
+  pointer-events:none;
+}
+
+/* 当前动作读数 */
+.bs-now{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  align-content:flex-start;
+  gap:3px 12px;
+  min-height:92px;
+  margin:18px 0 0;
+  padding-top:13px;
+  border-top:1px solid var(--line);
+}
+
+.bs-now-no{
+  font-size:9.5px;
+  letter-spacing:.14em;
+  line-height:1.6;
+  opacity:.72;
+  font-variant-numeric:tabular-nums;
+}
+
+.bs-now-name{
+  font-family:var(--serif);
+  font-size:clamp(24px,2.2vw,34px);
+  font-weight:700;
+  line-height:1.12;
+  letter-spacing:.02em;
+}
+
+.bs-now-time{
+  font-size:11px;
+  letter-spacing:.08em;
+  line-height:1.6;
+  font-variant-numeric:tabular-nums;
+  color:var(--accent);
+}
+
+.bs-now-group{
+  margin-inline-start:auto;
+  font-size:9.5px;
+  letter-spacing:.13em;
+  line-height:1.6;
+  text-transform:uppercase;
+  opacity:.74;
+  text-align:right;
+}
+
+.bs-now-tip{
+  flex-basis:100%;
+  margin:2px 0 0;
+  max-width:46em;
+  font-size:clamp(12.5px,.95vw,14.5px);
+  line-height:1.85;
+  opacity:.86;
+  text-wrap:pretty;
+}
+
+/* --------------------------------------------------------------------------
+   动作表：三组三列，时间在上、名字在下
+   -------------------------------------------------------------------------- */
+.bs-index{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(8px,1vw,16px);
+  align-items:start;
+  min-width:0;
+}
+
+.bs-group{min-width:0}
+
+.bs-group-head{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:1px 7px;
+  margin:0 0 7px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+.bs-gno{
+  font-size:9px;
+  letter-spacing:.1em;
+  line-height:1.6;
+  color:var(--accent);
+}
+.bs-group-head b{
+  font-family:var(--serif);
+  font-size:clamp(14px,1.12vw,16.5px);
+  font-weight:700;
+  line-height:1.3;
+  letter-spacing:.02em;
+  white-space:nowrap;
+}
+.bs-group[data-on="true"] .bs-group-head b{color:var(--accent)}
+.bs-group-head b{transition:color .25s ease}
+
+.bs-gmeta{
+  flex-basis:100%;
+  font-size:8.5px;
+  line-height:1.6;
+  letter-spacing:.04em;
+  opacity:.74;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+
+.bs-rows{display:grid}
+
+.bs-row{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+  min-height:42px;
+  padding:6px 6px 7px;
+  border:0;
+  border-top:1px solid color-mix(in srgb,var(--on) 13%,transparent);
+  background:transparent;
+  color:inherit;
+  text-align:start;
+  cursor:pointer;
+  transition:background .22s ease,color .22s ease;
+}
+.bs-row:hover{background:color-mix(in srgb,var(--on) 7%,transparent)}
+.bs-row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.bs-row[aria-current="true"]{
+  background:var(--on);
+  color:var(--surface);
+}
+
+.bs-row-time{
+  font-size:8.5px;
+  line-height:1.5;
+  letter-spacing:.08em;
+  opacity:.74;
+  font-variant-numeric:tabular-nums;
+}
+
+.bs-row-name{
+  font-family:var(--serif);
+  font-size:clamp(12.5px,.96vw,14.5px);
+  font-weight:700;
+  line-height:1.3;
+  letter-spacing:.01em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.bs-row[aria-current="true"] .bs-row-time{opacity:.8}
+
+/* --------------------------------------------------------------------------
+   结论、数字与出处
+   -------------------------------------------------------------------------- */
+.bs-punch{
+  max-width:44em;
+  margin:clamp(26px,3.6vh,40px) 0 0;
+  padding-top:clamp(16px,2.2vh,22px);
+  border-top:1px solid var(--line);
+  font-family:var(--serif);
+  font-size:clamp(16px,1.35vw,21px);
+  line-height:1.85;
+  text-wrap:pretty;
+}
+.bs-punch b{font-weight:700}
+
+.bs-facts{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:1px;
+  margin-top:clamp(22px,3vh,32px);
+  border:1px solid var(--line);
+  background:var(--line);
+}
+.bs-fact{
+  background:var(--surface);
+  padding:clamp(12px,1.3vw,18px) clamp(13px,1.4vw,20px);
+}
+.bs-fact b{
+  display:block;
+  font-family:var(--serif);
+  font-size:clamp(20px,1.9vw,28px);
+  line-height:1.2;
+  letter-spacing:.02em;
+}
+.bs-fact span{
+  display:block;
+  margin-top:6px;
+  font-size:9.5px;
+  line-height:1.6;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  opacity:.74;
+}
+
+.bs-foot{
+  max-width:56em;
+  margin-top:clamp(22px,3vh,32px);
+  padding-top:12px;
+  border-top:1px solid var(--line-soft);
+  font-size:11.5px;
+  line-height:1.9;
+  opacity:.8;
+  text-wrap:pretty;
+}
+.bs-foot a{
+  text-decoration:underline;
+  text-underline-offset:3px;
+  text-decoration-thickness:1px;
+}
+.bs-foot code{
+  font-size:10.5px;
+  white-space:nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   响应式
+   -------------------------------------------------------------------------- */
+@media (max-width:1279px){
+  .bs-console{grid-template-columns:minmax(0,1fr)}
+  .bs-now{min-height:0}
+}
+
+@media (max-width:760px){
+  .bs-section{
+    padding-top:58px;
+    padding-bottom:58px;
+  }
+  .bs-lede{margin-bottom:20px}
+  .bs-index{gap:9px}
+  .bs-group-head{gap:1px 5px}
+  .bs-group-head b{font-size:14px;letter-spacing:0}
+  .bs-gmeta{font-size:8px;letter-spacing:0}
+  .bs-row{padding:6px 4px 7px;min-height:44px}
+  .bs-row-time{font-size:8px}
+  .bs-row-name{font-size:13px;letter-spacing:0}
+  .bs-cap{font-size:9px;letter-spacing:.06em}
+  .bs-now-name{font-size:clamp(22px,6.4vw,28px)}
+  .bs-now-group{margin-inline-start:0;text-align:left}
+  .bs-now-tip{font-size:12.5px;line-height:1.8}
+  .bs-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bs-tape{height:42px}
+  .bs-zone b{font-size:8px;letter-spacing:.1em}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .bs-row,
+  .bs-tick,
+  .bs-zone b{transition:none!important}
+}

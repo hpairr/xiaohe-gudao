@@ -114,8 +114,8 @@
       ' role="img" aria-label="八角花主题纹样"' + style + '>' +
       (dark ? '<rect width="160" height="160" fill="' + COL.night + '"/>' : '') +
       '<g fill="none" stroke-linejoin="round">' +
-      '<path d="' + FRAME_D + '" stroke="' + (dark ? COL.gold : COL.ink) + '" stroke-width="2.1"/>' +
-      '<g transform="translate(80 80) scale(' + fx(scale) + ') translate(-80 -80)" ' +
+      '<path class="motif-frame" d="' + FRAME_D + '" stroke="' + (dark ? COL.gold : COL.ink) + '" stroke-width="2.1"/>' +
+      '<g class="motif-core" transform="translate(80 80) scale(' + fx(scale) + ') translate(-80 -80)" ' +
       'stroke-linecap="round">' + coreSvg + '</g>' +
       '</g></svg>';
   }
@@ -304,6 +304,41 @@
     return { svg: g.join(''), fit: 60.3 };
   }
 
+  /* 5b 富川织锦 · 经纬带 + 菱形显花 + 阶梯折线 —— 辨识焦点：织纹结构 */
+  function coreBrocade() {
+    var g = [];
+    for (var row = 0; row < 4; row++) {
+      var y = C - 33 + row * 22;
+      g.push(path('weft', 'M ' + (C - 48) + ' ' + y + ' L ' + (C + 48) + ' ' + y,
+        COL.gold, 1.2, 'stroke-dasharray="2 4"'));
+      g.push(path('weft', 'M ' + (C - 48) + ' ' + (y + 12) + ' L ' + (C + 48) + ' ' + (y + 12),
+        COL.inkSoft, 1.2, 'stroke-dasharray="2 4"'));
+      for (var col = 0; col < 5; col++) {
+        var x = C - 40 + col * 20;
+        g.push(path('lozenge', 'M ' + x + ' ' + (y + 1) + ' L ' + (x + 7) + ' ' + (y + 6) +
+          ' L ' + x + ' ' + (y + 11) + ' L ' + (x - 7) + ' ' + (y + 6) + ' Z',
+          col % 2 ? COL.qun : COL.cinnabar, 1.8));
+        g.push(path('stitch', 'M ' + x + ' ' + (y + 4) + ' L ' + x + ' ' + (y + 8),
+          COL.paper, 1, 'opacity=".68"'));
+      }
+      if (row < 3) {
+        var y2 = y + 18;
+        g.push(path('step', 'M ' + (C - 42) + ' ' + y2 + ' L ' + (C - 30) + ' ' + y2 +
+          ' L ' + (C - 30) + ' ' + (y2 + 4) + ' L ' + (C - 18) + ' ' + (y2 + 4) +
+          ' L ' + (C - 18) + ' ' + y2 + ' L ' + C + ' ' + y2,
+          COL.inkSoft, 1.3));
+        g.push(path('step', 'M ' + C + ' ' + y2 + ' L ' + (C + 12) + ' ' + y2 +
+          ' L ' + (C + 12) + ' ' + (y2 + 4) + ' L ' + (C + 24) + ' ' + (y2 + 4) +
+          ' L ' + (C + 24) + ' ' + y2 + ' L ' + (C + 42) + ' ' + y2,
+          COL.inkSoft, 1.3));
+      }
+    }
+    g.push('<polygon points="' + oct(17) + '" fill="none" stroke="' + COL.gold + '" stroke-width="1.7"/>');
+    g.push('<rect x="' + (C - 4) + '" y="' + (C - 4) + '" width="8" height="8" fill="' + COL.cinnabar +
+      '" transform="rotate(45 ' + C + ' ' + C + ')"/>');
+    return { svg: g.join(''), fit: 60 };
+  }
+
   /* 6 上灯炸龙 · 八角灯 + 光点龙 + 放射火花 —— 辨识焦点：光点 > 灯 */
   function coreDragon() {
     var g = [], hub = [C, C - 4];
@@ -362,7 +397,8 @@
 
   var CORES = {
     road: coreRoad, nushu: coreNushu, butterfly: coreButterfly,
-    drum: coreDrum, bridge: coreBridge, dragon: coreDragon, panwang: corePanwang
+    drum: coreDrum, bridge: coreBridge, brocade: coreBrocade,
+    dragon: coreDragon, panwang: corePanwang
   };
 
   function motif(key, attrs) {

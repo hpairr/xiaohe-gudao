@@ -1,11 +1,24 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN" class="no-js">
 <head>
 <meta charset="utf-8">
+<script>
+(function(){
+  var force=false,local=false,seen=false;
+  try{
+    force=new URLSearchParams(location.search).get('intro')==='1';
+    local=location.protocol==='file:'&&!force;
+  }catch(e){}
+  try{
+    seen=window.name.indexOf('xiaohe:intro-seen')!==-1||localStorage.getItem('xiaohe:intro-seen:v1')==='1'||sessionStorage.getItem('xiaohe:intro-seen:v1')==='1';
+  }catch(e){}
+  if((seen||local)&&!force)document.documentElement.classList.add('skip-intro');
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>潇贺古道有声文化数据库 | Xiaohe Ancient Road Audio Heritage Database</title>
-<meta name="description" content="潇贺古道北起湖南道县潇水，南抵广西贺州贺江。本站收录古道沿线的文化档案、声音与影像记录、古道图志，以及女书、蝴蝶歌、长鼓舞、风雨桥、盘王大歌、富川瑶族织锦六项文化遗产。">
-<meta name="keywords" content="潇贺古道,有声文化数据库,女书,蝴蝶歌,长鼓舞,风雨桥,盘王大歌,富川瑶族织锦,上灯炸龙,贺州,富川,江永">
+<meta name="description" content="潇贺古道北起湖南道县潇水，南抵广西贺州贺江。本站收录古道沿线的文化档案、声音与影像记录、古道图志，以及女书、蝴蝶歌、长鼓舞、富川风雨桥、盘王大歌、瑶族织锦六项文化遗产。">
+<meta name="keywords" content="潇贺古道,有声文化数据库,女书,蝴蝶歌,长鼓舞,富川风雨桥,风雨桥,盘王大歌,瑶族织锦,富川瑶族织锦,上灯炸龙,贺州,富川,江永">
 <meta name="author" content="潇贺古道有声文化数据库可视化界面设计">
 <link rel="canonical" href="https://hpairr.github.io/xiaohe-gudao/">
 <meta property="og:type" content="website">
@@ -21,7 +34,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0E0C">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23B63A33'/%3E%3Cpath d='M14 44c8-2 8-20 16-20s8 16 16 14' fill='none' stroke='%23F2EDE2' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="preload" as="image" href="assets/img/hero.webp" type="image/webp">
+<link rel="preload" as="image" href="assets/img/hero-road.webp" type="image/webp" fetchpriority="high">
 <style>
 /* ============================================================
    潇贺古道 · 古道滚动剧场
@@ -77,15 +90,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .svg-defs{position:absolute;width:0;height:0;overflow:hidden}
 
-/* ---------- 颗粒 / 光标 / 进度 ---------- */
-.grain{
-  position:fixed;inset:0;z-index:85;pointer-events:none;opacity:.035;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-  background-size:180px 180px;
-}
-.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:78;pointer-events:none}
-.progress i{display:block;height:100%;background:var(--cinnabar);transform-origin:0 50%;transform:scaleX(var(--scroll,0))}
-
+/* ---------- 光标 / 进度 ---------- */
 .cursor{position:fixed;top:0;left:0;z-index:130;pointer-events:none;display:none;mix-blend-mode:difference;color:#fff}
 .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;transform:translate3d(-50%,-50%,0)}
 .cursor-dot{width:5px;height:5px;background:currentColor}
@@ -101,6 +106,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .loader{position:fixed;inset:0;z-index:220;pointer-events:none;display:none}
 html.js .loader{display:block}
 html.no-js body.is-loading{overflow:auto}
+html.skip-intro .loader{display:none!important}
+html.skip-intro body.is-loading{overflow:auto}
 .loader-panel{position:absolute;left:0;width:100%;height:50.2%;background:var(--ink-2);transition:transform 1.05s var(--ease-io)}
 .loader-panel.top{top:0;border-bottom:1px solid rgba(242,237,226,.08)}
 .loader-panel.bottom{bottom:0}
@@ -123,7 +130,10 @@ body.skip-loader .loader{display:none}
   display:flex;align-items:center;gap:clamp(14px,2vw,34px);
   padding:22px var(--pad);
   color:var(--nav-fg,#F2EDE2);
-  transition:color .25s ease;
+  /* 首屏把蒙版推进来时顶栏先退场：那一段底子是"照片 + 雾"，
+     浅字深字都不稳；等纸面落定再回来。--nav-op 由 setHero 驱动。 */
+  opacity:var(--nav-op,1);
+  transition:color .25s ease,opacity .38s ease;
 }
 .topbar[data-tone="dark"]{--nav-fg:#141A16}
 .brand{display:flex;align-items:center;gap:12px;flex:none}
@@ -146,34 +156,14 @@ body.skip-loader .loader{display:none}
 .top-year{font:10px/1 var(--f-en);letter-spacing:.2em;opacity:.55;margin-left:6px}
 .menu-btn{display:none;margin-left:auto;font:11px/1 var(--f-en);letter-spacing:.18em;border:1px solid currentColor;padding:9px 12px}
 
-/* ---------- 右侧场景索引 ---------- */
-.scene-nav{
-  position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:70;
-  display:flex;flex-direction:column;gap:10px;mix-blend-mode:difference;color:#F2EDE2;
-  font:9px/1 var(--f-en);letter-spacing:.14em;
-}
-.scene-nav a{display:flex;align-items:center;justify-content:flex-end;gap:8px;opacity:.46;transition:opacity .3s}
-.scene-nav a i{display:block;width:16px;height:1px;background:currentColor;transition:width .35s var(--ease)}
-.scene-nav a span{width:18px;text-align:right}
-.scene-nav a:hover,.scene-nav a.active{opacity:1}
-.scene-nav a.active i{width:30px}
-
 /* ---------- 首屏 ---------- */
-/* 200vh：一屏用来收缩/字条/书写，一屏用来退场。原来是 350vh，
+/* 200vh：一屏用来收缩/标题/书写，一屏用来退场。原来是 350vh，
    要滚 2.5 屏页面才开始往下走，体感像卡住。 */
 .hero{position:relative;height:200vh;background:var(--ink-2)}
 .hero-pin{
   position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;
   background:
     radial-gradient(120% 90% at 50% 42%,#18231D 0%,#0D1310 55%,#070A08 100%);
-}
-.hero-pin::before{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background-image:url('assets/patterns/stone.svg');background-size:330px;
-  opacity:.04;
-}
-.hero-bgline{position:absolute;inset:0;z-index:0;opacity:.16;pointer-events:none;
-  background-image:repeating-linear-gradient(90deg,transparent 0 calc(8.333vw - 1px),rgba(242,237,226,.16) calc(8.333vw - 1px) 8.333vw);
 }
 .hero-card{
   position:absolute;inset:0;margin:0;z-index:2;overflow:hidden;
@@ -201,7 +191,6 @@ body.skip-loader .loader{display:none}
 }
 @keyframes kenburns{from{transform:scale(1.045) translate3d(0,0,0)}to{transform:scale(1.085) translate3d(-.6%,-.5%,0)}}
 .hero.is-out .hero-card img{animation-play-state:paused}
-.hero.is-out .band-track{animation-play-state:paused}
 .hero-card::after{
   content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
   background:
@@ -216,56 +205,13 @@ body.skip-loader .loader{display:none}
   text-shadow:0 1px 10px rgba(0,0,0,.72);
 }
 .hero-caption b{font-family:var(--f-serif);font-size:13px;font-weight:500;letter-spacing:.12em}
-.hero-caption i{display:block;width:22px;height:1px;background:currentColor;opacity:.6}
 
-/* 双向字条：无底色，字本身走色 */
-.bands{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
-.band{
-  position:absolute;left:-9vw;width:118vw;display:flex;align-items:center;overflow:hidden;
-  opacity:var(--band,0);will-change:transform;
-}
-.band-a{top:14.5%;transform:translate3d(calc((1 - var(--band,0)) * -38vw),0,0) rotate(-3.1deg)}
-.band-b{top:73.5%;transform:translate3d(calc((1 - var(--band,0)) * 38vw),0,0) rotate(2.4deg)}
-.band-c{display:none}
-.band-track{display:flex;width:max-content;will-change:transform;animation:marquee 36s linear infinite}
-.band-b .band-track{animation-direction:reverse;animation-duration:42s}
 @keyframes marquee{to{transform:translate3d(-50%,0,0)}}
-.band-seq{display:flex;align-items:center;gap:2.2vw;padding-right:2.2vw;white-space:nowrap}
-.band-a .band-seq{
-  font-family:var(--f-serif);font-weight:700;font-size:clamp(26px,5.3vh,56px);
-  letter-spacing:.04em;line-height:1.06;
-  background-image:linear-gradient(90deg,#F2EDE2 0%,#F2EDE2 28%,#E7B95E 34%,#F2EDE2 40%,#F2EDE2 60%,#D9695B 66%,#F2EDE2 72%,#F2EDE2 88%,#8FC9B7 93%,#F2EDE2 100%);
-  background-size:260% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  color:transparent;-webkit-text-fill-color:transparent;
-}
-.band-b .band-seq{
-  font:500 clamp(15px,3.2vh,33px)/1.15 var(--f-en);letter-spacing:.09em;text-transform:uppercase;
-  -webkit-text-stroke:1px rgba(242,237,226,.68);
-  background-image:linear-gradient(90deg,rgba(242,237,226,.96) 0%,rgba(242,237,226,.96) 30%,#E7B95E 36%,rgba(242,237,226,.96) 42%,rgba(242,237,226,.96) 62%,#D9695B 68%,rgba(242,237,226,.96) 74%,rgba(242,237,226,.96) 100%);
-  background-size:280% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  color:transparent;-webkit-text-fill-color:transparent;
-}
-.band-seq em{font-style:normal;color:rgba(242,237,226,.55);font-size:.42em;transform:translateY(-.12em)}
-.band-a .band-seq em{color:rgba(210,160,63,.8)}
-.band-b .band-seq em{color:rgba(242,237,226,.38)}
-.band-seq .tiny{font-family:var(--f-en);font-size:.25em;letter-spacing:.16em;opacity:.55;transform:translateY(.08em)}
 
 /* 首屏标题 */
 .hero-title{
   position:absolute;z-index:4;left:50%;top:47%;transform:translate(-50%,-50%);
   width:min(96vw,1600px);text-align:center;pointer-events:none;color:var(--paper);
-}
-.hero-title::before{
-  content:"";display:block;width:min(460px,44vw);height:1px;margin:0 auto clamp(12px,2vh,24px);
-  background:linear-gradient(90deg,transparent,rgba(242,237,226,.75) 20%,rgba(242,237,226,.75) 80%,transparent);
-  transform:scaleX(var(--kick,0));transform-origin:50% 50%;
-}
-.hero-kicker{
-  font:10px/1.5 var(--f-en);letter-spacing:.38em;text-transform:uppercase;
-  color:rgba(242,237,226,.78);opacity:var(--kick,0);
-  margin-bottom:clamp(10px,1.6vh,18px);
 }
 .hero-h1{
   display:flex;justify-content:center;align-items:flex-start;gap:.01em;
@@ -298,23 +244,7 @@ body.skip-loader .loader{display:none}
 }
 .hero-seal small{display:block;font:6px/1 var(--f-en);letter-spacing:.14em;margin-top:5px;opacity:.8}
 
-/* 首屏四角信息 */
-.hero-meta{
-  position:absolute;z-index:5;color:rgba(242,237,226,.62);
-  font:9px/1.75 var(--f-en);letter-spacing:.16em;text-transform:uppercase;
-  opacity:var(--ui,1);transition:opacity .2s linear;
-}
-.hero-meta b{display:block;color:var(--paper);font-weight:400;font-size:11px;letter-spacing:.14em}
-.hero-meta .cn{display:block;font-family:var(--f-serif);font-size:14px;letter-spacing:.16em;color:rgba(242,237,226,.9);margin-bottom:4px}
-.hero-meta.bl{left:var(--pad);bottom:clamp(26px,5vh,52px)}
-.hero-meta.br{right:var(--pad);bottom:clamp(26px,5vh,52px);text-align:right}
-.hero-vertical{
-  position:absolute;left:calc(var(--pad) - 2px);top:48%;z-index:5;
-  writing-mode:vertical-rl;transform:translateY(-50%);
-  font:10px/1 var(--f-sans);letter-spacing:.46em;color:rgba(242,237,226,.5);
-  opacity:var(--ui,1);
-}
-.hero-vertical::before{content:"";display:block;width:1px;height:52px;background:currentColor;margin:0 auto 14px;opacity:.5}
+/* 首屏底部提示 */
 .scroll-cue{
   position:absolute;z-index:6;left:50%;bottom:20px;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:10px;
@@ -325,21 +255,9 @@ body.skip-loader .loader{display:none}
 .scroll-cue i::after{content:"";position:absolute;left:0;top:-60%;width:100%;height:55%;background:var(--paper);animation:scrollLine 1.9s var(--ease-io) infinite}
 @keyframes scrollLine{0%{top:-60%}60%,100%{top:110%}}
 
-/* 笔尖 */
-.brush{position:fixed;top:0;left:0;z-index:60;width:24px;height:60px;margin:-30px 0 0 -12px;pointer-events:none;opacity:0;mix-blend-mode:screen;will-change:transform;transition:opacity .18s}
-.brush.on{opacity:.7}
-.brush i{display:block;width:100%;height:100%;border-radius:48% 52% 44% 56%;background:radial-gradient(ellipse at 50% 48%,rgba(255,255,255,.96) 0%,rgba(255,255,255,.55) 30%,rgba(255,255,255,.1) 60%,transparent 74%);filter:blur(1.3px);animation:brushWobble .19s steps(2) infinite}
-.brush::after{content:"";position:absolute;left:48%;top:62%;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.6);box-shadow:12px 8px 0 -1px rgba(255,255,255,.28),-10px 13px 0 -2px rgba(255,255,255,.22);filter:blur(.6px)}
-@keyframes brushWobble{0%{transform:rotate(-15deg) scaleY(1)}100%{transform:rotate(-11deg) scaleY(1.06)}}
-
 /* ---------- 序 / 170 公里 ---------- */
 .statement{position:relative;height:180vh;background:var(--paper);color:var(--ink)}
 .statement-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center}
-.statement-pin::before{
-  content:"";position:absolute;inset:0;pointer-events:none;opacity:.6;
-  background-image:repeating-linear-gradient(45deg,rgba(20,26,22,.035) 0 1px,transparent 1px 12px),repeating-linear-gradient(-45deg,rgba(20,26,22,.028) 0 1px,transparent 1px 12px),url('assets/patterns/paper.svg');
-  background-size:auto,auto,220px;
-}
 .statement .wrap{position:relative;z-index:3;width:min(92vw,1440px);margin:0 auto;padding-top:3vh}
 .statement .sec-label{display:flex;align-items:center;gap:14px;font:10px/1 var(--f-en);letter-spacing:.22em;text-transform:uppercase;color:rgba(20,26,22,.62);margin-bottom:clamp(18px,3.6vh,40px)}
 .statement .sec-label i{display:block;width:46px;height:1px;background:var(--cinnabar)}
@@ -667,13 +585,6 @@ body.skip-loader .loader{display:none}
 .ch-facts div{min-width:0}
 .ch-facts dt{font:8px/1.4 var(--f-en);letter-spacing:.18em;text-transform:uppercase;opacity:.7;margin-bottom:4px;color:var(--accent,currentColor)}
 .ch-facts dd{margin:0;font-family:var(--f-serif);font-size:clamp(11px,1vw,15px);letter-spacing:.06em;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wave{display:flex;align-items:flex-end;gap:2px;width:min(24vw,300px);height:38px;opacity:.52}
-/* 声波条：恢复 v1 里的呼吸（2026-10-23）。原来只有静态高度，
-   蝴蝶歌这类「有声音」的章节落位后就没有任何持续动效。风雨桥没有 .wave，
-   与「全站唯一禁止循环动效」不冲突。 */
-.wave i{display:block;flex:1;height:100%;background:currentColor;transform-origin:50% 100%;transform:scaleY(var(--h,.4))}
-.chapter.play .wave i{animation:waveBar 1.7s ease-in-out infinite alternate;animation-delay:var(--d,0s)}
-@keyframes waveBar{from{transform:scaleY(calc(var(--h,.4) * .35))}to{transform:scaleY(var(--h,.4))}}
 .silent-mark{
   min-width:150px;text-align:right;font:8px/1.6 var(--f-en);letter-spacing:.18em;text-transform:uppercase;opacity:.5;
 }
@@ -808,11 +719,6 @@ body.skip-loader .loader{display:none}
   transition:opacity .35s ease .28s,clip-path .8s var(--ease) .28s,transform .6s var(--ease) .28s;
 }
 
-/* 进入视野：六个标题依次浮起（只做一次） */
-.js .index-sec .theme-card .cn{opacity:0;transform:translateY(16px)}
-.index-sec.in .theme-card .cn{animation:indexIn .85s var(--ease) both;animation-delay:calc(var(--i,0) * 70ms)}
-@keyframes indexIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
 .index-foot{display:flex;justify-content:space-between;gap:20px;margin-top:clamp(18px,3vh,30px);font:9px/1.6 var(--f-en);letter-spacing:.16em;text-transform:uppercase;color:rgba(20,26,22,.48)}
 .index-foot .cn{font-family:var(--f-serif);font-size:11px;letter-spacing:.12em;text-transform:none}
 
@@ -899,7 +805,6 @@ body.menu-open .menu{transform:none;visibility:visible}
   .ch-foot{grid-template-columns:1fr;gap:8px;padding-top:10px}
   .ch-facts{gap:10px}
   .ch-facts dd{font-size:10.5px;white-space:normal}
-  .wave{width:100%;height:22px}
   .ch-frame{width:86vw;right:-24vw}
   .chapter.panel-full .ch-frame{opacity:.08}
   .ch-core{width:28px}
@@ -983,7 +888,6 @@ body.menu-open .menu{transform:none;visibility:visible}
   .ch-facts dd{font-size:9.5px}
   .ch-facts div:nth-child(3){display:none}
   .ch-foot{grid-template-columns:1fr}
-  .wave{display:none}
   .ch-frame{width:96vw;right:-30vw}
   .chapter.panel-full .ch-frame{opacity:.07}
   .chapter.alt .ch-frame{right:-30vw;left:auto}
@@ -1049,7 +953,6 @@ body.menu-open .menu{transform:none;visibility:visible}
   .route .path{stroke-dashoffset:0}
   .route .node{transform:scale(1)}
   .statement-quote{opacity:1;transform:none}
-  .brush{display:none}
 }
 /* ---------- 菜单里的数据库入口（窄屏 / 触屏用） ---------- */
 .menu-db{
@@ -1064,58 +967,6 @@ body.menu-open .menu{transform:none;visibility:visible}
 .menu-db a em{font-style:normal;font-size:8px;letter-spacing:.16em;color:rgba(242,237,226,.34)}
 .menu-db a:hover{color:var(--paper)}
 
-/* ======================================================================
-   沿线跑马灯 + 挂在横杆下的丝缕（从原主页移植；配色换成本页的纸/墨/朱砂）
-   ① 跑马灯由页面滚动驱动：页面每滚 1px，条子横移 1px（向下滚向左）；
-   ② 丝缕是 Verlet 质点串，唯一驱动力是横杆的横向速度差（拖拽模型）；
-   ③ 静止时不动，没有风、没有随机抖动 —— 摆动只来自滚轮这一条因果链。
-   ====================================================================== */
-.ribbon{
-  position:relative;z-index:2;overflow:clip;
-  /* 深色底：接住首屏的暗场，再把读者交给宣纸序章；深底也让顶部白字顶栏始终可读 */
-  padding:clamp(84px,9.4vh,104px) 0 0;
-  background:var(--ink-2);color:var(--paper);
-  border-top:1px solid rgba(242,237,226,.14);
-  border-bottom:1px solid rgba(242,237,226,.14);
-}
-.ribbon::before{
-  content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;
-  background-image:url('assets/patterns/stone.svg');background-size:330px;
-}
-.ribbon-inner{position:relative;z-index:1}
-.mq-clip{overflow-x:hidden;overflow-y:visible}
-.mq-track{
-  display:flex;align-items:center;width:max-content;min-width:0;
-  animation:mq 40s linear infinite;will-change:transform;
-}
-@keyframes mq{to{transform:translateX(-50%)}}
-.mq-item{
-  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
-  padding-inline:clamp(20px,3vw,46px);
-}
-.mq-item .w{
-  font-family:var(--f-serif);font-size:clamp(22px,2.5vw,34px);font-weight:700;
-  color:var(--paper);white-space:nowrap;letter-spacing:0;opacity:.86;
-}
-.mq-item .w > span{display:inline-block;padding-inline:.13em}
-.mq-item .dot{color:var(--cinnabar);font-size:.68em;font-style:normal;padding-inline:clamp(10px,1.4vw,20px);opacity:.9}
-/* 挂点横杆：丝缕挂在它的下沿，跟着条子一起横移 */
-.mq-rail{height:0;border-top:1px solid rgba(242,237,226,.26);margin-top:clamp(14px,1.8vh,20px)}
-/* 丝缕区不画自己的底色与边框：它与跑马灯同属一条带子 */
-.tassel{position:relative;height:clamp(96px,13.5vh,136px);overflow:hidden}
-.tassel-inner{position:absolute;inset:0}
-.tas{position:absolute;top:0;left:0;width:40px;margin-left:-20px;pointer-events:none;transform-origin:50% 0}
-.tas .knot{display:block;width:6px;height:5px;margin:-2px auto 0;background:var(--cinnabar);transform:rotate(45deg);opacity:.9}
-.tas svg{display:block;width:100%;height:auto;overflow:visible}
-.tas .th{fill:none;stroke-linecap:round}
-.tas:nth-child(3n+1) .th{stroke:rgba(242,237,226,.72)}
-.tas:nth-child(3n+2) .th{stroke:var(--gold);opacity:.8}
-.tas:nth-child(3n) .th{stroke:#D9695B;opacity:.9}
-@media(max-width:760px){
-  .mq-item{padding-inline:20px}
-  .mq-item .w{font-size:20px}
-  .tassel{height:92px}
-}
 noscript.loading-hide{display:none}
 
 /* ============================================================
@@ -1201,7 +1052,7 @@ noscript.loading-hide{display:none}
 <noscript>
 <style>
   body.is-loading{overflow:auto}
-  .loader,.brush,.cursor{display:none!important}
+  .loader,.cursor{display:none!important}
   .hero{height:100vh}
   .hero-card{transform:scale(.72);filter:grayscale(1) brightness(.44) contrast(1.04)}
   .hero-title .ch{clip-path:none!important;-webkit-mask-image:none!important;mask-image:none!important;transform:none!important}
@@ -1233,7 +1084,7 @@ noscript.loading-hide{display:none}
   @page{size:1440px 900px;margin:0}
   html,body{width:1440px!important;height:auto!important;margin:0!important;padding:0!important;background:#F2EDE2!important;overflow:visible!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body{--pad:48px}
-  .loader,.progress,.cursor,.topbar,.scene-nav,.hero,.statement,.index-sec,.closing{display:none!important}
+  .loader,.cursor,.topbar,.scene-nav,.hero,.statement,.index-sec,.closing{display:none!important}
   main{display:block!important;width:1440px!important;margin:0!important;padding:0!important;overflow:visible!important}
   .chapter .ch-grid{grid-template-columns:1.18fr .82fr!important;grid-template-rows:none!important;gap:clamp(24px,4.5vw,72px)!important}
   .chapter.alt .ch-grid{grid-template-columns:.82fr 1.18fr!important}
@@ -1261,7 +1112,6 @@ noscript.loading-hide{display:none}
   .chapter .frame-line,.chapter .road-map .map-route{stroke-dashoffset:0!important;animation:none!important}
   /* 打印只输出六章：跑马灯与丝缕属页面动效，不打印 */
   .ribbon{display:none!important}
-  .wave i{animation:none!important}
 
 </style>
 <style>
@@ -1317,10 +1167,456 @@ noscript.loading-hide{display:none}
   .theme-card:hover .theme-mark-type{opacity:.06;transform:none}
 }
 
+/* ============================================================
+   2026-10-25 · 六章 → 专题页：颜色先接管屏幕
+   ------------------------------------------------------------
+   卡片点击后，不是普通跳转：先把该章主色从点击位置扩成整屏，
+   再进入专题页。专题页以同一主色起幕，形成连续的一次转场。
+   ============================================================ */
+.theme-card.is-launching .fill{transform:none;transition:none}
+.theme-card.is-launching .group{left:var(--cpad);transform:translate(0,-50%);text-align:left}
+.theme-card.is-launching .cn{opacity:0}
+.theme-card.is-launching .no,.theme-card.is-launching .arrow{opacity:.9;transform:none}
+.theme-card.is-launching .sub,.theme-card.is-launching .meta{opacity:0;transform:translateY(-6px)}
+body.is-wiping{overflow:hidden;cursor:progress}
 
+.theme-wipe{
+  --wipe:#A9362E;--wx:50vw;--wy:50vh;
+  position:fixed;inset:0;z-index:230;overflow:hidden;
+  visibility:hidden;pointer-events:none;contain:strict;
+}
+.theme-wipe.is-on{visibility:visible}
+.theme-wipe.is-filled{background:var(--wipe)}
+.theme-wipe__field{
+  position:absolute;left:var(--wx);top:var(--wy);width:260vmax;height:260vmax;
+  margin-left:-130vmax;margin-top:-130vmax;border-radius:50%;
+  background:var(--wipe);transform:scale(0);transform-origin:50% 50%;
+  will-change:transform;transition:transform .34s cubic-bezier(.7,0,.18,1);
+}
+.theme-wipe.is-running .theme-wipe__field{transform:scale(1)}
+.handoff-title{
+  position:fixed;left:0;top:0;z-index:240;display:none;
+  color:#F2EDE2;font-family:var(--f-serif);font-weight:700;
+  font-size:clamp(92px,15.6vw,260px);line-height:1;letter-spacing:-.055em;white-space:nowrap;
+  pointer-events:none;transform-origin:center center;will-change:transform;
+}
+.handoff-title--long{font-size:clamp(64px,10.8vw,196px);letter-spacing:-.075em}
+.handoff-title.is-on{display:block}
+@media (max-width:900px){
+  .handoff-title,.handoff-title--long{font-size:clamp(78px,17.5vw,170px)}
+}
+@media (max-width:760px){
+  .theme-card.is-launching .fill{display:block;transform:none;transition:none}
+  .handoff-title{font-size:clamp(70px,20vw,122px)}
+  .handoff-title--long{font-size:clamp(64px,15.8vw,104px)}
+}
+@media (max-width:430px){
+  .handoff-title,.handoff-title--long{font-size:clamp(64px,19vw,94px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .theme-wipe{display:none}
+  .handoff-title{display:none}
+}
+</style>
+<link rel="stylesheet" href="assets/theme-stage.css?v=20261030a">
+<link rel="stylesheet" href="assets/audio-player.css">
+<style>
+.intro-fade{
+  position:fixed;inset:0;z-index:219;display:none;pointer-events:none;
+  background:#0A0E0C;
+}
+html.skip-intro .intro-fade,
+body.fade-intro .intro-fade{display:block;animation:introFade .62s ease .04s forwards}
+@keyframes introFade{from{opacity:1}to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion:reduce){.intro-fade{display:none!important}}
+
+/* ============================================================
+   首屏：把照片放回纸面，和序章使用同一张纸
+   ============================================================ */
+.hero,.hero-pin{background:var(--paper);color:var(--ink)}
+.hero-card{
+  inset:auto;
+  left:var(--pad);right:var(--pad);top:clamp(86px,12vh,124px);
+  height:clamp(300px,43vh,520px);
+  box-shadow:0 24px 64px rgba(20,26,22,.16);
+}
+.hero-card::after{
+  background:
+    linear-gradient(180deg,rgba(7,10,8,.38) 0%,rgba(7,10,8,0) 34%,rgba(7,10,8,.48) 100%),
+    linear-gradient(90deg,rgba(7,10,8,.18),transparent 28%,transparent 72%,rgba(7,10,8,.14));
+}
+.hero-caption{
+  left:clamp(14px,2vw,24px);top:clamp(12px,2vh,20px);gap:8px;
+  padding:6px 8px;background:rgba(7,10,8,.42);
+}
+.hero-caption b{font-size:12px}
+.hero-caption span{font-size:8.5px;opacity:.74}
+.hero-title{
+  top:auto;bottom:clamp(96px,12vh,132px);
+  transform:translateX(-50%);
+  color:var(--ink);
+}
+.hero-h1 .ch{text-shadow:none}
+.hero .hero-sub{
+  display:block;max-width:none;margin:clamp(22px,3.2vh,34px) 0 0;
+  padding:0;border:0;background:transparent;backdrop-filter:none;text-shadow:none;
+  color:rgba(20,26,22,.68);
+  opacity:1!important;transform:none!important;
+}
+.hero .hero-sub b{color:var(--ink)}
+.hero .hero-sub span{color:var(--cinnabar)}
+.hero .hero-sub .en-line{color:rgba(20,26,22,.5)!important}
+.hero .hero-seal{top:-1.5vh}
+.scroll-cue{color:rgba(20,26,22,.55)}
+.scroll-cue i{background:rgba(20,26,22,.16)}
+.scroll-cue i::after{background:var(--ink)}
+.hero-gray,.hero-dim{display:none}
+@media (max-width:860px){
+  .hero{height:200vh}
+  .hero-card{height:clamp(300px,50vh,480px)}
+  .hero-h1{font-size:clamp(64px,20vw,190px)}
+  .hero-title{bottom:clamp(96px,11vh,130px)}
+}
+@media (max-width:430px){
+  .hero-h1{font-size:clamp(56px,19.5vw,86px)}
+}
+
+/* ============================================================
+   首屏：一个开场，不是一张目录封面
+   ============================================================ */
+.hero{height:100svh;background:var(--paper);color:var(--ink)}
+.hero-pin{background:var(--paper)}
+.hero-copy{
+  position:absolute;inset:0;z-index:4;
+  display:grid;grid-template-columns:minmax(0,40%) minmax(0,60%);
+  grid-template-rows:auto 1fr auto auto;gap:0;
+  padding:clamp(96px,13vh,142px) var(--pad) clamp(28px,4.5vh,52px);
+  color:var(--ink);pointer-events:none;
+}
+.hero-copy a{pointer-events:auto}
+.hero-eyebrow{
+  grid-column:1;grid-row:1;align-self:start;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  font:8.5px/1.5 var(--f-en);letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(20,26,22,.54);
+}
+.hero-eyebrow i{
+  width:6px;height:6px;border-radius:50%;background:var(--cinnabar);
+  flex:0 0 auto;
+}
+.hero-eyebrow span:last-child{font-family:var(--f-serif);letter-spacing:.12em;text-transform:none}
+.hero-title-col{
+  grid-column:1;grid-row:2;align-self:center;
+  display:flex;flex-direction:column;align-items:flex-start;
+  gap:clamp(14px,2.2vh,24px);min-width:0;
+}
+.hero-h1{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:0;width:max-content;max-width:none;margin:0;padding:0;
+  font-family:var(--f-brush);font-weight:400;
+  font-size:clamp(76px,8.2vw,136px);line-height:.86;
+  letter-spacing:0;white-space:nowrap;color:var(--ink);
+}
+.hero-h1 .ch{
+  clip-path:none!important;transform:none!important;
+  text-shadow:none;
+}
+.hero-title-col .hero-seal{
+  position:relative;top:auto;right:auto;left:auto;
+  width:clamp(44px,4.2vw,58px);height:clamp(44px,4.2vw,58px);
+  border-color:var(--paper);
+  transform:rotate(5deg) scale(1)!important;opacity:1!important;
+  box-shadow:0 8px 24px rgba(20,26,22,.18);
+}
+.hero-lead{
+  grid-column:1;grid-row:3;align-self:end;justify-self:start;
+  max-width:18em;margin:0 0 clamp(14px,2.2vh,22px);
+  text-align:left;color:rgba(20,26,22,.72);
+  font:500 clamp(17px,1.5vw,23px)/1.6 var(--f-serif);
+  letter-spacing:.035em;
+}
+.hero-bottom{
+  grid-column:1;grid-row:4;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  margin:0;
+}
+.hero-meta{
+  display:flex;flex-wrap:wrap;gap:8px 16px;
+  font:9px/1.5 var(--f-en);letter-spacing:.12em;color:rgba(20,26,22,.5);
+}
+.hero-meta span+span::before{content:"·";margin-right:16px;color:rgba(20,26,22,.3)}
+.hero-enter{
+  display:inline-flex;align-items:center;gap:10px;flex:0 0 auto;
+  padding-bottom:5px;border-bottom:1px solid rgba(20,26,22,.58);
+  font:9px/1 var(--f-en);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;transition:color .25s ease;
+}
+.hero-enter i{font-style:normal;transition:transform .25s var(--ease)}
+.hero-enter:hover{color:var(--cinnabar)}
+.hero-enter:hover i{transform:translateY(3px)}
+
+/* 右侧影像不做全屏背景，改成纸面上的 3D coverflow */
+.hero-card{
+  grid-column:2;grid-row:1/5;align-self:stretch;
+  position:relative;inset:auto;width:100%;height:100%;margin:0;
+  overflow:visible;background:none;box-shadow:none;
+  transform:none!important;will-change:auto;perspective:1100px;
+}
+.hero-card::after{display:none}
+.hero-3d{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  perspective:1100px;
+}
+.hero-3d-card{
+  position:absolute;top:50%;left:50%;z-index:1;
+  width:clamp(240px,28vw,460px);aspect-ratio:4/3;
+  overflow:hidden;background:var(--paper);
+  box-shadow:0 28px 74px rgba(20,26,22,.18),0 4px 18px rgba(20,26,22,.1);
+  transform:translate3d(-50%,-50%,0);
+  transition:transform 1s cubic-bezier(.22,1,.36,1),opacity .7s ease;
+  will-change:transform,opacity;backface-visibility:hidden;
+}
+.hero-3d-card img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  transform:none!important;animation:none!important;
+}
+
+/* 顶栏在开场先让位，滚动后再出现 */
+html.js .topbar .nav,
+html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var(--ease)}
+/* 2026-10-28 棣栧睆鏀圭増锛氬鑸紑鍦哄嵆鍙 */
+
+/* 开场动效：影像先开，文字再落 */
+.hero.is-ready .hero-card{animation:heroVisualIn 1s cubic-bezier(.16,1,.3,1) .16s both}
+.hero.is-ready .hero-copy{animation:heroCopyIn .85s cubic-bezier(.16,1,.3,1) .1s both}
+.hero.is-ready .hero-h1{animation:heroTitleIn .78s cubic-bezier(.16,1,.3,1) .28s both}
+.hero.is-ready .hero-lead{animation:heroTextIn .6s ease .52s both}
+.hero.is-ready .hero-bottom{animation:heroTextIn .6s ease .64s both}
+@keyframes heroVisualIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes heroCopyIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes heroTitleIn{from{opacity:0;clip-path:inset(0 0 100% 0);transform:translateY(-10px)}to{opacity:1;clip-path:inset(0 0 0 0);transform:none}}
+@keyframes heroTextIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+@media (max-width:860px){
+  .hero-copy{
+    display:flex;flex-direction:column;justify-content:space-between;
+    gap:clamp(9px,1.6vh,14px);
+    padding:clamp(82px,11vh,108px) clamp(16px,5vw,24px) clamp(20px,4vh,34px);
+  }
+  .hero-eyebrow{position:static;font-size:7px;gap:8px}
+  .hero-title-col{
+    display:flex;flex-direction:row;align-items:flex-end;
+    gap:clamp(10px,3vw,16px);width:100%;
+  }
+  .hero-h1{
+    flex-direction:row;align-items:flex-end;width:auto;
+    font-size:clamp(56px,17.5vw,104px);line-height:.82;
+  }
+  .hero-title-col .hero-seal{
+    width:40px;height:40px;margin-bottom:clamp(2px,.8vh,8px);
+  }
+  .hero-card{
+    position:relative;inset:auto;flex:0 0 auto;
+    width:100%;height:38vh;min-height:250px;margin:clamp(10px,1.6vh,16px) 0 0;
+  }
+  .hero-3d-card{width:70vw;max-width:340px}
+  .hero-lead{
+    align-self:stretch;max-width:none;margin:0;text-align:left;
+    font-size:clamp(13px,3.6vw,16px);line-height:1.55;
+  }
+  .hero-bottom{align-items:center;margin:0}
+  .hero-meta{gap:6px 10px;font-size:8px}
+  .hero-meta span+span::before{margin-right:10px}
+  .hero-enter{font-size:8.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-card,.hero-copy,.hero-h1,.hero-lead,.hero-bottom{animation:none!important;opacity:1!important;transform:none!important;clip-path:none!important}
+  .hero-3d-card{transition:none!important}
+}
+
+/* ============================================================
+   序章：每一行文字各自一块颜色，随后整行出现
+   ============================================================ */
+.statement-headline{position:relative;z-index:3}
+.statement.reveal-ready h2 .row{
+  position:relative;width:fit-content;max-width:100%;overflow:hidden;
+}
+.statement.reveal-ready h2 .row:nth-child(1){--line:0}
+.statement.reveal-ready h2 .row:nth-child(2){--line:1}
+.statement.reveal-ready h2 .row:nth-child(3){--line:2}
+.statement.reveal-ready h2 .row>span{
+  position:relative;z-index:1;display:block;
+  transform:none!important;transition:none!important;
+}
+.statement.reveal-ready:not(.in) h2 .row>span{opacity:0}
+.statement.reveal-ready h2 .row::after{
+  content:"";position:absolute;inset:-.08em -.14em;z-index:2;
+  background:var(--cinnabar);pointer-events:none;transform:translateX(-110%);
+}
+.statement.reveal-ready.in h2 .row::after{
+  animation:lineSweep .78s cubic-bezier(.65,0,.35,1) calc(var(--line)*.12s) both;
+}
+.statement.reveal-ready.in h2 .row>span{
+  animation:lineText .78s linear calc(var(--line)*.12s) both;
+}
+@keyframes lineSweep{
+  0%{transform:translateX(-110%)}
+  36%{transform:translateX(0)}
+  54%{transform:translateX(0)}
+  100%{transform:translateX(110%)}
+}
+@keyframes lineText{
+  0%,38%{opacity:0}
+  40%,100%{opacity:1}
+}
+.statement.reveal-ready:not(.in) .statement-quote{
+  opacity:0;transform:translateY(8px);
+}
+.statement.reveal-ready.in .statement-quote{
+  opacity:1;transform:none;
+  transition:opacity .5s ease 1.1s,transform .5s var(--ease) 1.1s;
+}
+.statement.reveal-ready:not(.in) .route{
+  opacity:0;transform:translateY(10px);
+}
+.statement.reveal-ready.in .route{
+  opacity:1;transform:none;
+  transition:opacity .55s ease 1.25s,transform .55s var(--ease) 1.25s;
+}
+.statement.reveal-ready .route .path{transition-delay:1.2s}
+.statement.reveal-ready .route .node{transition-delay:1.25s}
+@media (prefers-reduced-motion:reduce){
+  .statement.reveal-ready h2 .row::after{display:none!important}
+  .statement.reveal-ready h2 .row>span{opacity:1!important;animation:none!important}
+  .statement.reveal-ready .statement-quote,
+  .statement.reveal-ready .route{opacity:1;transform:none;transition:none}
+}
+</style>
+<style>
+/* ============================================================
+   00 首屏：一整张风景，四字是蒙版上的窗
+   ------------------------------------------------------------
+   ① 一开始只有照片。题名的底图与照片层是**同一张图、同一组
+      background 参数**，所以四字落在照片上时完全不可见
+      （已逐像素比对：两张渲染图 maxdiff = 0）。
+   ② 向下滚动，照片整体褪成纸（没有边、没有水线，是一次均匀的淡化）。
+      字不跟着褪，于是字变成画面里最黑的一块 —— 题名就这样浮出来。
+   ③ 字从 1.7 倍（比屏幕还宽，两侧溢出画面）一路拉回到 1 倍，
+      缩到定稿位置；落款随后出现。
+
+   硬约束：这一段里**不能出现任何 transform**（含父级）。
+   只要祖先链上有 transform，background-attachment:fixed 就会
+   改挂到该元素自身，字的底图立刻与照片层错位，字会提前露出来。
+   所以缩放走 font-size 动画，居中走 flex，不用 translate(-50%,-50%)。
+   ============================================================ */
+.h6{
+  --t-size:min(19vw,38svh);      /* 题名定稿字号：四字合起来约 76vw；上限用 svh，宽屏才不至于被压小 */
+  --h6-photo:url('assets/img/hero-road.webp');
+  --veil:0;                      /* 照片褪成纸的程度：0 是原片，1 整页是纸 */
+  --tscale:1.7;                  /* 题名缩放（用字号做，不用 transform） */
+  --t-box:1;                     /* 题名占几行字高（窄屏排 2×2 时是 2） */
+  --foot:0;                      /* 落款 */
+  --rule:0;                      /* 落款上方那道细线（路） */
+  --cue:1;                       /* 开场滑动提示 */
+  position:relative;z-index:2;
+  height:280svh;min-height:280svh;
+  background:var(--paper);color:var(--ink);
+}
+.h6-pin{
+  position:sticky;top:0;height:100svh;overflow:hidden;isolation:isolate;
+  background:var(--ink-2);
+}
+/* 照片层与题名共用这一组参数 —— 单一来源，任何一边改动都会露字 */
+.h6-photo,.h6-title{
+  background-image:var(--h6-photo);
+  background-position:50% 50%;
+  background-size:cover;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+}
+.h6-photo{position:absolute;inset:0;z-index:0}
+/* 一张纸盖在照片上，整体由透到实 —— 均匀淡化，不出现任何边线。
+   字在纸之上：纸透了，字与照片逐像素重合（看不见）；纸越实，
+   字越是画面里唯一还黑的东西，于是浮出来。 */
+.h6-veil{
+  position:absolute;inset:0;z-index:1;
+  background:var(--paper);
+  opacity:var(--veil);
+  will-change:opacity;
+}
+.h6-typewrap{
+  position:absolute;inset:0;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  padding-top:3svh;                /* 视线中心略低于几何中心 */
+  pointer-events:none;
+}
+.h6-title{
+  /* flex:none 不能省：窄屏 2×2 的宽度是 2em，放大时若被 flex 压缩，
+     就会退化成每行一个字（竖排），版式跟定稿对不上。 */
+  flex:none;margin:0;white-space:nowrap;
+  font-family:var(--f-serif);font-weight:700;line-height:1;letter-spacing:0;
+  font-size:calc(var(--t-size) * var(--tscale));
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+  -webkit-background-clip:text;background-clip:text;
+}
+.h6-foot{
+  position:absolute;z-index:3;left:0;right:0;
+  top:calc(50% + var(--t-size) * var(--t-box) * .5 + 4.6svh + 26px);
+  text-align:center;opacity:var(--foot);
+}
+.h6-rule{
+  display:block;width:clamp(120px,20vw,240px);height:1px;margin:0 auto 15px;
+  background:var(--ink);opacity:.5;
+  transform:scaleX(var(--rule));transform-origin:50% 50%;
+}
+.h6-cap{
+  margin:0;font:11px/1.6 var(--f-sans);letter-spacing:.26em;color:rgba(20,26,22,.66);
+  white-space:nowrap;
+}
+.h6-cap em{
+  font:9px/1 var(--f-en);letter-spacing:.24em;font-style:normal;
+  margin-left:14px;color:rgba(20,26,22,.62);
+}
+.h6-cue{
+  position:absolute;z-index:4;left:50%;bottom:clamp(20px,3.6vh,38px);
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:11px;
+  opacity:var(--cue);
+  font:9px/1 var(--f-en);letter-spacing:.34em;text-transform:uppercase;
+  color:rgba(242,237,226,.78);text-shadow:0 1px 10px rgba(7,10,8,.55);
+}
+.h6-cue i{position:relative;display:block;width:1px;height:46px;background:rgba(242,237,226,.24);overflow:hidden}
+.h6-cue i::after{
+  content:"";position:absolute;left:0;top:0;width:1px;height:45%;background:var(--paper);
+  animation:h6cue 2.6s var(--ease-io) infinite;
+}
+@keyframes h6cue{0%{transform:translateY(-120%)}62%,100%{transform:translateY(240%)}}
+
+/* 照片还亮着的时候，顶栏翻成浅色（深墨压在暗照片上等于没有字）。
+   由 setHero 在照片还占着屏顶时挂 body.hero-on-photo。 */
+.hero-on-photo .topbar[data-tone="dark"]{--nav-fg:var(--paper)}
+.hero-on-photo .topbar::before{opacity:1}
+
+@media (max-width:760px){
+  /* 窄屏：四字排成 2×2，字才立得住；宽度 2em 让浏览器按字折行 */
+  .h6{--t-size:min(40vw,25svh);--t-box:2;height:230svh;min-height:230svh}
+  .h6-title{width:2em;white-space:normal}
+  .h6-typewrap{padding-top:2svh}
+  .h6-foot{top:calc(50% + var(--t-size) * var(--t-box) * .5 + 4svh + 24px)}
+  .h6-cap{font-size:10px;letter-spacing:.18em}
+  .h6-cap em{display:block;margin:6px 0 0}
+}
+@media (prefers-reduced-motion:reduce){
+  .h6{height:100svh;min-height:100svh;--veil:1;--tscale:1;--foot:1;--rule:1;--cue:0}
+  .h6-cue{display:none}
+  .h6-cue i::after{animation:none}
+}
+/* 无 JS：直接停在成稿状态，不然首屏会只剩一张照片 */
+html.no-js .h6{--veil:1;--tscale:1;--foot:1;--rule:1;--cue:0}
 </style>
 </head>
-<body class="is-loading">
+<body class="is-loading" data-audio-base="assets/audio/">
 <script>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');</script>
 
 <div class="loader" id="loader" aria-hidden="true">
@@ -1330,19 +1626,22 @@ noscript.loading-hide{display:none}
     <div class="loader-toprow"><span>潇贺古道 · 有声文化数据库</span><span>XIAOHE ANCIENT ROAD</span></div>
     <div class="loader-center">
       <div class="loader-cn">潇贺古道</div>
-      <div class="loader-en">The road that still speaks</div>
+      <div class="loader-en">DAOXIAN — HEZHOU · 170 KM</div>
       <div class="loader-line"><i id="loadBar"></i></div>
     </div>
-    <div class="loader-botrow"><span>正在载入古道 / loading the ancient road</span><b id="loadNum">00</b></div>
+    <div class="loader-botrow"><span>载入中 / LOADING</span><b id="loadNum">00</b></div>
   </div>
 </div>
 
-<div class="grain" aria-hidden="true"></div>
-<div class="progress" aria-hidden="true"><i></i></div>
+<div class="intro-fade" aria-hidden="true"></div>
 <div class="cursor" aria-hidden="true"><div class="cursor-ring"></div><div class="cursor-dot"></div></div>
-<div class="brush" id="brush" aria-hidden="true"><i></i></div>
 
-<header class="topbar" id="topbar" data-tone="light">
+<div class="theme-wipe" id="themeWipe" aria-hidden="true">
+  <div class="theme-wipe__field"></div>
+</div>
+<div class="handoff-title" id="handoffTitle" aria-hidden="true"></div>
+
+<header class="topbar" id="topbar" data-tone="dark">
   <a class="brand" href="#hero" aria-label="潇贺古道首页">
     <span class="brand-mark">潇</span>
     <span class="brand-txt"><span class="brand-cn">潇贺古道</span><span class="brand-en">XIAOHE ANCIENT ROAD</span></span>
@@ -1359,19 +1658,6 @@ noscript.loading-hide{display:none}
   <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">目录</button>
 </header>
 
-<nav class="scene-nav" aria-label="页面场景">
-  <a href="#hero" data-scene="hero" class="active" aria-label="首页"><i></i><span>00</span></a>
-  <a href="#statement" data-scene="statement" aria-label="序"><i></i><span>01</span></a>
-  <a href="#ch-nushu" data-scene="ch-nushu" aria-label="女书"><i></i><span>02</span></a>
-  <a href="#ch-butterfly" data-scene="ch-butterfly" aria-label="蝴蝶歌"><i></i><span>03</span></a>
-  <a href="#ch-drum" data-scene="ch-drum" aria-label="长鼓舞"><i></i><span>04</span></a>
-  <a href="#ch-bridge" data-scene="ch-bridge" aria-label="风雨桥"><i></i><span>05</span></a>
-  <a href="#ch-panwang" data-scene="ch-panwang" aria-label="盘王大歌"><i></i><span>06</span></a>
-  <a href="#ch-brocade" data-scene="ch-brocade" aria-label="富川织锦"><i></i><span>07</span></a>
-  <a href="#index" data-scene="index" aria-label="六章"><i></i><span>08</span></a>
-  <a href="#closing" data-scene="closing" aria-label="尾声"><i></i><span>09</span></a>
-</nav>
-
 <div class="menu" id="menu" aria-hidden="true">
   <div class="menu-top">
     <span class="brand"><span class="brand-mark">潇</span><span class="brand-txt"><span class="brand-cn">潇贺古道</span><span class="brand-en">XIAOHE ANCIENT ROAD</span></span></span>
@@ -1383,9 +1669,9 @@ noscript.loading-hide{display:none}
     <a href="#ch-nushu"><span class="no">壹</span>女书<span class="en">Nüshu</span></a>
     <a href="#ch-butterfly"><span class="no">贰</span>蝴蝶歌<span class="en">Butterfly Song</span></a>
     <a href="#ch-drum"><span class="no">叁</span>长鼓舞<span class="en">Long Drum</span></a>
-    <a href="#ch-bridge"><span class="no">肆</span>风雨桥<span class="en">Wind-Rain Bridge</span></a>
+    <a href="#ch-bridge"><span class="no">肆</span>富川风雨桥<span class="en">Wind-Rain Bridge</span></a>
     <a href="#ch-panwang"><span class="no">伍</span>盘王大歌<span class="en">Panwang Song</span></a>
-    <a href="#ch-brocade"><span class="no">陆</span>富川织锦<span class="en">Fuchuan Brocade</span></a>
+    <a href="#ch-brocade"><span class="no">陆</span>瑶族织锦<span class="en">Yao Brocade</span></a>
     <a href="#index">六章<span class="en">Six Chapters</span></a>
     <a href="#closing">尾声<span class="en">Epilogue</span></a>
   </div>
@@ -1399,90 +1685,22 @@ noscript.loading-hide{display:none}
 </div>
 
 <main>
-  <!-- ========== 00 首屏：照片、字条、书写 ========== -->
-  <section class="hero" id="hero" data-tone="light">
-    <div class="hero-pin">
-      <div class="hero-bgline" aria-hidden="true"></div>
-
-      <div class="bands" aria-hidden="true">
-        <div class="band band-a">
-          <div class="band-track">
-            <div class="band-seq">
-              <span>女书</span><em>·</em><span>蝴蝶歌</span><em>·</em><span>长鼓舞</span><em>·</em><span>风雨桥</span><em>·</em><span>盘王大歌</span><em>·</em><span>织锦</span><em>·</em><span>古道图志</span><em>·</em><span>声音档案</span><em>·</em><span class="tiny">XIAOHE / AUDIO HERITAGE</span><em>·</em>
-            </div>
-            <div class="band-seq">
-              <span>女书</span><em>·</em><span>蝴蝶歌</span><em>·</em><span>长鼓舞</span><em>·</em><span>风雨桥</span><em>·</em><span>盘王大歌</span><em>·</em><span>织锦</span><em>·</em><span>古道图志</span><em>·</em><span>声音档案</span><em>·</em><span class="tiny">XIAOHE / AUDIO HERITAGE</span><em>·</em>
-            </div>
-          </div>
-        </div>
-        <div class="band band-b">
-          <div class="band-track">
-            <div class="band-seq">
-              <span>XIAOHE ANCIENT ROAD</span><em>/</em><span>SOUND ARCHIVE</span><em>/</em><span>170 KM</span><em>/</em><span>HUNAN → GUANGXI</span><em>/</em><span>FIELD RECORDING</span><em>/</em><span>NÜSHU</span><em>/</em><span>BUTTERFLY SONG</span><em>/</em><span>LONG DRUM</span><em>/</em><span>BRIDGE</span><em>/</em><span>PANWANG SONG</span><em>/</em><span>BROCADE</span><em>/</em>
-            </div>
-            <div class="band-seq">
-              <span>XIAOHE ANCIENT ROAD</span><em>/</em><span>SOUND ARCHIVE</span><em>/</em><span>170 KM</span><em>/</em><span>HUNAN → GUANGXI</span><em>/</em><span>FIELD RECORDING</span><em>/</em><span>NÜSHU</span><em>/</em><span>BUTTERFLY SONG</span><em>/</em><span>LONG DRUM</span><em>/</em><span>BRIDGE</span><em>/</em><span>PANWANG SONG</span><em>/</em><span>BROCADE</span><em>/</em>
-            </div>
-          </div>
-        </div>
+  <!-- ========== 00 首屏：一整张风景 · 四字是蒙版上的窗 ========== -->
+  <section class="h6" id="hero" data-tone="dark" aria-label="潇贺古道">
+    <div class="h6-pin">
+      <div class="h6-photo" aria-hidden="true"></div>
+      <div class="h6-veil" aria-hidden="true"></div>
+      <div class="h6-typewrap">
+        <h1 class="h6-title">潇贺古道</h1>
       </div>
-
-      <figure class="hero-card" id="heroCard">
-        <picture>
-          <source srcset="assets/img/hero.webp" type="image/webp">
-          <img src="assets/img/hero.jpg" alt="黄姚古镇的石拱桥、河面与小船，两岸是茂密的绿树" fetchpriority="high" width="2400" height="1400">
-        </picture>
-        <div class="hero-gray" aria-hidden="true">
-          <img src="assets/img/hero-gray.jpg" alt="" width="2400" height="1400" decoding="async">
-        </div>
-        <span class="hero-dim" aria-hidden="true"></span>
-        <figcaption class="hero-caption"><i></i><b>贺州 · 黄姚古镇</b><span>古道沿线文化节点 / 001</span></figcaption>
-      </figure>
-
-      <div class="hero-title" id="heroTitle">
-        <div class="hero-kicker">XIAOHE ANCIENT ROAD · AUDIO HERITAGE DATABASE</div>
-        <h1 class="hero-h1" aria-label="潇贺古道">
-          <span class="ch" style="--i:0">潇</span><span class="ch" style="--i:1">贺</span><span class="ch" style="--i:2">古</span><span class="ch" style="--i:3">道</span>
-        </h1>
-        <p class="hero-sub"><b>秦建新道 · 楚粤通衢</b><span>·</span>北起潇水，南抵贺江<span class="en-line"> · 陆路约 170 公里</span></p>
-        <div class="hero-seal" aria-hidden="true">有声<small>SOUND</small></div>
+      <div class="h6-foot">
+        <i class="h6-rule" aria-hidden="true"></i>
+        <p class="h6-cap">富川秀水村 · 石拱桥<em>XIUSHUI · FUCHUAN</em></p>
       </div>
-
-      <div class="hero-vertical" aria-hidden="true">北起潇水 · 南抵贺江</div>
-      <div class="hero-meta bl"><span class="cn">秦建新道 · 楚粤通衢</span><b>前 219 — 前 213</b>湖南道县 · 广西贺州</div>
-      <div class="hero-meta br"><span class="cn">潇贺古道有声文化数据库</span><b>文化档案 · 声音 · 图志</b>SCROLL TO EXPLORE / 001—006</div>
-
-      <div class="scroll-cue" aria-hidden="true"><span>向下滑动 / SCROLL</span><i></i></div>
+      <div class="h6-cue" aria-hidden="true"><span>Scroll</span><i></i></div>
     </div>
   </section>
 
-  <!-- ========== 沿线跑马灯：滚轮一推，条子走、丝缕荡 ========== -->
-  <div class="ribbon" id="ribbon" data-tone="light" aria-hidden="true">
-    <div class="ribbon-inner">
-      <div class="mq-clip">
-        <div class="mq-track" id="mqTrack">
-          <span class="mq-item"><span class="w"><span>道</span><span>县</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>潇</span><span>水</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>江</span><span>永</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>江</span><span>华</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>谢</span><span>沐</span><span>关</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>富</span><span>川</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>贺</span><span>州</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>贺</span><span>江</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>道</span><span>县</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>潇</span><span>水</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>江</span><span>永</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>江</span><span>华</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>谢</span><span>沐</span><span>关</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>富</span><span>川</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>贺</span><span>州</span></span><i class="dot">·</i></span>
-          <span class="mq-item"><span class="w"><span>贺</span><span>江</span></span><i class="dot">·</i></span>
-        </div>
-        <div class="mq-rail"></div>
-      </div>
-      <div class="tassel" id="tassel"><div class="tassel-inner" id="tasselInner"></div></div>
-    </div>
-  </div>
 
   <!-- ========== 01 序：170 公里 ========== -->
   <section class="statement" id="statement" data-tone="dark">
@@ -1491,11 +1709,13 @@ noscript.loading-hide{display:none}
       <div class="big170" aria-hidden="true">170<small>KILOMETRES</small></div>
       <div class="wrap">
         <div class="sec-label"><i></i><b>序</b><span>PROLOGUE</span><span>秦代「新道」</span></div>
-        <h2>
-          <span class="row"><span>北起潇水，南抵贺江。</span></span>
-          <span class="row"><span>翻越萌渚岭，<span class="red">一百七十公里</span>。</span></span>
-          <span class="row"><span class="thin">把长江与珠江连在一起。</span></span>
-        </h2>
+        <div class="statement-headline">
+          <h2>
+            <span class="row"><span>北起潇水，南抵贺江。</span></span>
+            <span class="row"><span>翻越萌渚岭，<span class="red">一百七十公里</span>。</span></span>
+            <span class="row"><span class="thin">把长江与珠江连在一起。</span></span>
+          </h2>
+        </div>
         <div class="statement-quote"><i></i>「交融古今，通达天下」—— 周大鸣，光明日报 2022-04-20</div>
         <div class="route" id="route">
           <svg viewBox="0 0 1200 168" role="img" aria-label="潇贺古道自北向南的路线：道县、江永、江华、富川、贺州，陆路约170公里">
@@ -1529,245 +1749,23 @@ noscript.loading-hide{display:none}
   </section>
 
 
-  <!-- ========== 01 女书 ========== -->
-  <section class="chapter" id="ch-nushu" data-c="nushu" data-tone="light" data-base-tone="dark">
-    <div class="chapter-pin" data-no="01">
-      <div class="chapter-block" aria-hidden="true"></div>
-      <div class="chapter-art" aria-hidden="true"></div>
-      <div class="chapter-texture" aria-hidden="true"></div>
-      <div class="chapter-shade" aria-hidden="true"></div>
-      <div class="chapter-bg" aria-hidden="true"><div class="nushu">𛆁𛈬𛆓𛆂𛆱𛈅𛈆𛇁𛆊𛆌𛊐𛉊</div></div>
-      <div class="ch-frame" aria-hidden="true"><svg viewBox="0 0 160 160"><path class="frame-line" pathLength="1000" d="M 80 16 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16 80 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80 144 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144 80 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80 16 Z"/></svg></div>
-      <div class="chapter-inner">
-        <div class="ch-top"><span>CHAPTER 01 / 06</span><span class="cn">国家级非物质文化遗产 · 2006 第一批</span><span>25.27°N · 111.34°E</span></div>
-        <div class="ch-grid">
-          <div class="ch-head">
-            <div class="ch-no">
-              <svg class="ch-core" viewBox="0 0 100 100" aria-hidden="true"><path class="core-line" d="M50 10 L88 50 L50 90 L12 50 Z"/><path class="core-line" d="M50 28 L72 50 L50 72 L28 50 Z"/><path class="core-line" d="M50 10 V28 M88 50 H72 M50 90 V72 M12 50 H28"/></svg>
-              <b>壹</b><span>NÜSHU / A SCRIPT OF HER OWN</span>
-            </div>
-            <h2 class="ch-title" aria-label="女书"><span class="mask"><span class="ch">女</span></span><span class="mask"><span class="ch">书</span></span></h2>
-            <div class="ch-en">A SCRIPT OF HER OWN<small>江永女书 · 目前已知唯一由女性专用的文字</small></div>
-            <p class="ch-lede">女书笔画纤细、右斜，字形呈长菱形。江永的女性用它写信、记姊妹往来，写在纸扇、手帕和三朝书上。<b>目前已知唯一由女性专用</b>的文字。</p>
-          </div>
-          <figure class="ch-media">
-            <img src="assets/img/nushu.jpg" alt="江永女书手稿，左侧为女书字形，右侧为汉字译文" loading="lazy" decoding="async" width="1100" height="825">
-            <figcaption class="ch-cap"><b>女书手稿与汉译</b><span>SOURCE / 公开资料图 · 课程演示</span></figcaption>
-          </figure>
-        </div>
-        <div class="ch-foot">
-          <dl class="ch-facts">
-            <div><dt>属地 / Region</dt><dd>湖南 · 江永</dd></div>
-            <div><dt>名录 / Heritage</dt><dd>2006 第一批国家级非遗</dd></div>
-            <div><dt>声音 / Sound</dt><dd>读唱 · 坐歌堂</dd></div>
-          </dl>
-          <div class="wave" aria-hidden="true"></div>
-        </div>
-      </div>
-      <div class="ch-side" aria-hidden="true">PAPER &amp; WEAVE / NÜSHU · 01</div>
+  <!-- ========== 六章：单一连续滚轮舞台 ========== -->
+  <section class="theme-stage" id="chapter-stage" data-tone="light">
+    <div class="stage-pin" id="stagePin">
+      <div class="stage-bg stage-bg-current" id="stageBgCurrent" aria-hidden="true"></div>
+      <div class="stage-bg stage-bg-next" id="stageBgNext" aria-hidden="true"></div>
+      <div class="stage-images" id="stageImages" aria-hidden="true"></div>
+      <h2 class="stage-title" id="stageTitle">
+        <span class="stage-title-text" id="stageTitleText"></span>
+      </h2>
+      <div class="stage-copies" id="stageCopies"></div>
     </div>
-  </section>
-
-  <!-- ========== 02 蝴蝶歌 ========== -->
-  <section class="chapter alt" id="ch-butterfly" data-c="butterfly" data-tone="light" data-base-tone="light">
-    <div class="chapter-pin" data-no="02">
-      <div class="chapter-block" aria-hidden="true"></div>
-      <div class="chapter-art" aria-hidden="true"></div>
-      <div class="chapter-texture" aria-hidden="true"></div>
-      <div class="chapter-shade" aria-hidden="true"></div>
-      <div class="chapter-bg" aria-hidden="true"><div class="lyric">蝴的蝶 蝶的蝶 蝴的蝶 蝶的蝶</div></div>
-      <div class="ch-frame" aria-hidden="true"><svg viewBox="0 0 160 160"><path class="frame-line" pathLength="1000" d="M 80 16 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16 80 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80 144 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144 80 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80 16 Z"/></svg></div>
-      <div class="chapter-inner">
-        <div class="ch-top"><span>CHAPTER 02 / 06</span><span class="cn">国家级非物质文化遗产 · 2008 第二批</span><span>24.82°N · 111.27°E</span></div>
-        <div class="ch-grid">
-          <figure class="ch-media">
-            <img src="assets/img/butterfly.jpg" alt="富川瑶族蝴蝶歌传承人群" loading="lazy" decoding="async" width="550" height="366">
-            <figcaption class="ch-cap"><b>蝴蝶歌传承人群</b><span>SOURCE / 广西新闻网 · 公开资料图</span></figcaption>
-          </figure>
-          <div class="ch-head">
-            <div class="ch-no">
-              <svg class="ch-core" viewBox="0 0 100 100" aria-hidden="true"><path class="core-line" d="M8 50 C24 18 40 18 50 50 C60 18 76 18 92 50 C76 82 60 82 50 50 C40 82 24 82 8 50 Z"/><path class="core-line" d="M50 18 V82"/></svg>
-              <b>贰</b><span>BUTTERFLY SONG / TWO VOICES</span>
-            </div>
-            <h2 class="ch-title" aria-label="蝴蝶歌"><span class="mask"><span class="ch">蝴</span></span><span class="mask"><span class="ch">蝶</span></span><span class="mask"><span class="ch">歌</span></span></h2>
-            <div class="ch-en">TWO VOICES, ONE BREATH<small>富川瑶家 · 二声部民歌</small></div>
-            <p class="ch-lede">衬词「蝴的蝶」贯穿全曲，两个声部同起同收。富川瑶族在节庆、歌会与劳作时演唱，唱爱情，也唱劳作。</p>
-          </div>
-        </div>
-        <div class="ch-foot">
-          <dl class="ch-facts">
-            <div><dt>属地 / Region</dt><dd>广西 · 富川</dd></div>
-            <div><dt>名录 / Heritage</dt><dd>2008 第二批国家级非遗</dd></div>
-            <div><dt>声音 / Sound</dt><dd>二声部 · 同起同收</dd></div>
-          </dl>
-          <div class="wave" aria-hidden="true"></div>
-        </div>
-      </div>
-      <div class="ch-side" aria-hidden="true">WEAVE / BUTTERFLY SONG · 02</div>
-    </div>
-  </section>
-
-  <!-- ========== 03 长鼓舞 ========== -->
-  <section class="chapter" id="ch-drum" data-c="drum" data-tone="dark" data-base-tone="light">
-    <div class="chapter-pin" data-no="03">
-      <div class="chapter-block" aria-hidden="true"></div>
-      <div class="chapter-art" aria-hidden="true"></div>
-      <div class="chapter-texture" aria-hidden="true"></div>
-      <div class="chapter-shade" aria-hidden="true"></div>
-      <div class="chapter-bg" aria-hidden="true"><div class="rings"></div></div>
-      <div class="ch-frame" aria-hidden="true"><svg viewBox="0 0 160 160"><path class="frame-line" pathLength="1000" d="M 80 16 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16 80 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80 144 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144 80 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80 16 Z"/></svg></div>
-      <div class="chapter-inner">
-        <div class="ch-top"><span>CHAPTER 03 / 06</span><span class="cn">国家级非物质文化遗产 · 2008 第二批</span><span>25.18°N · 111.55°E</span></div>
-        <div class="ch-grid">
-          <div class="ch-head">
-            <div class="ch-no">
-              <svg class="ch-core" viewBox="0 0 100 100" aria-hidden="true"><path class="core-line" d="M28 12 C42 34 42 66 28 88 M72 12 C58 34 58 66 72 88 M28 12 H72 M28 88 H72 M42 50 H58"/><circle class="core-fill" cx="50" cy="50" r="3"/></svg>
-              <b>叁</b><span>LONG DRUM DANCE / THE DRUM REMEMBERS</span>
-            </div>
-            <h2 class="ch-title" aria-label="长鼓舞"><span class="mask"><span class="ch">长</span></span><span class="mask"><span class="ch">鼓</span></span><span class="mask"><span class="ch">舞</span></span></h2>
-            <div class="ch-en">THE DRUM REMEMBERS<small>瑶语「郭咚郭」· 湖南江华 / 广东连南 / 广西富川</small></div>
-            <p class="ch-lede">舞者挎长鼓，边击鼓边舞蹈。动作有开荒、伐木、建房等，江华、<span class="nb">金秀</span>、富川各有分支。</p>
-          </div>
-          <figure class="ch-media">
-            <img src="assets/img/drum.jpg" alt="瑶族长鼓舞表演，舞者身穿彩色民族服饰，手持长鼓腾跃" loading="lazy" decoding="async" width="1200" height="829">
-            <figcaption class="ch-cap"><b>瑶族长鼓舞</b><span>SOURCE / 公开资料图 · 课程演示</span></figcaption>
-          </figure>
-        </div>
-        <div class="ch-foot">
-          <dl class="ch-facts">
-            <div><dt>属地 / Region</dt><dd>江华 · 连南 · 富川</dd></div>
-            <div><dt>名录 / Heritage</dt><dd>2008 第二批国家级非遗</dd></div>
-            <div><dt>声音 / Sound</dt><dd>鼓点 · 号子</dd></div>
-          </dl>
-          <div class="wave" aria-hidden="true"></div>
-        </div>
-      </div>
-      <div class="ch-side" aria-hidden="true">WOOD &amp; GOLD / LONG DRUM · 03</div>
-    </div>
-  </section>
-
-  <!-- ========== 04 风雨桥 ========== -->
-  <section class="chapter alt" id="ch-bridge" data-c="bridge" data-tone="light" data-base-tone="dark">
-    <div class="chapter-pin" data-no="04">
-      <div class="chapter-block" aria-hidden="true"></div>
-      <div class="chapter-art" aria-hidden="true"></div>
-      <div class="chapter-texture" aria-hidden="true"></div>
-      <div class="chapter-shade" aria-hidden="true"></div>
-      <div class="chapter-bg" aria-hidden="true"><div class="water"></div>
-        <svg class="bg-core" viewBox="0 0 160 160">
-          <path d="M18 100 H142 M30 100 A18 18 0 0 1 66 100 M66 100 A18 18 0 0 1 102 100 M102 100 A18 18 0 0 1 138 100" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M40 78 H120 M52 78 L62 62 H100 L110 78 M60 62 V78 M80 62 V78 M100 62 V78" fill="none" stroke="currentColor" stroke-width="1.2"/>
-          <path d="M46 78 L54 68 M74 78 L80 68 M106 78 L112 68" fill="none" stroke="currentColor" stroke-width="1"/>
-        </svg>
-      </div>
-      <div class="ch-frame" aria-hidden="true"><svg viewBox="0 0 160 160"><path class="frame-line" pathLength="1000" d="M 80 16 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16 80 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80 144 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144 80 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80 16 Z"/></svg></div>
-      <div class="chapter-inner">
-        <div class="ch-top"><span>CHAPTER 04 / 06</span><span class="cn">全国重点文物保护单位 · 2013 第七批</span><span>24.90°N · 111.20°E</span></div>
-        <div class="ch-grid">
-          <figure class="ch-media">
-            <img src="assets/img/bridge.jpg" alt="富川瑶族风雨桥，三孔石拱上架桥廊与桥亭，横跨溪流" loading="lazy" decoding="async" width="1100" height="773">
-            <figcaption class="ch-cap"><b>富川瑶族风雨桥群</b><span>SOURCE / 公开资料图 · 课程演示</span></figcaption>
-          </figure>
-          <div class="ch-head">
-            <div class="ch-no">
-              <svg class="ch-core" viewBox="0 0 100 100" aria-hidden="true"><path class="core-line" d="M8 62 H92 M22 62 A13 13 0 0 1 48 62 M42 62 A13 13 0 0 1 68 62 M62 62 A13 13 0 0 1 88 62 M18 46 H82 M30 46 L38 34 H64 L72 46"/></svg>
-              <b>肆</b><span>A BRIDGE THAT SHELTERS</span>
-            </div>
-            <h2 class="ch-title" aria-label="风雨桥"><span class="mask"><span class="ch">风</span></span><span class="mask"><span class="ch">雨</span></span><span class="mask"><span class="ch">桥</span></span></h2>
-            <div class="ch-en">A BRIDGE THAT SHELTERS<small>27 座 · 石拱 / 石梁 / 木梁</small></div>
-            <p class="ch-lede">回澜桥为三孔石拱，桥上建廊，廊间起亭，亭上叠阁楼。桥廊两侧设坐凳，供行人避雨歇脚。</p>
-          </div>
-        </div>
-        <div class="ch-foot">
-          <dl class="ch-facts">
-            <div><dt>属地 / Region</dt><dd>广西 · 富川</dd></div>
-            <div><dt>名录 / Heritage</dt><dd>2013 第七批全国重点文保</dd></div>
-            <div><dt>声音 / Sound</dt><dd>水声 · 风穿廊</dd></div>
-          </dl>
-          <div class="wave" aria-hidden="true"></div>
-        </div>
-      </div>
-      <div class="ch-side" aria-hidden="true">TIMBER &amp; WATER / BRIDGE · 04</div>
-    </div>
-  </section>
-
-  <!-- ========== 05 盘王大歌 ========== -->
-  <section class="chapter" id="ch-panwang" data-c="panwang" data-tone="light" data-base-tone="light">
-    <div class="chapter-pin" data-no="05">
-      <div class="chapter-block" aria-hidden="true"></div>
-      <div class="chapter-art" aria-hidden="true"></div>
-      <div class="chapter-texture" aria-hidden="true"></div>
-      <div class="chapter-shade" aria-hidden="true"></div>
-      <div class="chapter-bg" aria-hidden="true">
-        <div class="songs">还盘王愿 · 八千行 · 三十六歌 · 七任曲</div>
-      </div>
-      <div class="ch-frame" aria-hidden="true"><svg viewBox="0 0 160 160"><path class="frame-line" pathLength="1000" d="M 80 16 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16 80 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80 144 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144 80 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80 16 Z"/></svg></div>
-      <div class="chapter-inner">
-        <div class="ch-top"><span>CHAPTER 05 / 06</span><span class="cn">国家级非物质文化遗产 · 2014 第四批</span><span>25.18°N · 111.55°E</span></div>
-        <div class="ch-grid">
-          <div class="ch-head">
-            <div class="ch-no">
-              <svg class="ch-core" viewBox="0 0 100 100" aria-hidden="true"><rect class="core-line" x="20" y="20" width="60" height="60"/><path class="core-line" d="M50 50 L50 24 M76 50 L50 50 M50 76 L50 50 M24 50 L50 50"/><circle class="core-fill" cx="50" cy="50" r="3"/></svg>
-              <b>伍</b><span>PANWANG SONG / A VOW RETURNED</span>
-            </div>
-            <h2 class="ch-title" aria-label="盘王大歌"><span class="mask"><span class="ch">盘</span></span><span class="mask"><span class="ch">王</span></span><span class="mask"><span class="ch">大</span></span><span class="mask"><span class="ch">歌</span></span></h2>
-            <div class="ch-en">A VOW RETURNED<small>还盘王愿 · 八千行 · 七任曲</small></div>
-            <p class="ch-lede">《盘王大歌》约八千行，分序歌、插歌、正歌、杂歌，有七支曲牌。盘王节「还盘王愿」时，师公与歌娘男女对唱。</p>
-          </div>
-          <figure class="ch-media">
-            <img src="assets/img/panwang.jpg" alt="盘王印方形绣片实例" loading="lazy" decoding="async" width="810" height="810">
-            <figcaption class="ch-cap"><b>盘王印绣片</b><span>SOURCE / 华农朝华夕绣 · 公开资料图</span></figcaption>
-          </figure>
-        </div>
-        <div class="ch-foot">
-          <dl class="ch-facts">
-            <div><dt>属地 / Region</dt><dd>湖南 · 江华</dd></div>
-            <div><dt>名录 / Heritage</dt><dd>2014 第四批国家级非遗</dd></div>
-            <div><dt>声音 / Sound</dt><dd>吟唱 · 七任曲</dd></div>
-          </dl>
-          <div class="wave" aria-hidden="true"></div>
-        </div>
-      </div>
-      <div class="ch-side" aria-hidden="true">SOOT &amp; GOLD / PANWANG · 05</div>
-    </div>
-  </section>
-
-  <!-- ========== 07 富川织锦 ========== -->
-  <section class="chapter alt" id="ch-brocade" data-c="brocade" data-tone="light" data-base-tone="light">
-    <div class="chapter-pin" data-no="06">
-      <div class="chapter-block" aria-hidden="true"></div>
-      <div class="chapter-art" aria-hidden="true"></div>
-      <div class="chapter-texture" aria-hidden="true"></div>
-      <div class="chapter-shade" aria-hidden="true"></div>
-      <div class="chapter-bg" aria-hidden="true"><div class="lyric">菱形 · 折线 · 花带</div></div>
-      <div class="ch-frame" aria-hidden="true"><svg viewBox="0 0 160 160"><path class="frame-line" pathLength="1000" d="M 80 16 A 73.91 73.91 0 0 1 125.25 125.25 A 73.91 73.91 0 0 1 16 80 A 73.91 73.91 0 0 1 125.25 34.75 A 73.91 73.91 0 0 1 80 144 A 73.91 73.91 0 0 1 34.75 34.75 A 73.91 73.91 0 0 1 144 80 A 73.91 73.91 0 0 1 34.75 125.25 A 73.91 73.91 0 0 1 80 16 Z"/></svg></div>
-      <div class="chapter-inner">
-        <div class="ch-top"><span>CHAPTER 06 / 06</span><span class="cn">广西自治区级非物质文化遗产 · 2018</span><span>24.82°N · 111.27°E</span></div>
-        <div class="ch-grid">
-          <figure class="ch-media">
-            <img src="assets/img/brocade.jpg" alt="富川平地瑶织锦与服饰" loading="lazy" decoding="async" width="640" height="465">
-            <figcaption class="ch-cap"><b>富川平地瑶织锦与服饰</b><span>SOURCE / 公开资料图 · 课程演示</span></figcaption>
-          </figure>
-          <div class="ch-head">
-            <div class="ch-no">
-              <b>陆</b><span>FUCHUAN YAO BROCADE / WEAVE &amp; DYE</span>
-            </div>
-            <h2 class="ch-title" aria-label="富川瑶族织锦"><span class="mask"><span class="ch">织</span></span><span class="mask"><span class="ch">锦</span></span></h2>
-            <div class="ch-en">FUCHUAN YAO BROCADE<small>平地瑶 · 植物染色 · 经纬显花</small></div>
-            <p class="ch-lede">富川平地瑶的织锦以植物染色的经纬线织出菱形、折线与花带，用在被面、枕头、头帕与服饰上。<b>2018 年列入广西自治区级非遗</b>。据《消费日报》报道，这项技艺已有 1000 余年历史。</p>
-          </div>
-        </div>
-        <div class="ch-foot">
-          <dl class="ch-facts">
-            <div><dt>属地 / Region</dt><dd>广西 · 富川</dd></div>
-            <div><dt>名录 / Heritage</dt><dd>2018 自治区级非遗</dd></div>
-            <div><dt>声音 / Sound</dt><dd>织机 · 投梭</dd></div>
-          </dl>
-          <div class="wave" aria-hidden="true"></div>
-        </div>
-      </div>
-      <div class="ch-side" aria-hidden="true">WEAVE &amp; DYE / BROCADE · 06</div>
-    </div>
+    <span class="stage-anchor" id="ch-nushu" style="--i:0" aria-hidden="true"></span>
+    <span class="stage-anchor" id="ch-butterfly" style="--i:1" aria-hidden="true"></span>
+    <span class="stage-anchor" id="ch-drum" style="--i:2" aria-hidden="true"></span>
+    <span class="stage-anchor" id="ch-bridge" style="--i:3" aria-hidden="true"></span>
+    <span class="stage-anchor" id="ch-panwang" style="--i:4" aria-hidden="true"></span>
+    <span class="stage-anchor" id="ch-brocade" style="--i:5" aria-hidden="true"></span>
   </section>
 
   <!-- ========== 08 六章索引 ========== -->
@@ -1777,12 +1775,11 @@ noscript.loading-hide{display:none}
         <div class="left">
           <div class="index-label"><i></i><span>目录 / CONTENTS</span></div>
           <h2>六章</h2>
-          <p class="index-intro">潇贺古道沿线的六项文化遗产。悬停或点按任意一题，展开这一题的短说明与专题页入口。</p>
+          <p class="index-intro">潇贺古道沿线的六项文化遗产，六套色彩、字形与纹样。</p>
         </div>
-        <div class="index-count">悬停展开 · 点按进入 →</div>
       </div>
       <div class="index-grid">
-        <a class="theme-card" href="themes/02-女书.html" style="--cc:#A9362E;--cf:#F2EDE2;--i:0" aria-label="女书 · A SCRIPT OF HER OWN">
+        <a class="theme-card" href="themes/02-女书.html" data-theme-key="nushu" style="--cc:#A9362E;--cf:#F2EDE2;--i:0" aria-label="女书 · 湖南江永 · 国家级非遗 2006">
           <span class="fill" aria-hidden="true"></span>
           <span class="no">01 / NÜSHU</span>
           <span class="arrow" aria-hidden="true">↗</span>
@@ -1790,10 +1787,10 @@ noscript.loading-hide{display:none}
           <span class="group">
             <span class="cn">女书</span>
             <span class="sub">湖南江永 · 国家级非遗 2006</span>
-            <span class="meta"><span class="en">A SCRIPT OF HER OWN</span><span class="note">长菱形字格 · 八角花</span></span>
+            <span class="meta"><span class="note">长菱形字格 · 八角花</span></span>
           </span>
         </a>
-        <a class="theme-card" href="themes/03-蝴蝶歌.html" style="--cc:#2C5A4E;--cf:#F2EDE2;--i:1" aria-label="蝴蝶歌 · TWO VOICES, ONE BREATH">
+        <a class="theme-card" href="themes/03-蝴蝶歌.html" data-theme-key="butterfly" style="--cc:#2C5A4E;--cf:#F2EDE2;--i:1" aria-label="蝴蝶歌 · 广西富川 · 国家级非遗 2008">
           <span class="fill" aria-hidden="true"></span>
           <span class="no">02 / BUTTERFLY SONG</span>
           <span class="arrow" aria-hidden="true">↗</span>
@@ -1801,10 +1798,10 @@ noscript.loading-hide{display:none}
           <span class="group">
             <span class="cn">蝴蝶歌</span>
             <span class="sub">广西富川 · 国家级非遗 2008</span>
-            <span class="meta"><span class="en">TWO VOICES, ONE BREATH</span><span class="note">二声部 · 同起同收</span></span>
+            <span class="meta"><span class="note">二声部 · 同起同收</span></span>
           </span>
         </a>
-        <a class="theme-card" href="themes/04-长鼓舞.html" style="--cc:#8B5A16;--cf:#F2EDE2;--i:2" aria-label="长鼓舞 · THE DRUM REMEMBERS">
+        <a class="theme-card" href="themes/04-长鼓舞.html" data-theme-key="drum" style="--cc:#C08A2E;--cf:#141A16;--i:2" aria-label="长鼓舞 · 湘桂瑶族地区 · 国家级非遗 2008">
           <span class="fill" aria-hidden="true"></span>
           <span class="no">03 / LONG DRUM</span>
           <span class="arrow" aria-hidden="true">↗</span>
@@ -1812,21 +1809,21 @@ noscript.loading-hide{display:none}
           <span class="group">
             <span class="cn">长鼓舞</span>
             <span class="sub">湘桂瑶族地区 · 国家级非遗 2008</span>
-            <span class="meta"><span class="en">THE DRUM REMEMBERS</span><span class="note">长鼓 · 高台长鼓舞</span></span>
+            <span class="meta"><span class="note">长鼓 · 高台长鼓舞</span></span>
           </span>
         </a>
-        <a class="theme-card" href="themes/05-风雨桥.html" style="--cc:#1D2652;--cf:#F2EDE2;--i:3" aria-label="风雨桥 · A BRIDGE THAT SHELTERS">
+        <a class="theme-card" href="themes/05-风雨桥.html" data-theme-key="bridge" style="--cc:#1D2652;--cf:#F2EDE2;--i:3" aria-label="富川风雨桥 · 广西富川 · 全国重点文保 2013">
           <span class="fill" aria-hidden="true"></span>
           <span class="no">04 / WIND-RAIN BRIDGE</span>
           <span class="arrow" aria-hidden="true">↗</span>
           <span class="theme-mark-type" aria-hidden="true">风</span>
           <span class="group">
-            <span class="cn">风雨桥</span>
-            <span class="sub">广西富川 · 全国重点文保 2013</span>
-            <span class="meta"><span class="en">A BRIDGE THAT SHELTERS</span><span class="note">27 座 · 桥廊与桥亭</span></span>
+            <span class="cn">富川风雨桥</span>
+            <span class="sub">瑶族桥群 · 全国重点文保 2013</span>
+            <span class="meta"><span class="note">27 座 · 桥廊与桥亭</span></span>
           </span>
         </a>
-        <a class="theme-card" href="themes/06-盘王大歌.html" style="--cc:#15120F;--cf:#F2EDE2;--i:4" aria-label="盘王大歌 · A VOW RETURNED">
+        <a class="theme-card" href="themes/06-盘王大歌.html" data-theme-key="panwang" style="--cc:#15120F;--cf:#F2EDE2;--i:4" aria-label="盘王大歌 · 湖南江华 · 国家级非遗 2014">
           <span class="fill" aria-hidden="true"></span>
           <span class="no">05 / PANWANG SONG</span>
           <span class="arrow" aria-hidden="true">↗</span>
@@ -1834,18 +1831,18 @@ noscript.loading-hide{display:none}
           <span class="group">
             <span class="cn">盘王大歌</span>
             <span class="sub">湖南江华 · 国家级非遗 2014</span>
-            <span class="meta"><span class="en">A VOW RETURNED</span><span class="note">八千行 · 七任曲</span></span>
+            <span class="meta"><span class="note">八千行 · 七任曲</span></span>
           </span>
         </a>
-        <a class="theme-card" href="themes/07-富川织锦.html" style="--cc:#1E2B26;--cf:#F2EDE2;--i:5" aria-label="富川织锦 · FUCHUAN YAO BROCADE">
+        <a class="theme-card" href="themes/07-富川织锦.html" data-theme-key="brocade" style="--cc:#1E2B26;--cf:#F2EDE2;--i:5" aria-label="瑶族织锦 · 广西富川 · 自治区级非遗 2018">
           <span class="fill" aria-hidden="true"></span>
-          <span class="no">06 / FUCHUAN BROCADE</span>
+          <span class="no">06 / YAO BROCADE</span>
           <span class="arrow" aria-hidden="true">↗</span>
           <span class="theme-mark-type" aria-hidden="true">织</span>
           <span class="group">
-            <span class="cn">富川织锦</span>
+            <span class="cn">瑶族织锦</span>
             <span class="sub">广西富川 · 自治区级非遗 2018</span>
-            <span class="meta"><span class="en">FUCHUAN YAO BROCADE</span><span class="note">平地瑶 · 植物染色</span></span>
+            <span class="meta"><span class="note">平地瑶 · 植物染色</span></span>
           </span>
         </a>
       </div>
@@ -1865,7 +1862,7 @@ noscript.loading-hide{display:none}
         <h2><span class="out">听见</span><span class="red">古道</span></h2>
       </div>
       <div class="closing-copy">
-        <p>古道沿线，女书、蝴蝶歌、长鼓舞、风雨桥、盘王大歌与富川织锦各有自己的声音与手艺。<br>数据库收录可核对的条目、录音与影像，供查阅与引用。</p>
+        <p>古道沿线，女书、蝴蝶歌、长鼓舞、富川风雨桥、盘王大歌与瑶族织锦各有自己的声音与手艺。<br>数据库收录可核对的条目、录音与影像，供查阅与引用。</p>
         <div class="closing-actions">
           <a class="btn solid" href="database.html#/sounds"><span>进入声音数据库</span>SOUND →</a>
           <a class="btn" href="database.html#/atlas"><span>打开古道图志</span>ATLAS ↗</a>
@@ -1885,7 +1882,7 @@ noscript.loading-hide{display:none}
     <footer class="footer">
       <div class="footer-top">
         <span class="footer-cn">© 2026 潇贺古道有声文化数据库 · 贺州学院视觉传达设计</span>
-        <span>IMAGES / 黄姚古镇 · 江永女书 · 瑶族长鼓舞 · 富川风雨桥 · 公开资料图，仅作文化展示</span>
+        <span>IMAGES / 潇贺古道沿线影像与非遗图像 · 公开资料图，仅作文化展示</span>
         <span>FONTS / Noto Serif SC · Noto Sans SC · Ma Shan Zheng · SIL OFL 1.1</span>
         <a href="#hero">BACK TO TOP ↑</a>
       </div>
@@ -1909,7 +1906,7 @@ noscript.loading-hide{display:none}
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const params = new URLSearchParams(location.search);
   const debugScene = params.get('scene');
-  const skipLoader = !!debugScene || reduced || params.has('nofx');
+  const skipLoader = !!debugScene || reduced || params.has('nofx') || document.documentElement.classList.contains('skip-intro');
 
   const body = document.body;
   if (params.has('nocursor')) {
@@ -1918,17 +1915,20 @@ noscript.loading-hide{display:none}
   }
   const topbar = $('#topbar');
   const hero = $('#hero');
-  const heroH1 = $('.hero-h1', hero);
   const heroChars = $$('.hero-h1 .ch', hero);
+  const heroCard = $('#heroCard');
+  const hero3d = $('#hero3d');
+  const hero3dCards = hero3d ? $$('.hero-3d-card', hero3d) : [];
+  let hero3dActive = 0;
   const statement = $('#statement');
   const route = $('#route');
+  const themeStage = $('#chapter-stage');
   const indexSec = $('#index');
   const closing = $('#closing');
   const sceneLinks = $$('.scene-nav a');
   const menu = $('#menu');
   const menuBtn = $('#menuBtn');
   const menuClose = $('#menuClose');
-  const brush = $('#brush');
 
   const chapterEls = $$('.chapter');
 
@@ -1956,27 +1956,35 @@ noscript.loading-hide{display:none}
   let heroRange = 1;
   let heroEnd = 0;
   let statementTop = 0;
+  let statementHeadTop = 0;
+  let statementStarted = false;
   let indexTop = 0;
   let sections = [];
-  let charRects = [];
   let activeId = '';
   let lastTone = '';
   let heroOut = false;
+  let heroNavPast = false;
+  let heroOnPhoto = false;
+  /* ?hp=0.55 把首屏钉在某个进度上（看稿 / 截图 / 答辩演示用） */
+  const heroPin = params.has('hp') ? clamp(parseFloat(params.get('hp')) || 0, 0, 1) : null;
   let writeStarted = false;
   let writeDone = false;
   let writeStart = 0;
   let curY = scrollY;
   let targetY = scrollY;
-  let lastProgress = -1;
-  let snapScenes = [];
-  let snapping = false;
-  let lastSnapEnd = -1000;
 
   /* ---------------- 载入 ---------------- */
   if (skipLoader) {
     body.classList.remove('is-loading');
     body.classList.add('loaded', 'skip-loader');
+    hero.classList.add('is-ready');
+    if (!reduced && !debugScene && !params.has('nofx')) body.classList.add('fade-intro');
   } else {
+    try {
+      window.name = 'xiaohe:intro-seen';
+      localStorage.setItem('xiaohe:intro-seen:v1', '1');
+      sessionStorage.setItem('xiaohe:intro-seen:v1', '1');
+    } catch (err) { /* file:// / 隐私模式 */ }
     runLoader();
   }
 
@@ -1984,7 +1992,7 @@ noscript.loading-hide{display:none}
     const bar = $('#loadBar');
     const num = $('#loadNum');
     const start = performance.now();
-    const dur = 1350;
+    const dur = 1050;
     function tick(now) {
       const t = clamp((now - start) / dur, 0, 1);
       const e = 1 - Math.pow(1 - t, 3);
@@ -1994,32 +2002,37 @@ noscript.loading-hide{display:none}
         requestAnimationFrame(tick);
       } else {
         body.classList.add('loaded');
+        hero.classList.add('is-ready');
         window.setTimeout(() => {
           body.classList.remove('is-loading');
           body.classList.add('skip-loader');
           measure();
-        }, 900);
+        }, 700);
       }
     }
     requestAnimationFrame(tick);
   }
 
-  /* ---------------- 声波条 ---------------- */
-  $$('.wave').forEach((wave, wi) => {
-    const frag = document.createDocumentFragment();
-    for (let i = 0; i < 56; i++) {
-      const bar = document.createElement('i');
-      const v = 0.16 + 0.8 *
-        Math.abs(Math.sin((i + 1) * (0.63 + wi * 0.09))) *
-        (0.55 + 0.45 * Math.abs(Math.sin((i + 1) * 0.19 + wi)));
-      bar.style.setProperty('--h', clamp(v, 0.12, 1).toFixed(3));
-      bar.style.setProperty('--d', (-(i * 0.06 + wi * 0.4)).toFixed(2) + 's');
-      frag.appendChild(bar);
-    }
-    wave.appendChild(frag);
-  });
-
   /* ---------------- 尺寸与场景位置 ---------------- */
+  function layoutHero3d() {
+    if (!hero3d || !hero3dCards.length) return;
+    const n = hero3dCards.length;
+    const width = hero3d.clientWidth || Math.min(innerWidth * .5, 760);
+    const step = Math.min(190, Math.max(72, width * .24));
+
+    hero3dCards.forEach((card, i) => {
+      const offset = ((i - hero3dActive + n + Math.floor(n / 2)) % n) - Math.floor(n / 2);
+      const abs = Math.abs(offset);
+      const x = offset * step;
+      const z = abs === 0 ? 90 : -abs * 120;
+      const ry = offset * -26;
+      const scale = abs === 0 ? 1 : .8;
+      card.style.transform = `translate3d(calc(-50% + ${x}px), -50%, ${z}px) rotateY(${ry}deg) scale(${scale})`;
+      card.style.opacity = abs === 0 ? 1 : (abs === 1 ? .86 : .44);
+      card.style.zIndex = String(20 - abs);
+    });
+  }
+
   function measure() {
     vw = innerWidth;
     vh = innerHeight;
@@ -2032,6 +2045,10 @@ noscript.loading-hide{display:none}
     heroRange = Math.max(1, hero.offsetHeight - vh);
     heroEnd = heroTop + hero.offsetHeight;
     statementTop = Math.round(statement.getBoundingClientRect().top + scrollY);
+    const statementH2 = statement.querySelector('h2');
+    statementHeadTop = statementH2
+      ? Math.round(statementH2.getBoundingClientRect().top + scrollY)
+      : statementTop;
     indexTop = Math.round(indexSec.getBoundingClientRect().top + scrollY);
 
     chapterEls.forEach(el => {
@@ -2040,7 +2057,7 @@ noscript.loading-hide{display:none}
       el._range = Math.max(1, el.offsetHeight - vh);
     });
 
-    sections = [hero, statement, ...chapterEls, indexSec, closing].filter(Boolean).map(el => {
+    sections = [hero, statement, themeStage, ...chapterEls, indexSec, closing].filter(Boolean).map(el => {
       const r = el.getBoundingClientRect();
       return {
         el,
@@ -2051,22 +2068,7 @@ noscript.loading-hide{display:none}
       };
     });
 
-    /* 滚轮一格的落点：序章 + 六章（主题）；页脚/索引保持原生滚动 */
-    snapScenes = sections
-      .filter(s => s.id === 'statement' || s.el.classList.contains('chapter'))
-      .map(s => s.top)
-      .sort((a, b) => a - b);
-
-    const hr = heroH1.getBoundingClientRect();
-    charRects = heroChars.map(ch => {
-      const r = ch.getBoundingClientRect();
-      return {
-        left: r.left - hr.left,
-        top: r.top - hr.top,
-        w: r.width,
-        h: r.height
-      };
-    });
+    layoutHero3d();
   }
 
   const varCache = new Map();
@@ -2077,62 +2079,49 @@ noscript.loading-hide{display:none}
     el.style.setProperty(name, v);
   }
 
-  /* ---------------- 首屏 ---------------- */
+  /* ---------------- 首屏：纸色蒙版 + 题名缩放 ----------------
+     p = 0 → 只有照片；p = 1 → 纸面上一幅落款题名。
+     蒙版是一张纸自下而上淹没照片；字在纸上开口，纸过到哪儿字就在哪儿显影。
+     tscale 走字号（不用 transform，否则题名底图会挂到字自己身上、
+     和照片层错位 —— 见 CSS 注释里的硬约束）。 */
   function setHero(p) {
-    const s = 1 - (isMobile ? 0.27 : 0.425) * smoothstep(0.06, 0.44, p);
-    const gray = smoothstep(0.10, 0.53, p);
-    const dim = 0.68 * smoothstep(0.12, 0.59, p);
-    const band = smoothstep(0.13, 0.40, p);
-    const kick = smoothstep(0.22, 0.35, p);
-    const cue = 1 - smoothstep(0.01, 0.11, p);
-    const ui = 1 - smoothstep(0.28, 0.52, p);
-    const cap = 1 - smoothstep(0.03, 0.15, p);
+    /* 淡化拉得很长（约 0.57 屏 ≈ 920px，十几次滚轮才走完）：
+       一格的亮度变化只有原来的三分之一，不会出现"一下亮起来"的闪。 */
+    const veil = smoothstep(0.05, 0.62, p);      /* 照片整体褪成纸（均匀淡化，不做边） */
+    const shrink = smoothstep(0.05, 0.82, p);    /* 大字：1.7 → 1，慢慢拉到定稿 */
+    /* 倍数上限：宽屏放得开，四个字被切掉两边也读得出"比屏幕大"；
+       窄屏是 2×2，放到 2 倍只剩四条竖杠，反而读不出字，收到 1.45。 */
+    const tMax = isMobile ? 1.45 : 1.7;
+    const tscale = tMax - (tMax - 1) * shrink;
+    const foot = smoothstep(0.78, 0.88, p);
+    const rule = smoothstep(0.82, 0.92, p);
+    const cue = 1 - smoothstep(0.02, 0.09, p);
 
-    /* 到了书写段就自动开始，之后不再被滚轮拖动 */
-    if (!writeStarted && p >= 0.30) {
-      writeStarted = true;
-      writeStart = performance.now();
-    }
-
-    setNum(hero, '--s', s, 'hero-scale');
-    setNum(hero, '--gray', gray, 'hero-gray');
-    setNum(hero, '--dim', dim, 'hero-dim');
-    setNum(hero, '--band', band, 'hero-band');
-    setNum(hero, '--kick', kick, 'hero-kick');
+    setNum(hero, '--veil', veil, 'hero-veil');
+    setNum(hero, '--tscale', tscale, 'hero-tscale');
+    setNum(hero, '--foot', foot, 'hero-foot');
+    setNum(hero, '--rule', rule, 'hero-rule');
     setNum(hero, '--cue', cue, 'hero-cue');
-    setNum(hero, '--ui', ui, 'hero-ui');
-    setNum(hero, '--cap', cap, 'hero-cap');
-    setNum(hero, '--p', p, 'hero-p');
+
+    /* 顶栏：开场在照片上用浅字 → 蒙版推进时退场 → 纸面落定后回来 */
+    const navOp = clamp(1 - smoothstep(0.04, 0.10, p) + smoothstep(0.46, 0.56, p), 0, 1);
+    setNum(document.documentElement, '--nav-op', navOp, 'hero-navop');
+
+    /* 纸还没漫上来时，顶栏用浅色（深墨压在暗照片上等于没有字） */
+    const onPhoto = p < 0.10;
+    if (onPhoto !== heroOnPhoto) {
+      heroOnPhoto = onPhoto;
+      body.classList.toggle('hero-on-photo', onPhoto);
+    }
   }
 
   function setWriting(wt) {
-    let active = -1;
-    let local = 0;
     heroChars.forEach((ch, i) => {
       const r = clamp((wt - i * 0.17) / 0.38, 0, 1);
       setNum(ch, '--r', r, 'hero-char-' + i);
-      if (r > 0.001 && r < 0.999 && active < 0) {
-        active = i;
-        local = r;
-      }
     });
     setNum(hero, '--seal', smoothstep(0.76, 0.93, wt), 'hero-seal');
     setNum(hero, '--sub', smoothstep(0.58, 0.80, wt), 'hero-sub');
-    updateBrush(active, local);
-  }
-
-  function updateBrush(active, local) {
-    if (reduced || active < 0) {
-      if (brush.classList.contains('on')) brush.classList.remove('on');
-      return;
-    }
-    const hr = heroH1.getBoundingClientRect();
-    const cr = charRects[active];
-    if (!cr) return;
-    const x = hr.left + cr.left + cr.w * local;
-    const y = hr.top + cr.top + cr.h * 0.56;
-    brush.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
-    brush.classList.add('on');
   }
 
   /* ---------------- 顶栏 / 进度 / 场景 ---------------- */
@@ -2156,7 +2145,7 @@ noscript.loading-hide{display:none}
       const s = sections[i];
       if (y + 4 >= s.top && y + 4 < s.bottom) topActive = s;
     }
-    let tone = topActive.tone;
+    let tone = topActive.el.dataset.tone || topActive.tone;
     if (topActive.el.classList.contains('chapter') && !topActive.el.classList.contains('panel-full')) {
       tone = topActive.el.dataset.baseTone || 'dark';
     }
@@ -2165,12 +2154,6 @@ noscript.loading-hide{display:none}
       topbar.dataset.tone = tone;
     }
 
-    const max = Math.max(1, document.documentElement.scrollHeight - vh);
-    const progress = clamp(y / max, 0, 1);
-    if (Math.abs(progress - lastProgress) > 0.0004) {
-      lastProgress = progress;
-      document.documentElement.style.setProperty('--scroll', progress.toFixed(4));
-    }
   }
 
   /* ---------------- 六章：滚动进度驱动 ---------------- */
@@ -2214,9 +2197,25 @@ noscript.loading-hide{display:none}
       heroOut = out;
       hero.classList.toggle('is-out', out);
     }
+    const navPast = targetY > heroTop + vh * 0.45;
+    if (navPast !== heroNavPast) {
+      heroNavPast = navPast;
+      body.classList.toggle('hero-past', navPast);
+    }
+    if (!statementStarted && targetY + vh * 0.66 >= statementHeadTop) {
+      statementStarted = true;
+      statement.classList.add('in');
+      route.classList.add('in');
+    }
 
     if (!reduced) {
-      if (curY < heroEnd) setHero(clamp((curY - heroTop) / heroRange, 0, 1));
+      if (heroPin !== null) setHero(heroPin);
+      else if (curY < heroEnd) setHero(clamp((curY - heroTop) / heroRange, 0, 1));
+      else if (heroOnPhoto) {
+        /* 越过首屏后兜底：别让顶栏一直停在浅色 */
+        heroOnPhoto = false;
+        body.classList.remove('hero-on-photo');
+      }
       if (writeStarted && !writeDone) {
         const wt = clamp((performance.now() - writeStart) / 1150, 0, 1);
         setWriting(wt);
@@ -2230,21 +2229,15 @@ noscript.loading-hide{display:none}
 
   /* ---------------- 序章进入 ---------------- */
   const indexGrid = indexSec.querySelector('.index-grid');
-  const io = new IntersectionObserver(entries => {
+  statement.classList.add('reveal-ready');
+  const indexIO = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      if (entry.target === statement) {
-        statement.classList.add('in');
-        route.classList.add('in');
-      }
-      if (entry.target === indexGrid) {
-        indexSec.classList.add('in');
-      }
-      io.unobserve(entry.target);
+      indexSec.classList.add('in');
+      indexIO.unobserve(entry.target);
     });
   }, { threshold: 0.08 });
-  io.observe(statement);
-  if (indexGrid) io.observe(indexGrid);
+  if (indexGrid) indexIO.observe(indexGrid);
 
   /* ---------------- 菜单 ---------------- */
   function setMenu(open) {
@@ -2308,6 +2301,146 @@ noscript.loading-hide{display:none}
     });
   }
 
+  /* ---------------- 六章 → 专题页：主色接管 + 标题接力 ---------------- */
+  const themeWipe = $('#themeWipe');
+  const handoffTitle = $('#handoffTitle');
+  const themeCards = $$('.theme-card');
+
+  const prefetchTheme = href => {
+    if (!href || document.querySelector('link[data-prefetch-theme="' + href + '"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = href;
+    link.dataset.prefetchTheme = href;
+    document.head.appendChild(link);
+  };
+  let sharedPrefetched = false;
+  const prefetchShared = () => {
+    if (sharedPrefetched) return;
+    sharedPrefetched = true;
+    [
+      ['themes/theme-experience.css', 'style'],
+      ['themes/experience.js', 'script'],
+      ['themes/assets/motifs.js', 'script']
+    ].forEach(([href, as]) => {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.as = as;
+      link.href = href;
+      document.head.appendChild(link);
+    });
+  };
+  const canPrefetch = /^https?:$/.test(location.protocol);
+  const idle = window.requestIdleCallback
+    ? cb => window.requestIdleCallback(cb, { timeout: 2400 })
+    : cb => window.setTimeout(cb, 1200);
+  if (canPrefetch) {
+    idle(() => {
+      prefetchShared();
+      themeCards.forEach(card => prefetchTheme(card.getAttribute('href')));
+    });
+
+    themeCards.forEach(card => {
+      const warm = () => prefetchTheme(card.getAttribute('href'));
+      card.addEventListener('pointerenter', warm, { once: true, passive: true });
+      card.addEventListener('focus', warm, { once: true });
+      card.addEventListener('touchstart', warm, { once: true, passive: true });
+    });
+  }
+
+  if (themeWipe && handoffTitle && !reduced) {
+    let isNavigating = false;
+
+    const runHandoff = (e, link, titleEl, color, foreground, key) => {
+      if (isNavigating || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const href = link.getAttribute('href');
+      if (!href || !titleEl || /^(?:[a-z]+:)?\/\//i.test(href)) return;
+
+      e.preventDefault();
+      isNavigating = true;
+
+      /* 原件标题立即隐藏，只留下会移动的副本，避免同字重叠 */
+      titleEl.style.opacity = '0';
+
+      const title = titleEl.textContent.trim();
+      const range = document.createRange();
+      range.selectNodeContents(titleEl);
+      const rect = range.getBoundingClientRect();
+      const titleStyle = getComputedStyle(titleEl);
+      const startSize = parseFloat(titleStyle.fontSize) || 48;
+
+      themeWipe.style.setProperty('--wipe', color);
+      themeWipe.style.setProperty('--wx', (rect.left + rect.width / 2).toFixed(1) + 'px');
+      themeWipe.style.setProperty('--wy', (rect.top + rect.height / 2).toFixed(1) + 'px');
+
+      handoffTitle.className = 'handoff-title' + (title.length >= 4 ? ' handoff-title--long' : '');
+      handoffTitle.textContent = title;
+      handoffTitle.classList.add('is-on');
+      const stageSize = parseFloat(getComputedStyle(handoffTitle).fontSize) || startSize;
+      const scale = stageSize / startSize;
+
+      handoffTitle.style.color = foreground;
+      handoffTitle.style.fontSize = startSize.toFixed(2) + 'px';
+      handoffTitle.style.left = rect.left.toFixed(2) + 'px';
+      handoffTitle.style.top = rect.top.toFixed(2) + 'px';
+      if (link.classList) link.classList.add('is-launching');
+      body.classList.add('is-wiping');
+      void handoffTitle.offsetWidth;
+
+      /* 副本的字形对齐到原件字形，接管瞬间不会错位 */
+      const glyphRange = document.createRange();
+      glyphRange.selectNodeContents(handoffTitle);
+      const glyphRect = glyphRange.getBoundingClientRect();
+      handoffTitle.style.left = (rect.left + (rect.left - glyphRect.left)).toFixed(2) + 'px';
+      handoffTitle.style.top = (rect.top + (rect.top - glyphRect.top)).toFixed(2) + 'px';
+      void handoffTitle.offsetWidth;
+
+      const startRect = handoffTitle.getBoundingClientRect();
+      const dx = innerWidth / 2 - (startRect.left + startRect.width / 2);
+      const dy = innerHeight / 2 - (startRect.top + startRect.height / 2);
+
+      themeWipe.classList.add('is-on');
+      void themeWipe.offsetWidth;
+      requestAnimationFrame(() => themeWipe.classList.add('is-running'));
+
+      /* 先让主题色圆把整页盖住（0.34s），再让标题离开原位；
+         等的是正在移动的圆，而不是让标题干等。 */
+      handoffTitle.animate([
+        { transform: 'translate3d(0,0,0) scale(1)' },
+        { transform: 'translate3d(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px,0) scale(' + scale.toFixed(4) + ')' }
+      ], { duration: 720, delay: 340, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'forwards' });
+      window.setTimeout(() => { themeWipe.classList.add('is-filled'); }, 340);
+
+      const target = href + (href.includes('?') ? '&' : '?') + 'arrive=' + encodeURIComponent(key);
+      window.setTimeout(() => { location.href = target; }, 1420);
+    };
+
+    themeCards.forEach(card => {
+      card.addEventListener('click', e => {
+        const titleEl = $('.cn', card);
+        if (!titleEl) return;
+        const styles = getComputedStyle(card);
+        const color = styles.getPropertyValue('--cc').trim() || '#A9362E';
+        const foreground = styles.getPropertyValue('--cf').trim() || '#F2EDE2';
+        runHandoff(e, card, titleEl, color, foreground, card.dataset.themeKey || '');
+      });
+    });
+
+    /* 上面舞台的「进入专题」按钮也走同一套：标题先到画面中间，再由专题页接走 */
+    document.addEventListener('click', e => {
+      const more = e.target.closest ? e.target.closest('.stage-more') : null;
+      if (!more) return;
+      const copy = more.closest('.stage-copy');
+      const titleEl = document.getElementById('stageTitleText');
+      const bgEl = document.getElementById('stageBgCurrent');
+      if (!copy || !titleEl) return;
+      const color = bgEl ? getComputedStyle(bgEl).backgroundColor : '#A9362E';
+      const foreground = getComputedStyle(copy).color;
+      runHandoff(e, more, titleEl, color, foreground, copy.dataset.theme || '');
+    });
+  }
+
   /* ---------------- 调试定位（?scene=title 等） ---------------- */
   const chScene = (i, f = 0.72) => {
     const el = chapterEls[i];
@@ -2341,57 +2474,16 @@ noscript.loading-hide{display:none}
     }, 80);
   }
 
-  /* ---------------- 滚轮：一格一个主题 ---------------- */
-  function snapTo(target) {
-    if (snapping) return;
-    const start = scrollY;
-    const dist = target - start;
-    if (Math.abs(dist) < 4) return;
-    snapping = true;
-    const root = document.documentElement;
-    const prevBehavior = root.style.scrollBehavior;
-    root.style.scrollBehavior = 'auto';
-    const dur = Math.min(900, Math.max(420, Math.abs(dist) / vh * 560));
-    const t0 = performance.now();
-    function step(now) {
-      const t = clamp((now - t0) / dur, 0, 1);
-      const e = 1 - Math.pow(1 - t, 3);
-      window.scrollTo(0, start + dist * e);
-      if (t < 1) {
-        requestAnimationFrame(step);
-      } else {
-        window.scrollTo(0, target);
-        root.style.scrollBehavior = prevBehavior;
-        snapping = false;
-        lastSnapEnd = performance.now();
-      }
-    }
-    requestAnimationFrame(step);
+  /* 首屏 3D 影像：在纸面上持续转动展示 */
+  if (!reduced && hero3dCards.length) {
+    window.setInterval(() => {
+      if (document.hidden) return;
+      const rect = hero.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= innerHeight) return;
+      hero3dActive = (hero3dActive + 1) % hero3dCards.length;
+      layoutHero3d();
+    }, 3800);
   }
-
-  function onWheel(e) {
-    if (reduced) return;
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if (!e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-    if (snapping || performance.now() - lastSnapEnd < 180) {
-      e.preventDefault();
-      return;
-    }
-    if (Math.abs(e.deltaY) < 1 || !snapScenes.length) return;
-    const y = scrollY;
-    if (y < snapScenes[0]) return;
-    if (y > snapScenes[snapScenes.length - 1] + vh * 0.5) return;
-    let idx = -1;
-    for (let i = 0; i < snapScenes.length; i++) {
-      if (y + vh * 0.5 >= snapScenes[i]) idx = i;
-    }
-    if (idx < 0) return;
-    const next = snapScenes[idx + (e.deltaY > 0 ? 1 : -1)];
-    if (next === undefined) return;
-    e.preventDefault();
-    snapTo(next);
-  }
-  window.addEventListener('wheel', onWheel, { passive: false });
 
   /* ---------------- 启动 ---------------- */
   function init() {
@@ -2399,6 +2491,7 @@ noscript.loading-hide{display:none}
     if (reduced) {
       statement.classList.add('in');
       route.classList.add('in');
+      indexSec.classList.add('in');
       chapterEls.forEach(el => el.classList.add('color-in', 'play', 'panel-full'));
     }
     if (debugScene) {
@@ -2429,251 +2522,21 @@ noscript.loading-hide{display:none}
 })();
 </script>
 
-<!-- ============================================================
-     沿线跑马灯 + 悬挂丝缕（从原主页移植）
-     ------------------------------------------------------------
-     跑马灯：页面每滚 dy px，条子横移 dy px；收手时按 MQ_EASE 收敛。
-     丝缕：每根是一串 Verlet 质点，相邻两点是刚性杆，顶端钉在横杆上；
-           唯一的驱动力是横杆速度与质点速度之差（拖拽），重力负责回正。
-           没有风、没有随机扰动；静止时完全不动。
-     ============================================================ -->
+<script src="assets/scroll-inertia.js?v=20261029a" defer></script>
+<script src="assets/theme-stage.js?v=20261030a" defer></script>
+<script src="assets/audio-player.js" defer></script>
 <script>
-(() => {
-  'use strict';
-  const track = document.getElementById('mqTrack');
-  const inner = document.getElementById('tasselInner');
-  const host = document.getElementById('tassel');
-  if(!track || !inner || !host) return;
-
-  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const reduceNow = reduced();
-
-  /* ---------- 跑马灯：跟着页面滚动走 ---------- */
-  const MQ_SPEED = 1;      /* 页面每滚 1px，条子横移 1px */
-  const MQ_EASE = .14;     /* 惯性收紧速度：越大越跟手 */
-  let mqLoop = 0, mqPos = 0, mqTarget = 0, mqRaf = 0;
-
-  function mqMeasure(){
-    const kids = track.children, half = kids.length >> 1;
-    mqLoop = (half && kids[half]) ? (kids[half].offsetLeft - kids[0].offsetLeft) : track.scrollWidth / 2;
-    if(!(mqLoop > 0)) mqLoop = 0;
-  }
-  function mqEnsure(){
-    if(track.style.animation !== 'none') track.style.animation = 'none';
-    if(!mqLoop) mqMeasure();
-    return mqLoop > 0;
-  }
-  function mqRender(){
-    if(!mqLoop) return;
-    const x = -((((-mqPos % mqLoop) + mqLoop) % mqLoop));
-    track.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
-  }
-  function mqFrame(){
-    mqRaf = 0;
-    const diff = mqTarget - mqPos;
-    if(Math.abs(diff) < .05) mqPos = mqTarget;
-    else { mqPos += diff * (reduceNow ? 1 : MQ_EASE); mqRaf = requestAnimationFrame(mqFrame); }
-    mqRender();
-  }
-
-  /* ---------- 丝缕：Verlet + 约束松弛（Jakobsen） ---------- */
-  const TAS_SEG = 14;       /* 每段长度 px */
-  const TAS_ITER = 14;      /* 每帧松弛次数 */
-  const TAS_GRAV = 3200;    /* 重力 px/s² */
-  const TAS_DRAG = .075;    /* 线性阻力 */
-  const TAS_RAIL_K = 5.0;   /* 横杆拖拽系数 1/s */
-  let tasItems = [], tasW = 0, tasRaf = 0, tasLastTs = 0, tasVisible = true, tasScrollPx = 0, tasIO = null, tasVisBound = false;
-
-  function tasEnsure(){
-    if(inner.dataset.built === '1' && tasItems.length) return true;
-    tasItems = [];
-    inner.dataset.built = '1';
-    inner.innerHTML = '';
-    const W = inner.clientWidth || 1200;
-    const H = inner.clientHeight || 120;
-    tasW = W;
-    /* 间距 = 跑马灯循环长度 ÷ 循环内应有的点位个数 */
-    const span = (mqLoop > 0) ? mqLoop / Math.max(1, Math.round(mqLoop / 112)) : 112;
-    const count = Math.max(4, Math.floor(W / span) + 1);
-    const BOXW = 40, DX = BOXW / 2;
-    for(let i = 0; i < count; i++){
-      const t = count === 1 ? .5 : i / (count - 1);
-      const bell = .78 + .22 * Math.sin(Math.PI * t);   /* 中间略长、两侧略短 */
-      const len = Math.min(H * .92, H * (.62 + .28 * bell));
-      const n = Math.max(4, Math.round(len / TAS_SEG));
-      const seg = len / n;
-      const nodes = [], old = [];
-      for(let k = 0; k <= n; k++){ nodes.push(DX, k * seg); old.push(DX, k * seg); }
-      const boxH = Math.ceil(len);
-      const el = document.createElement('div');
-      el.className = 'tas';
-      el.style.height = boxH + 'px';
-      /* SVG 与元素同尺寸、viewBox 同数值 → 像素即坐标系 */
-      el.innerHTML = '<span class="knot"></span>' +
-        '<svg viewBox="0 0 ' + BOXW + ' ' + boxH + '" preserveAspectRatio="none">' +
-        '<path class="th" stroke-width="' + (.8 + .6 * bell).toFixed(2) + '" d=""/></svg>';
-      inner.appendChild(el);
-      tasItems.push({
-        el: el, path: el.querySelector('path.th'),
-        nodes: nodes, old: old, n: n, seg: seg, L: len, boxH: boxH, dx: DX,
-        x0: i * span,
-        g: .90 + (i % 5) * .05,
-        dr: .90 + (i % 4) * .05
-      });
-    }
-    return tasItems.length > 0;
-  }
-
-  function tasSimulate(h, railV){
-    const h2 = h * h, invH = 1 / h;
-    for(let i = 0; i < tasItems.length; i++){
-      const it = tasItems[i], nd = it.nodes, od = it.old, n = it.n;
-      const g = TAS_GRAV * it.g;
-      const dmp = 1 - TAS_DRAG * it.dr;
-      const kDrag = TAS_RAIL_K * it.g;
-      for(let k = 1; k <= n; k++){
-        const p = k << 1;
-        const x = nd[p], y = nd[p + 1];
-        const vx = (x - od[p]) * invH;            /* Verlet 隐含速度 */
-        const ax = (railV - vx) * kDrag;          /* 拖拽：把结点速度往横杆速度上拉 */
-        const nx = x + (x - od[p]) * dmp + ax * h2;
-        const ny = y + (y - od[p + 1]) * dmp + g * h2;
-        od[p] = x; od[p + 1] = y;
-        nd[p] = nx; nd[p + 1] = ny;
-      }
-      for(let it2 = 0; it2 < TAS_ITER; it2++){
-        for(let k = 0; k < n; k++){
-          const p = k << 1, q = p + 2;
-          let dx = nd[q] - nd[p], dy = nd[q + 1] - nd[p + 1];
-          const d = Math.sqrt(dx * dx + dy * dy) || 1e-6;
-          const diff = (d - it.seg) / d * .5;
-          dx *= diff; dy *= diff;
-          nd[p] += dx; nd[p + 1] += dy;
-          nd[q] -= dx; nd[q + 1] -= dy;
-        }
-        nd[0] = it.dx; nd[1] = 0;                 /* 钉点：顶端压回锚点 */
-      }
-    }
-  }
-
-  /* 用「二次贝塞尔穿过各段中点、以结点为控制点」画平滑曲线 */
-  function tasRender(){
-    for(let i = 0; i < tasItems.length; i++){
-      const it = tasItems[i], nd = it.nodes, n = it.n;
-      let d = 'M' + nd[0].toFixed(2) + ' ' + nd[1].toFixed(2);
-      if(n < 2){ it.path.setAttribute('d', d); continue; }
-      d += ' Q' + nd[2].toFixed(2) + ' ' + nd[3].toFixed(2) + ' ' +
-        ((nd[0] + nd[2]) / 2).toFixed(2) + ' ' + ((nd[1] + nd[3]) / 2).toFixed(2);
-      for(let k = 1; k < n - 1; k++){
-        const p = k << 1, q = p + 2, r = p + 4;
-        d += ' Q' + nd[q].toFixed(2) + ' ' + nd[q + 1].toFixed(2) + ' ' +
-          ((nd[q] + nd[r]) / 2).toFixed(2) + ' ' + ((nd[q + 1] + nd[r + 1]) / 2).toFixed(2);
-      }
-      const e = n << 1;
-      d += ' Q' + nd[e - 2].toFixed(2) + ' ' + nd[e - 1].toFixed(2) + ' ' +
-        nd[e].toFixed(2) + ' ' + nd[e + 1].toFixed(2);
-      it.path.setAttribute('d', d);
-    }
-  }
-
-  function tasPaint(it, railX){
-    let x = it.x0 + railX;
-    if(tasW > 0) x = ((x % tasW) + tasW) % tasW;
-    if(reduceNow) it.el.style.left = x.toFixed(1) + 'px';
-    else it.el.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
-  }
-
-  function tasFrame(ts){
-    tasRaf = 0;
-    if(!tasVisible || document.hidden) return;
-    if(!tasLastTs) tasLastTs = ts;
-    let dt = (ts - tasLastTs) / 1000;
-    tasLastTs = ts;
-    if(!(dt > 0)) dt = 1 / 60;
-    if(dt > .10) dt = .10;
-    let railV = tasScrollPx / dt;      /* 本帧实际滚过的像素 ÷ 帧时长 */
-    tasScrollPx = 0;
-    railV = Math.max(-3000, Math.min(3000, railV));
-    let rest = dt;
-    while(rest > 1e-6){
-      const h = Math.min(1 / 90, rest);
-      rest -= h;
-      tasSimulate(h, railV);
-    }
-    tasRender();
-    for(let i = 0; i < tasItems.length; i++) tasPaint(tasItems[i], mqPos);
-    tasRaf = requestAnimationFrame(tasFrame);
-  }
-
-  function tasImpulse(dy){
-    if(!tasItems.length || reduceNow || !tasVisible) return;
-    tasScrollPx += dy;
-    if(!tasRaf) tasRaf = requestAnimationFrame(tasFrame);
-  }
-
-  function tasInit(){
-    if(!tasEnsure()) return;
-    if(reduceNow){
-      /* 减动效：不跑物理，只把丝缕按锚点排开；摆动交给 CSS 兜底 */
-      tasRender();
-      for(let i = 0; i < tasItems.length; i++) tasPaint(tasItems[i], mqPos);
-      return;
-    }
-    tasLastTs = 0;
-    if(!tasRaf) tasRaf = requestAnimationFrame(tasFrame);
-    if(tasIO) tasIO.disconnect();
-    if('IntersectionObserver' in window){
-      tasIO = new IntersectionObserver(es => {
-        tasVisible = es[es.length - 1].isIntersecting;
-        if(tasVisible){ if(!tasRaf) tasRaf = requestAnimationFrame(tasFrame); }
-        else if(tasRaf){ cancelAnimationFrame(tasRaf); tasRaf = 0; }
-      }, { threshold: 0 });
-      tasIO.observe(host);
-    }
-    if(!tasVisBound){
-      tasVisBound = true;
-      document.addEventListener('visibilitychange', () => {
-        tasLastTs = 0;
-        if(!document.hidden && tasVisible && !tasRaf) tasRaf = requestAnimationFrame(tasFrame);
-      });
-    }
-  }
-  function rebuild(){
-    if(tasRaf){ cancelAnimationFrame(tasRaf); tasRaf = 0; }
-    if(tasIO){ tasIO.disconnect(); tasIO = null; }
-    inner.dataset.built = '0';
-    inner.innerHTML = '';
-    tasItems = [];
-    mqLoop = 0;
-    mqEnsure();
-    tasInit();
-  }
-
-  /* ---------- 唯一输入：滚动 ---------- */
-  let lastY = window.scrollY || 0;
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY || 0;
-    const dy = y - lastY;
-    lastY = y;
-    if(!dy) return;
-    mqTarget -= dy * MQ_SPEED;         /* 向下滚 → 条子向左走 */
-    if(!mqRaf) mqRaf = requestAnimationFrame(mqFrame);
-    tasImpulse(dy);
-  }, { passive: true });
-
-  window.addEventListener('resize', () => {
-    window.clearTimeout(window.__ribbonResize);
-    window.__ribbonResize = window.setTimeout(rebuild, 160);
-  }, { passive: true });
-
-  if(document.fonts && document.fonts.ready){
-    document.fonts.ready.then(() => { rebuild(); });
-  }
-
-  mqEnsure();
-  mqRender();
-  tasInit();
+(function(){
+  var done = function(){ document.documentElement.classList.add('h6-done'); };
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){ done(); }
+  else { setTimeout(done, 3000); }
 })();
 </script>
+<script>
+/* 首屏已改为「字号缩放」，题名不能带 transform（会让 fixed 底图挂到字身上），
+   所以这里不再做指针视差。留空占位，免得后来人又加回去。 */
+</script>
+
+
 </body>
 </html>
