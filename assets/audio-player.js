@@ -495,12 +495,14 @@
     if (stagePlayers.length) {
       const active = activeStagePlayer();
       if (!active) {
-        /* 每次“出章”都收干净：正在播的、还在解码的都要停，
-           否则快速滚过时会有几首同时响（它们解码完就没人管了） */
-        stagePlayers.forEach(player => {
-          if (player.playing || player.loading) player.pause({ auto: true });
-        });
-        lastAutoKey = '';
+        /* 只在真的离开舞台时收声；舞台还在屏上、只是一瞬间没有 is-active
+           （切换动画中间态）时不要停，否则会莫名其妙断掉且不再续上。 */
+        if (!stageInView()) {
+          stagePlayers.forEach(player => {
+            if (player.playing || player.loading) player.pause({ auto: true });
+          });
+          lastAutoKey = '';
+        }
         return;
       }
       if (active.key !== lastAutoKey) {
