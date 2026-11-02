@@ -122,3 +122,51 @@
   .audio-player--theme{padding:16px}
   .audio-player--theme .audio-player__wave{height:110px}
 }
+
+/* ==========================================================================
+   首页 · 声音总开关（顶栏内）
+   --------------------------------------------------------------------------
+   locked（还没拿到手势）→ 「开启声音」并轻微呼吸；on → 「声音 开」；off → 「声音 关」。
+   颜色跟顶栏 currentColor 走，深底浅底两种状态都能用；手机上只留图标。
+   ========================================================================== */
+.xh-sound{
+  display:inline-flex;align-items:center;gap:7px;
+  margin-inline-start:6px;
+  padding:7px 10px;
+  border:1px solid color-mix(in srgb,currentColor 40%,transparent);
+  background:transparent;color:inherit;
+  font-family:var(--sans,var(--f-sans,sans-serif));
+  font-size:9.5px;line-height:1;letter-spacing:.16em;text-transform:uppercase;
+  white-space:nowrap;cursor:pointer;opacity:.8;
+  transition:opacity .2s ease,background-color .2s ease,border-color .2s ease;
+}
+.xh-sound:hover{opacity:1;background:color-mix(in srgb,currentColor 12%,transparent);border-color:currentColor}
+.xh-sound:focus-visible{outline:2px solid #D2A03F;outline-offset:3px}
+.xh-sound svg{width:13px;height:13px;flex:none;overflow:visible}
+.xh-sound .slash{opacity:0}
+.xh-sound .w1,.xh-sound .w2,.xh-sound .slash{transition:opacity .2s ease}
+.xh-sound[data-state="off"] .w1,
+.xh-sound[data-state="off"] .w2{opacity:0}
+.xh-sound[data-state="off"] .slash{opacity:1}
+.xh-sound[data-state="locked"]{opacity:1;animation:xhSoundPulse 2.4s ease-in-out infinite}
+@keyframes xhSoundPulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+@media (max-width:860px){
+  .xh-sound{padding:0;width:34px;height:34px;justify-content:center;gap:0;margin-inline-start:10px}
+  .xh-sound__text{display:none}
+  .xh-sound svg{width:15px;height:15px}
+  /* 还没开启、或者被关掉时把字露出来，否则只剩一个喇叭看不懂 */
+  .xh-sound[data-state="locked"],
+  .xh-sound[data-state="off"]{width:auto;height:30px;padding:0 9px;gap:6px}
+  .xh-sound[data-state="locked"] .xh-sound__text,
+  .xh-sound[data-state="off"] .xh-sound__text{display:inline;font-size:9px;letter-spacing:.12em}
+}
+@media (prefers-reduced-motion:reduce){
+  .xh-sound{animation:none!important;transition:none!important}
+}
+@media print{.xh-sound{display:none}}
+/* 没有顶栏的页面（理论上不会出现）退回左下角 */
+.xh-sound--float{
+  position:fixed;left:18px;bottom:18px;z-index:80;
+  background:rgba(242,237,226,.94);color:#141A16;border-color:rgba(20,26,22,.35);
+}
