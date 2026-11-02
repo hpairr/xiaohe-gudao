@@ -437,6 +437,18 @@
       player.stageCopy && player.stageCopy.classList.contains('is-active')
     ) || null;
   };
+
+  /* 提前把下一章的声音数据取回来（不解码）：换章时不用干等 700 KB，
+     移动端开了省流量就不预取。 */
+  const warmNextChapter = player => {
+    if (navigator.connection && navigator.connection.saveData) return;
+    const i = stagePlayers.indexOf(player);
+    const next = i >= 0 ? stagePlayers[i + 1] : null;
+    if (!next) return;
+    if (window.XiaoheAudioData && window.XiaoheAudioData[next.key]) return;
+    if (dataCache[next.key]) return;
+    loadData(next.key).catch(() => {});
+  };
   const activeChapterPlayer = () => {
     if (!chapterPlayers.length) return null;
     const vh = window.innerHeight;
@@ -482,7 +494,7 @@
         active.userPaused = false;
       }
       if (!active.playing && !active.userPaused && !active.finished) {
-        active.play({ auto: true });
+        active.play({ auto: true }).then(ok => { if (ok) warmNextChapter(active); });
       }
       return;
     }
