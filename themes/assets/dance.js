@@ -1,20 +1,22 @@
 /* ==========================================================================
-   长鼓舞专题 · 基础教学台（静帧版）
+   长鼓舞专题 · 基础教学台
    --------------------------------------------------------------------------
-   线上不再挂教学片（18 MB，仓库里没有），改用从原片逐帧截下的二十一张静帧：
-   1) 点右侧动作名 → 左侧换成该动作的静帧，读数、分组、刻度尺同步。
-   2) 静帧按动作起点排，刻度尺用 01:56 的原始时间轴，位置关系与原片一致。
-   3) 左右方向键 / 上下方向键在动作表内换动作，Home / End 到首尾。
-   4) 无 JS 时左侧保留第一张静帧，动作表与时间码照常可读（渐进增强）。
-   图由 tools/make_video_stills.py 生成，动作时间点仍以 HTML 的 data-start 为准。
+   教学片（18 MB）跟着仓库一起发布，正常情况就是能播的视频：
+   1) 点右侧动作名 → 影片跳到该动作起点；播放 → 当前动作、所在组、刻度尺同步。
+   2) 原片加载失败（断网、被墙、文件缺失）→ 自动切到同一位置的静帧，
+      由 tools/make_video_stills.py 从原片截取，交互不变，只是不播。
+   3) 刻度尺按动作起点分布（不是等分），三段色块对应握鼓 / 鼓花 / 步法。
+   4) 不自动播放：只在用户点击后 seek + play，符合浏览器自动播放策略。
    ========================================================================== */
 (() => {
   'use strict';
 
   const FRAME_DIR = 'assets/dance-frames/';
-  /* 教学片全长 117 s = 01:56，只用来算刻度尺比例 */
+  /* 片长 01:56。读不到 metadata 时用它算刻度尺比例 */
   const TOTAL = 117;
-  /* 取帧时略过动作起点，避开上一动作的收势（与截图脚本的 +1.0s 同一套逻辑） */
+  /* 跳转时略过动作起点，避开上一动作的收势 */
+  const LEAD = 0.18;
+  /* 静帧对应的取帧偏移，与截图脚本一致 */
   const FRAME_LEAD = 1.0;
 
   const pad2 = n => String(n).padStart(2, '0');
@@ -24,10 +26,10 @@
     const section = document.querySelector('.bs-section');
     if (!section) return;
 
+    const video = section.querySelector('[data-bs-video]');
     const still = section.querySelector('[data-bs-still]');
     const film = section.querySelector('.bs-film');
     const tape = section.querySelector('[data-bs-tape]');
-    const fill = tape ? tape.querySelector('.bs-fill') : null;
     const playhead = tape ? tape.querySelector('.bs-play') : null;
 
     const noEl = section.querySelector('[data-bs-no]');
@@ -47,7 +49,7 @@
       };
     });
 
-    if (!still || !rows.length || !groups.length) return;
+    if ((!video && !still) || !rows.length || !groups.length) return;
 
     const items = rows.map((el, i) => {
       const name = el.querySelector('.bs-row-name');
@@ -64,43 +66,56 @@
 
     const members = groups.map((_, gi) => items.filter(it => it.group === gi));
 
+    let mode = video ? 'video' : 'still';
     let active = -1;
+    let pendingSeek = null;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const loaded = new Set();
+    const framesLoaded = new Set();
 
     const frameAt = i => FRAME_DIR + pad2(i + 1) + '.jpg';
 
     function preload(i) {
       if (i < 0 || i >= items.length) return;
       const src = frameAt(i);
-      if (loaded.has(src)) return;
-      loaded.add(src);
+      if (framesLoaded.has(src)) return;
+      framesLoaded.add(src);
       const img = new Image();
       img.decoding = 'async';
       img.src = src;
     }
 
+    function duration() {
+      if (mode === 'video' && video) {
+        const d = video.duration;
+        if (isFinite(d) && d > 0) return d;
+      }
+      return TOTAL;
+    }
+
     /* ---------------------------------------------------------- 刻度尺 */
     function buildTape() {
       if (!tape) return;
-      const at = s => (Math.max(0, Math.min(s, TOTAL)) / TOTAL * 100).toFixed(3) + '%';
-      const anchor = fill || null;
+      const total = duration();
+      const span = Math.max(1, total);
+      const at = s => (Math.max(0, Math.min(s, total)) / span * 100).toFixed(3) + '%';
 
       tape.querySelectorAll('.bs-zone,.bs-tick').forEach(node => node.remove());
+
+      const anchor = tape.querySelector('.bs-fill');
 
       groups.forEach((g, gi) => {
         const first = members[gi][0];
         const from = g.from || (first ? first.start : 0);
         const nextGroup = groups[gi + 1];
         const next = nextGroup
-          ? (nextGroup.from || (members[gi + 1][0] ? members[gi + 1][0].start : TOTAL))
-          : TOTAL;
+          ? (nextGroup.from || (members[gi + 1][0] ? members[gi + 1][0].start : total))
+          : total;
 
         const zone = document.createElement('span');
         zone.className = 'bs-zone';
         zone.setAttribute('data-zone', String(gi));
         zone.style.left = at(from);
-        zone.style.width = (((Math.min(next, TOTAL) - Math.max(from, 0)) / TOTAL) * 100).toFixed(3) + '%';
+        zone.style.width = (((Math.min(next, total) - Math.max(from, 0)) / span) * 100).toFixed(3) + '%';
 
         const label = document.createElement('b');
         label.textContent = g.name;
@@ -117,8 +132,27 @@
       });
     }
 
-    /* ---------------------------------------------------------- 选中一张 */
-    function setActive(idx) {
+    function paintTape(p) {
+      if (!tape) return;
+      const clamped = Math.max(0, Math.min(1, p));
+      tape.style.setProperty('--bs-p', clamped.toFixed(4));
+      if (playhead) playhead.style.left = (clamped * 100).toFixed(3) + '%';
+
+      const current = clamped * duration();
+      tape.querySelectorAll('.bs-tick').forEach((tick, k) => {
+        tick.setAttribute('data-passed', current >= items[k].start - 0.04 ? 'true' : 'false');
+        if (k === active) tick.setAttribute('data-on', 'true');
+        else tick.removeAttribute('data-on');
+      });
+      const gi = active >= 0 ? items[active].group : -1;
+      tape.querySelectorAll('.bs-zone').forEach((zone, k) => {
+        if (k === gi) zone.setAttribute('data-on', 'true');
+        else zone.removeAttribute('data-on');
+      });
+    }
+
+    /* ---------------------------------------------------------- 状态同步 */
+    function renderState(idx) {
       if (idx < 0 || idx >= items.length) return;
       active = idx;
 
@@ -134,23 +168,6 @@
         else g.el.removeAttribute('data-on');
       });
 
-      if (tape) {
-        /* 刻度尺不再跟着播放走，只标出「当前动作在整支片子的哪个位置」 */
-        const p = Math.max(0, Math.min(1, (item.start + FRAME_LEAD) / TOTAL));
-        tape.style.setProperty('--bs-p', p.toFixed(4));
-        if (playhead) playhead.style.left = (p * 100).toFixed(3) + '%';
-
-        tape.querySelectorAll('.bs-zone').forEach((zone, k) => {
-          if (k === gi) zone.setAttribute('data-on', 'true');
-          else zone.removeAttribute('data-on');
-        });
-        tape.querySelectorAll('.bs-tick').forEach((tick, k) => {
-          tick.setAttribute('data-passed', k <= idx ? 'true' : 'false');
-          if (k === idx) tick.setAttribute('data-on', 'true');
-          else tick.removeAttribute('data-on');
-        });
-      }
-
       if (noEl) noEl.textContent = pad2(idx + 1) + ' / ' + items.length;
       if (nameEl) nameEl.textContent = item.name;
       if (timeEl) timeEl.textContent = mmss(item.start);
@@ -159,15 +176,52 @@
         groupEl.textContent = groups[gi].name + ' · 第 ' + (list.indexOf(item) + 1) + ' / ' + list.length + ' 种';
       }
       if (tipEl) tipEl.textContent = item.tip;
+    }
 
-      const src = frameAt(idx);
-      if (still.getAttribute('src') !== src) still.setAttribute('src', src);
-      still.setAttribute('alt',
-        '第 ' + (idx + 1) + ' 个动作「' + item.name + '」：' + (item.tip || '蒋丙莲演示'));
+    function sync() {
+      if (mode !== 'video' || !video) return;
+      const t = video.currentTime || 0;
+      const total = duration();
+
+      let idx = 0;
+      for (let i = items.length - 1; i >= 0; i--) {
+        if (t >= items[i].start - 0.04) { idx = i; break; }
+      }
+      renderState(idx);
+      paintTape(t / Math.max(1, total));
+    }
+
+    /* ---------------------------------------------------------- 静帧模式 */
+    function selectStill(idx) {
+      if (idx < 0 || idx >= items.length) return;
+      renderState(idx);
+      paintTape((items[idx].start + FRAME_LEAD) / TOTAL);
+
+      if (still) {
+        const src = frameAt(idx);
+        still.hidden = false;
+        if (still.getAttribute('src') !== src) still.setAttribute('src', src);
+        still.setAttribute('alt',
+          '第 ' + (idx + 1) + ' 个动作「' + items[idx].name + '」：' + (items[idx].tip || '蒋丙莲演示'));
+      }
 
       preload(idx - 1);
       preload(idx + 1);
       if (idx + 2 < items.length) preload(idx + 2);
+    }
+
+    function enterStillMode() {
+      if (mode === 'still') return;
+      mode = 'still';
+      try { video.pause(); } catch (err) { /* noop */ }
+      if (video) video.hidden = true;
+      if (still) still.hidden = false;
+      if (film) film.classList.add('is-missing');
+
+      const idx = active >= 0 ? active : 0;
+      active = -1;
+      buildTape();
+      selectStill(idx);
     }
 
     /* ---------------------------------------------------------- 视口 */
@@ -186,9 +240,31 @@
       });
     }
 
+    /* ---------------------------------------------------------- 跳转 */
+    function seekTo(seconds) {
+      if (!video) return;
+      const target = Math.max(0, Math.min(seconds, duration() - 0.12));
+      pendingSeek = target;
+      if (video.readyState >= 1) {
+        try { video.currentTime = target; } catch (err) { /* 尚未可 seek */ }
+        pendingSeek = null;
+        video.play().catch(() => {});
+      }
+    }
+
     function go(idx) {
-      setActive(idx);
+      const item = items[idx];
+      if (!item) return;
       revealFilm();
+
+      if (mode === 'still') {
+        selectStill(idx);
+        return;
+      }
+
+      renderState(idx);
+      paintTape((item.start + LEAD) / duration());
+      seekTo(item.start + LEAD);
     }
 
     /* ---------------------------------------------------------- 事件 */
@@ -196,7 +272,6 @@
       item.el.addEventListener('click', () => go(item.i));
     });
 
-    /* 键盘：方向键在 21 个动作里走，避免 Tab 二十一次 */
     const index = section.querySelector('.bs-index');
     if (index) {
       index.addEventListener('keydown', e => {
@@ -216,10 +291,32 @@
       });
     }
 
+    /* ---------------------------------------------------------- 启动 */
     buildTape();
-    setActive(0);
-    preload(1);
-    preload(2);
+
+    if (mode === 'video') {
+      video.addEventListener('loadedmetadata', () => {
+        buildTape();
+        active = -1;
+        if (pendingSeek !== null && video.readyState >= 1) {
+          try { video.currentTime = pendingSeek; } catch (err) { /* noop */ }
+          pendingSeek = null;
+          video.play().catch(() => {});
+        }
+        sync();
+      });
+      ['timeupdate', 'seeking', 'seeked', 'play', 'pause', 'ended'].forEach(evt => {
+        video.addEventListener(evt, sync);
+      });
+      video.addEventListener('error', enterStillMode, { once: true });
+
+      sync();
+      if (video.error) enterStillMode();
+      /* 封面先占着；静帧 01 已在 poster 里，预热相邻几张，断网时切换不闪 */
+      preload(1);
+    } else {
+      selectStill(0);
+    }
   }
 
   if (document.readyState === 'loading') {

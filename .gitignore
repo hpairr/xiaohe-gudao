@@ -1,7 +1,9 @@
 # ── 本地大文件：不进仓库 ─────────────────────────────────────────
-# 视频 573 MB；GitHub 单文件 >100 MiB 会拒绝推送，Pages 也不适合托管视频。
+# 除长鼓舞教学片（18 MB，例外放行）外，其余视频共 573 MB 不进仓库：
+# GitHub 单文件 >100 MiB 直接拒收，仓库 / Pages 也不适合装几百 MB 视频。
 # 线上播放走 database.html 的 VIDEO_URLS 外链（搜「视频外链配置」）。
-video/
+video/*
+!video/04-changgu-basics.mp4
 
 # 首页 hero 风格试验场（约 70 MB，独立原型，不属于公开站点）
 hero/

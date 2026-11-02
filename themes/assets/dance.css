@@ -37,12 +37,22 @@
 
 .bs-screen{position:relative;min-width:0}
 
-/* 静帧：从教学片按二十一个动作逐帧截取，线上不放视频 */
+/* 影片；加载不出来时换成同位置的静帧（.bs-still） */
 .bs-film{
   position:relative;
   margin:0;
   background:#0A0E0C;
   border:1px solid color-mix(in srgb,var(--on) 52%,transparent);
+}
+
+.bs-video{
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:16 / 9;
+  background:#0A0E0C;
+  object-fit:contain;
+  vertical-align:top;
 }
 
 .bs-still{
@@ -54,6 +64,8 @@
   background:#0A0E0C;
   vertical-align:top;
 }
+
+.bs-film [hidden]{display:none!important}
 
 /* 图注 */
 .bs-cap{

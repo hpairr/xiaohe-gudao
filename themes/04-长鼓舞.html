@@ -102,19 +102,23 @@ if(location.search.indexOf('arrive=')>-1){
       </aside>
       <div class="story-main">
         <div class="story-head"><h2 id="bsTitle">二十一个基本动作</h2><span class="en-tag">The basic vocabulary</span></div>
-        <p class="bs-lede">握鼓十种、鼓花四种、步法七种。教学片由蒋丙莲演示，这里按二十一个动作逐帧取静帧：点右边动作名，左边换一张。</p>
+        <p class="bs-lede">握鼓十种、鼓花四种、步法七种。教学片由蒋丙莲演示，点右边动作名，影片跳到该动作；原片万一加载不出来，自动改用同一位置的静帧。</p>
 
-        <!-- 教学片静帧：从本地 video/04-changgu-basics.mp4 按二十一个动作的起点逐帧截取。
-             线上不放视频（18 MB，仓库里没有），只放图；重截图见 tools/make_video_stills.py。 -->
+        <!-- 教学片 18 MB 随仓库一起发布（video/04-changgu-basics.mp4）。
+             二十一张静帧（assets/dance-frames/）是用它截的：既能当封面，也是断网/加载失败时的兜底。
+             重新截图：python tools/make_video_stills.py dance -->
         <div class="bs-console">
           <div class="bs-screen">
             <figure class="bs-film">
-              <img class="bs-still" data-bs-still
-                   src="assets/dance-frames/01.jpg" width="1280" height="720"
-                   alt="第 1 个动作「阳手横鼓」：蒋丙莲横持长鼓，手掌向上。"
-                   fetchpriority="high" decoding="async">
+              <video class="bs-video" data-bs-video controls playsinline preload="metadata"
+                     src="../video/04-changgu-basics.mp4"
+                     poster="assets/dance-frames/01.jpg"
+                     aria-label="瑶族长鼓舞基础教学片，蒋丙莲演示，全长一分五十六秒">
+                <p>教学片需要浏览器支持 HTML5 视频。</p>
+              </video>
+              <img class="bs-still" data-bs-still hidden alt="">
             </figure>
-            <p class="bs-cap"><span>蒋丙莲 · 长鼓舞基础教学</span><span>21 张静帧 · 原片 01:56</span></p>
+            <p class="bs-cap"><span>蒋丙莲 · 长鼓舞基础教学</span><span>21 个动作 / 01:56</span></p>
             <div class="bs-tape" data-bs-tape aria-hidden="true">
               <span class="bs-fill"></span>
               <span class="bs-play"></span>
@@ -220,7 +224,7 @@ if(location.search.indexOf('arrive=')>-1){
           <div class="bs-fact"><b>2008</b><span>第二批国家级非遗</span></div>
         </div>
         <p class="bs-foot">动作名目、时间码与要领据抖音「龙女爱分享」发布的《第一部分 长鼓舞基础》（2023-10-09，1 分 56 秒），演示者蒋丙莲，江华瑶族自治县文化馆原馆长、第 30 代原生态长鼓舞传承人；原片见 <a href="https://www.douyin.com/video/7287820631314337080" target="_blank" rel="noopener">douyin.com/video/7287820631314337080</a>。时间码按画面字幕整理、取整到秒，同一动作的起势可能早一两秒。这些动作名是教学中的口传用语，公开文献里查不到对应条目，各地叫法也可能不同；此处只取这一套教学的命名，不作统一标准。教学片与据其截取的静帧仅作教学参考，版权归原作者，公开上线前需取得授权。</p>
-        <noscript><p class="bs-foot">这一节需要 JavaScript 才能切换动作静帧。二十一个动作依次是：握鼓法十种（00:15–00:42）、基本鼓花四种（00:50–01:08）、基本步法七种（01:23–01:52）。</p></noscript>
+        <noscript><p class="bs-foot">这一节需要 JavaScript 才能按动作跳转播放。二十一个动作依次是：握鼓法十种（00:15–00:42）、基本鼓花四种（00:50–01:08）、基本步法七种（01:23–01:52）。</p></noscript>
       </div>
     </div>
   </div>
