@@ -106,14 +106,32 @@
     if (dataCache[key]) return dataCache[key];
 
     dataCache[key] = (async () => {
+      /* 浏览器到 CDN 偶尔会把某一个文件挂住：给每次请求设超时，
+         超时就换一个带查询串的地址重试一次，再不行退回 base64 脚本。 */
+      const attempt = async (url, ms) => {
+        const ctrl = window.AbortController ? new AbortController() : null;
+        const timer = ctrl ? window.setTimeout(() => ctrl.abort(), ms) : 0;
+        try {
+          const res = await fetch(url, {
+            cache: 'force-cache',
+            signal: ctrl ? ctrl.signal : undefined
+          });
+          const buf = res.ok ? await res.arrayBuffer() : null;
+          if (!buf || buf.byteLength < 1024) throw new Error('empty audio body');
+          return buf;
+        } finally {
+          if (timer) window.clearTimeout(timer);
+        }
+      };
+
       try {
-        const res = await fetch(audioBase + key + '.mp3', { cache: 'force-cache' });
-        const buf = res.ok ? await res.arrayBuffer() : null;
-        /* 有的本地预览环境会把媒体请求回成 204/空 body，这种要走脚本兜底 */
-        if (!buf || buf.byteLength < 1024) throw new Error('empty audio body');
-        return buf;
+        return await attempt(audioBase + key + '.mp3', 4000);
       } catch (err) {
-        return await loadDataScript(key);
+        try {
+          return await attempt(audioBase + key + '.mp3?r=' + Date.now(), 6000);
+        } catch (err2) {
+          return await loadDataScript(key);
+        }
       }
     })();
     return dataCache[key];
@@ -672,7 +690,7 @@
     const setSound = on => {
       soundEnabled = on;
       try { window.localStorage.setItem(SOUND_KEY, on ? 'on' : 'off'); } catch (err) { /* 忽略 */ }
-      if (!on) players.forEach(player => { if (player.playing) player.pause({ auto: true }); });
+      if (!on) players.forEach(player => { if (player.playing || player.loading) player.pause({ auto: true }); });
       paint();
     };
 
