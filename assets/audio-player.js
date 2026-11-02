@@ -295,7 +295,7 @@
       if (player.playing) return true;
 
       players.forEach(other => {
-        if (other !== player && other.playing) other.pause({ auto: true });
+        if (other !== player && (other.playing || other.loading)) other.pause({ auto: true });
       });
 
       try {
@@ -465,18 +465,18 @@
     if (stagePlayers.length) {
       const active = activeStagePlayer();
       if (!active) {
-        if (lastAutoKey) {
-          stagePlayers.forEach(player => {
-            if (player.playing) player.pause({ auto: true });
-          });
-          lastAutoKey = '';
-        }
+        /* 每次“出章”都收干净：正在播的、还在解码的都要停，
+           否则快速滚过时会有几首同时响（它们解码完就没人管了） */
+        stagePlayers.forEach(player => {
+          if (player.playing || player.loading) player.pause({ auto: true });
+        });
+        lastAutoKey = '';
         return;
       }
       if (active.key !== lastAutoKey) {
         lastAutoKey = active.key;
         stagePlayers.forEach(player => {
-          if (player !== active && player.playing) player.pause({ auto: true });
+          if (player !== active && (player.playing || player.loading)) player.pause({ auto: true });
         });
         active.finished = false;
         active.userPaused = false;
