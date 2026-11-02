@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" class="no-js">
 <head>
 <meta charset="utf-8">
@@ -8,11 +8,14 @@ document.documentElement.classList.add('js');
 if(location.search.indexOf('arrive=')>-1){
   document.documentElement.classList.add('is-arriving');
   window.setTimeout(function(){
-    document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
     var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
-    if(v)v.style.display='none';
-    if(t)t.style.display='none';
-  },3600);
+    document.documentElement.classList.add('is-revealing');
+    window.setTimeout(function(){
+      document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
+      if(v)v.style.display='none';
+      if(t)t.style.display='none';
+    },680);
+  },6000);
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +32,7 @@ if(location.search.indexOf('arrive=')>-1){
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1D2652">
+<meta name="theme-color" content="#4C6C8B">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="alternate icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23F7F4EC'/%3E%3Cpath d='M3 12c1.5 0 1.5-4.5 3-4.5s1.5 9 3 9 1.5-13.5 3-13.5 1.5 9 3 9 1.5-4.5 3-4.5' fill='none' stroke='%23C3272B' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
@@ -40,9 +43,8 @@ if(location.search.indexOf('arrive=')>-1){
 @font-face{font-family:'Noto Sans Nushu';src:url('../assets/fonts/site/NotoSansNushu-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 </style>
 <link rel="stylesheet" href="theme-experience.css">
-<link rel="stylesheet" href="assets/rain.css">
 <link rel="stylesheet" href="../assets/audio-player.css">
-<style>:root{--main:#1D2652;--on:#F2EDE2;--accent:#B7C3D6;--surface:#0B1028;--deep:#101735}</style>
+<style>:root{--main:#4C6C8B;--on:#F2EDE2;--accent:#B7C3D6;--surface:#193854;--deep:#12293F}</style>
 </head>
 <body class="theme-page" data-theme="bridge" data-audio-base="../assets/audio/">
 <a class="skip-link" href="#main">跳到正文</a>
@@ -66,12 +68,20 @@ if(location.search.indexOf('arrive=')>-1){
     <div class="hero-copy">
       <div class="hero-chapter"><span>CHAPTER 04 / 06</span><span>WIND-RAIN BRIDGE</span></div>
       <h1 class="hero-title hero-title--long" id="themeTitle">富川风雨桥</h1>
-      <div class="hero-en">Wind-rain Bridge</div>
+      <div class="hero-en">Wind-Rain Bridge</div>
       <p class="hero-lead">富川瑶族风雨桥群现存 27 座，2013 年列入第七批全国重点文物保护单位。回澜风雨桥由三孔石桥、桥廊、桥亭与阁楼组成。桥名取自韩愈《进学解》「会百川而东之，回狂澜之即倒」。</p>
       <div class="hero-badges"><span class="badge hot">全国重点文保 · 2013 第七批</span><span class="badge">现存 27 座</span><span class="badge">回澜桥 · 三孔石拱</span><span class="badge">青龙桥 · 单孔 · 俗称阴阳桥</span></div>
     </div>
     <div class="hero-art">
-      <div class="motif-unit" data-motif-unit aria-hidden="true"></div>
+      <div class="hero-stack">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/bridge-layer-01.png" style="--i:0" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/bridge-layer-02.png" style="--i:1" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/bridge-layer-03.png" style="--i:2" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/bridge-layer-04.png" style="--i:3" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/bridge-layer-05.png" style="--i:4" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/bridge-layer-06.png" style="--i:5" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/bridge-layer-07.png" style="--i:6" width="700" height="700" decoding="async" alt="风雨桥图案：几重方框层层退深，中心为重檐阁楼与石拱侧影。">
+      </div>
     </div>
   </div>
   <div class="wrap hero-footer">
@@ -79,100 +89,6 @@ if(location.search.indexOf('arrive=')>-1){
     <span class="hero-coord">广西 · 富川 · 04 / 06</span>
   </div>
 </header>
-<section class="rain-section" id="rain" aria-labelledby="rainTitle">
-  <div class="wrap">
-    <div class="story-grid">
-      <aside class="story-rail" aria-hidden="true">
-        <span class="story-no">雨</span>
-        <span class="story-en">Rain</span>
-        <i></i>
-      </aside>
-      <div class="story-main">
-        <div class="story-head"><h2 id="rainTitle">桥与雨</h2><span class="en-tag">Bridge and rain</span></div>
-        <p class="rain-lede">富川风雨桥的桥面覆有廊屋，桥头露天。</p>
-        <div class="rain-stage">
-          <div class="rain-inner">
-            <svg class="rain-svg" viewBox="0 0 1200 460" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-              <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                <path d="M0 392 H1200" opacity=".38"/>
-                <path d="M60 406 H200 M320 410 H470 M640 406 H790 M910 410 H1060" opacity=".18"/>
-                <path d="M0 320 H1200"/>
-                <path d="M330 320 V392 M870 320 V392"/>
-                <path d="M330 392 Q600 286 870 392"/>
-                <path d="M300 320 V246 M400 320 V225 M500 320 V203 M600 320 V182 M700 320 V203 M800 320 V225 M900 320 V246"/>
-                <path d="M272 240 L600 170 L928 240"/>
-                <path d="M272 252 L600 182 L928 252" opacity=".55"/>
-              </g>
-              <g class="r-dry" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                <path d="M292 312 H908" stroke-dasharray="5 8" opacity=".85"/>
-              </g>
-              <text x="150" y="306" text-anchor="middle">桥头</text>
-              <text x="1050" y="306" text-anchor="middle">桥头</text>
-            </svg>
-            <canvas class="rain-canvas" aria-hidden="true"></canvas>
-          </div>
-        </div>
-        <div class="rain-controls">
-          <input class="rain-range" type="range" min="0" max="1200" step="10" value="120" aria-label="把雨从左移到右" aria-describedby="rainNote">
-          <p class="rain-read" data-rain-read>雨落在桥头 · 这一段没有屋顶</p>
-        </div>
-        <p class="rain-naming" id="rainNote">廊屋覆盖的桥面不见雨。<b>桥上加廊，本为行人避雨、歇脚。</b></p>
-        <div class="rain-facts">
-          <div class="rain-fact"><b>27</b><span>现存座数</span></div>
-          <div class="rain-fact"><b>三期</b><span>明 6 · 清早中期 11 · 清后期 10</span></div>
-          <div class="rain-fact"><b>2013</b><span>第七批全国重点文保</span></div>
-        </div>
-        <details class="rain-fold">
-          <summary><span>桥谱 · 27 座名录</span><span>明细</span></summary>
-          <div class="rain-fold-body">
-            <p class="rain-stat">按结构：木梁 16 · 石梁 6 · 石拱 3 · 石拱梁 1 · 砖木 1　　|　　按乡镇：朝东 15 · 城北 8 · 麦岭 3 · 石家 1</p>
-            <div class="rain-table-wrap">
-              <table class="rain-table">
-                <caption>富川瑶族风雨桥群 · 27 座（各名均缀「风雨桥」，下表从简）</caption>
-                <thead><tr><th scope="col">桥名</th><th scope="col">所在</th><th scope="col">始建</th><th scope="col">结构</th></tr></thead>
-                <tbody>
-                  <tr class="grp"><td colspan="4">明代 · 6 座</td></tr>
-                  <tr><th scope="row">廻澜</th><td>朝东镇 · 油沐／沐笼</td><td>1602 万历三十</td><td>石拱 · 三孔</td></tr>
-                  <tr><th scope="row">朝阳</th><td>城北镇 · 凤溪</td><td>1607 万历三十五</td><td>木梁</td></tr>
-                  <tr><th scope="row">福寿</th><td>城北镇 · 凤溪</td><td>1608 万历三十六</td><td>木梁</td></tr>
-                  <tr><th scope="row">凤溪新桥</th><td>城北镇 · 凤溪</td><td>1621 天启元</td><td>木梁</td></tr>
-                  <tr><th scope="row">青龙</th><td>朝东镇 · 黄沙河</td><td>1624 天启四</td><td>石拱 · 单孔</td></tr>
-                  <tr><th scope="row">黄侯泉</th><td>麦岭镇 · 黄侯泉</td><td>1626 天启六</td><td>石梁</td></tr>
-                  <tr class="grp"><td colspan="4">清早中期 · 11 座</td></tr>
-                  <tr><th scope="row">高桥</th><td>麦岭镇 · 高桥</td><td>1733 雍正十</td><td>砖木</td></tr>
-                  <tr><th scope="row">石漕迴龙</th><td>城北镇 · 石漕母</td><td>1741 乾隆六</td><td>木梁</td></tr>
-                  <tr><th scope="row">东辕</th><td>朝东镇 · 白面寨</td><td>1769 乾隆三十四</td><td>石梁</td></tr>
-                  <tr><th scope="row">鸬鹚塘</th><td>麦岭镇 · 宝剑</td><td>1770 乾隆三十五</td><td>石梁 · 四跨</td></tr>
-                  <tr><th scope="row">龙归</th><td>朝东镇 · 龙归</td><td>1775 乾隆四十</td><td>木梁</td></tr>
-                  <tr><th scope="row">兴隆</th><td>朝东镇 · 岔山</td><td>1813 嘉庆十八</td><td>木梁</td></tr>
-                  <tr><th scope="row">石垒阳寿</th><td>城北镇 · 两源</td><td>1817 嘉庆二十二</td><td>木梁</td></tr>
-                  <tr><th scope="row">永济福</th><td>城北镇 · 巍丰大</td><td>1827 道光七</td><td>石梁</td></tr>
-                  <tr><th scope="row">环涧</th><td>朝东镇 · 长塘</td><td>1842 道光二十二</td><td>木梁</td></tr>
-                  <tr><th scope="row">锦桥</th><td>朝东镇 · 福溪</td><td>1842 道光二十二</td><td>石拱</td></tr>
-                  <tr><th scope="row">下井</th><td>城北镇 · 下井</td><td>1847 道光二十七</td><td>石梁</td></tr>
-                  <tr class="grp"><td colspan="4">清后期 · 10 座</td></tr>
-                  <tr><th scope="row">新田青龙</th><td>城北镇 · 茅家</td><td>1855 咸丰五</td><td>木梁</td></tr>
-                  <tr><th scope="row">长塘迴龙</th><td>朝东镇 · 苦竹湾</td><td>1866 同治五</td><td>木梁</td></tr>
-                  <tr><th scope="row">龙湾</th><td>石家乡 · 龙湾刘家</td><td>1879 光绪五</td><td>木梁</td></tr>
-                  <tr><th scope="row">儒子西门</th><td>朝东镇 · 儒子</td><td>1884 光绪十</td><td>石梁</td></tr>
-                  <tr><th scope="row">集贤</th><td>朝东镇 · 油沐沐笼</td><td>1885 光绪十一</td><td>木梁</td></tr>
-                  <tr><th scope="row">双溪</th><td>朝东镇 · 东水</td><td>1885 光绪十一</td><td>木梁</td></tr>
-                  <tr><th scope="row">社尾岗</th><td>朝东镇 · 油沐岗湾</td><td>1885 光绪十一</td><td>石拱梁</td></tr>
-                  <tr><th scope="row">毓秀</th><td>朝东镇 · 油沐沐笼</td><td>1885 光绪十一</td><td>木梁</td></tr>
-                  <tr><th scope="row">儒子东门</th><td>朝东镇 · 儒子</td><td>1887 光绪十三</td><td>木梁</td></tr>
-                  <tr><th scope="row">钟灵</th><td>朝东镇 · 福溪</td><td>1904 光绪三十</td><td>木梁</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="rain-src">名录、年代与结构：富川县人民政府门户网站《富川风雨桥（27 座）》，2024-03-19。回澜桥长度各资料不一（正文记 37.54 米，另有资料记 29.7 米），此处不列。</p>
-          </div>
-        </details>
-        <p class="rain-foot">图为构形示意图，不是某一座桥的测绘图。座数与分期取自富川县人民政府门户网站《富川风雨桥（27 座）》；回澜桥的始建、重修与桥名出处见正文；青龙桥的门额与修缮另见老百晓集桥。青龙桥孔数有「单孔」「三孔」两说，此处不作图。</p>
-        <noscript><p class="rain-foot">雨的示意需要 JavaScript。廊顶遮雨、廊下干燥的道理，见本页「形制与建造」一节。</p></noscript>
-      </div>
-    </div>
-  </div>
-</section>
 <section class="story-block" data-step="01" id="story-01">
   <div class="wrap">
     <div class="story-grid">
@@ -241,26 +157,6 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </section>
-<section class="story-block story-block--sources" data-step="04" id="sources">
-  <div class="wrap">
-    <div class="story-grid">
-      <aside class="story-rail" aria-hidden="true">
-        <span class="story-no">04</span>
-        <span class="story-en">SOURCES / 出处</span>
-        <i></i>
-      </aside>
-      <div class="story-main">
-        <details class="source-fold">
-          <summary>
-            <span>资料来源 / Sources</span>
-            <span class="src-action">核对表 <span class="src-toggle" aria-hidden="true">＋</span></span>
-          </summary>
-          <div class="source-body"><table class="src"><tr><th>内容</th><th>说明</th><th>来源</th></tr><tr><td class="g">名录级别</td><td>富川瑶族风雨桥群列入第七批全国重点文物保护单位（2013）；现存 27 座</td><td>富川瑶族自治县人民政府官网 <code>gxfc.gov.cn</code></td></tr><tr><td class="g">回澜桥形制</td><td>三孔石桥 + 桥廊 + 桥亭 + 阁楼；桥长 37.54 米；始建明万历三十年，崇祯十四年重修</td><td>富川县政府官网；公开资料整理（回澜风雨桥）</td></tr><tr><td class="g">青龙桥形制</td><td>单孔石拱，始建于明天启四年（1624 年）；与回澜桥俗称「阴阳桥」</td><td>富川县政府官网</td></tr><tr><td class="g">桥名典故</td><td>取自韩愈《进学解》「会百川而东之，回狂澜之即倒」</td><td>360 百科·回澜风雨桥</td></tr><tr><td class="g">矢量测绘</td><td>国家文物局已完成 27 座风雨桥本体测绘与保护矢量图绘制（2024-10）</td><td>福建省文物局转载国家文物局信息</td></tr><tr><td class="g">修缮</td><td>2021 年 27 座古风雨桥修缮后首次集齐；2023 年「披上保护衣」</td><td>腾讯新闻 2021-10；人民网广西 2023-06</td></tr><tr><td class="g">艺术特征研究</td><td>《富川瑶乡回澜、青龙风雨桥艺术特征分析》</td><td>学术文献，需经学校图书馆检索</td></tr><tr><td class="g">群体认知</td><td>#富川回澜风雨桥 单条内容获 16.2 万点赞（2024-11）</td><td>抖音；仅作公众关注度参考，不作学术引用</td></tr></table><p class="sec-note">⚠ 早期资料中曾把回澜桥写作「双拱」，与官方档案不符，应以三孔石拱为准。</p></div>
-        </details>
-      </div>
-    </div>
-  </div>
-</section>
 <section class="sound-line" id="sound" aria-labelledby="soundTitle">
   <div class="wrap sound-grid">
     <div class="sound-copy">
@@ -291,12 +187,12 @@ if(location.search.indexOf('arrive=')>-1){
       <p class="next-note">瑶族史诗，现存歌本约八千行。</p>
     </div>
     <nav class="chapter-strip" aria-label="六章色带">
-      <a class="" href="02-女书.html" style="--chip:#A9362E;--chip-fg:#F2EDE2"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
-      <a class="" href="03-蝴蝶歌.html" style="--chip:#2C5A4E;--chip-fg:#F2EDE2"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
-      <a class="" href="04-长鼓舞.html" style="--chip:#C08A2E;--chip-fg:#141A16"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
-      <a class="is-current" href="05-风雨桥.html" style="--chip:#1D2652;--chip-fg:#F2EDE2" aria-current="page"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
+      <a class="" href="02-女书.html" style="--chip:#1D2652;--chip-fg:#F2EDE2"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
+      <a class="" href="03-蝴蝶歌.html" style="--chip:#B8862F;--chip-fg:#141A16"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
+      <a class="" href="04-长鼓舞.html" style="--chip:#A9362E;--chip-fg:#F2EDE2"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
+      <a class="is-current" href="05-风雨桥.html" style="--chip:#4C6C8B;--chip-fg:#F2EDE2" aria-current="page"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
       <a class="" href="06-盘王大歌.html" style="--chip:#15120F;--chip-fg:#F2EDE2"><span class="cs-no">05 / 06</span><span class="cs-cn">盘王大歌</span><span class="cs-en">Panwang Da Ge</span></a>
-      <a class="" href="07-富川织锦.html" style="--chip:#1E2B26;--chip-fg:#F2EDE2"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Fuchuan Brocade</span></a>
+      <a class="" href="07-富川织锦.html" style="--chip:#5E3F55;--chip-fg:#F2EDE2"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Yao Brocade</span></a>
     </nav>
     <div class="foot-meta">
       <p>本站收录潇贺古道沿线六项文化遗产。图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示。<br><a href="01-潇贺古道.html">总述 · 潇贺古道</a> /
@@ -306,9 +202,40 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </footer>
+<section class="source-ledger" id="sources" aria-labelledby="sourceTitle">
+  <div class="wrap ledger-grid">
+    <div class="ledger-head">
+      <p class="eyebrow"><i></i>SOURCES / 出处</p>
+      <h2 id="sourceTitle">资料来源</h2>
+      <p class="ledger-note">本页每条事实的出处，逐条列出，可随时核对。完整来源说明见 <a href="../database.html#/about">「关于与来源」</a>。</p>
+      <div class="ledger-meta">
+        <span>04 / Sources · 8 条</span>
+        <a class="ledger-back" href="#main">回到页首 <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+    <div class="ledger-body">
+      <table class="src" aria-labelledby="sourceTitle">
+        <thead>
+          <tr><th scope="col">内容</th><th scope="col">说明</th><th scope="col">来源</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="g">名录级别</td><td>富川瑶族风雨桥群列入第七批全国重点文物保护单位（2013）；现存 27 座</td><td><a class="src-link" href="http://www.gxfc.gov.cn/fcgk/jdjj/t10824361.shtml" target="_blank" rel="noopener noreferrer">富川瑶族自治县人民政府官网</a> <a class="src-link src-link--code" href="http://www.gxfc.gov.cn" target="_blank" rel="noopener noreferrer"><code>gxfc.gov.cn</code></a></td></tr>
+          <tr><td class="g">回澜桥形制</td><td>三孔石桥 + 桥廊 + 桥亭 + 阁楼；桥长 37.54 米；始建明万历三十年，崇祯十四年重修</td><td><a class="src-link" href="http://www.gxfc.gov.cn/fcgk/jdjj/t10824361.shtml" target="_blank" rel="noopener noreferrer">富川县政府官网</a>；公开资料整理（回澜风雨桥）</td></tr>
+          <tr><td class="g">青龙桥形制</td><td>单孔石拱，始建于明天启四年（1624 年）；与回澜桥俗称「阴阳桥」</td><td><a class="src-link" href="http://www.gxfc.gov.cn/fcgk/jdjj/t10824361.shtml" target="_blank" rel="noopener noreferrer">富川县政府官网</a></td></tr>
+          <tr><td class="g">桥名典故</td><td>取自韩愈《进学解》「会百川而东之，回狂澜之即倒」</td><td><a class="src-link" href="https://baike.so.com/doc/858308-907478.html" target="_blank" rel="noopener noreferrer">360 百科</a>·回澜风雨桥</td></tr>
+          <tr><td class="g">矢量测绘</td><td>国家文物局已完成 27 座风雨桥本体测绘与保护矢量图绘制（2024-10）</td><td><a class="src-link" href="http://wwj.wlt.fujian.gov.cn/xwzx/wbyw/202410/t20241021_6550891.htm" target="_blank" rel="noopener noreferrer">福建省文物局</a>转载国家文物局信息</td></tr>
+          <tr><td class="g">修缮</td><td>2021 年 27 座古风雨桥修缮后首次集齐；2023 年「披上保护衣」</td><td><a class="src-link" href="https://news.qq.com/rain/a/20211020A0A3EE00" target="_blank" rel="noopener noreferrer">腾讯新闻</a> 2021-10；<a class="src-link" href="http://gx.people.com.cn/n2/2023/0607/c179435-40447424.html" target="_blank" rel="noopener noreferrer">人民网广西</a> 2023-06</td></tr>
+          <tr><td class="g">艺术特征研究</td><td>《富川瑶乡回澜、青龙风雨桥艺术特征分析》</td><td>学术文献，需经学校图书馆检索</td></tr>
+          <tr><td class="g">群体认知</td><td>#富川回澜风雨桥 单条内容获 16.2 万点赞（2024-11）</td><td><a class="src-link" href="https://www.douyin.com/video/7438907555595799844" target="_blank" rel="noopener noreferrer">抖音</a>；仅作公众关注度参考，不作学术引用</td></tr>
+        </tbody>
+      </table>
+      <p class="ledger-fine">⚠ 早期资料中曾把回澜桥写作「双拱」，与官方档案不符，应以三孔石拱为准。</p>
+    </div>
+  </div>
+</section>
 <script src="../assets/audio-player.js" defer></script>
 <script src="assets/motifs.js" defer></script>
 <script src="experience.js" defer></script>
-<script src="assets/rain.js" defer></script>
+<script src="../assets/leave-guard.js" defer></script>
 </body>
 </html>

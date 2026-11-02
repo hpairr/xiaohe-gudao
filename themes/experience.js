@@ -152,6 +152,24 @@
     els.forEach(el => io.observe(el));
   }
 
+  /* ---------- 分层图案：等每一层都解码完再起跑 ----------
+     首屏图案是按图层一张张叠起来的。之前一加载就开始计时，小图（底色几 KB）
+     秒到、大图（女书笔画上百 KB）还没解码，轮到它时动画时间已经走完，
+     于是「小图有动画、大图直接蹦出来」。这里等全部 decode 完成再放行。 */
+  const armIris = () => {
+    const layers = [...document.querySelectorAll('.hero-stack .hero-layer')];
+    let fired = false;
+    const fire = () => {
+      if (fired) return;
+      fired = true;
+      root.classList.add('is-iris');
+    };
+    if (!layers.length) { fire(); return; }
+    window.setTimeout(fire, 2500);        // 兜底：一张慢图不许卡住整页
+    Promise.all(layers.map(img => (img.decode ? img.decode().catch(() => {}) : Promise.resolve())))
+      .then(fire);
+  };
+
   /* ---------- 专题页开场：标题接力 + 整屏主色渐显 ---------- */
   const finishArrival = () => {
     const veil = document.getElementById('arrivalVeil');
@@ -159,6 +177,8 @@
     root.classList.remove('is-arriving', 'is-revealing', 'is-arrival-landed');
     if (veil) veil.style.display = 'none';
     if (clone) clone.style.display = 'none';
+    // 幕布落下后再让首屏图案开始画圈，否则圆会在幕布后面白跑一半
+    armIris();
     try {
       const url = new URL(location.href);
       if (url.searchParams.has('arrive')) {
@@ -167,6 +187,9 @@
       }
     } catch (err) { /* file:// / 隐私模式 */ }
   };
+
+  // 没有入场（直接打开/刷新）时，解码完就起跑
+  if (!isArriving) armIris();
 
   const runArrival = () => {
     const veil = document.getElementById('arrivalVeil');
@@ -221,7 +244,16 @@
       });
     };
 
-    const wait = () => window.setTimeout(start, 40);
+    /* 最多等字体 420ms 就开演。五个中文字体加起来约 1.4MB，等它全部就绪时
+       进场动画会被页头那个兜底定时器截断，观感就是「整屏色块被一刀切掉」。
+       字体晚到只会让标题量算偏一点点，比截断好看得多。 */
+    let arrived = false;
+    const wait = () => {
+      if (arrived) return;
+      arrived = true;
+      window.setTimeout(start, 40);
+    };
+    window.setTimeout(wait, 420);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(wait);
     else wait();
   };

@@ -1,10 +1,10 @@
 /* ==========================================================================
    长鼓舞 · 基础教学台（04-长鼓舞.html 专用）
    --------------------------------------------------------------------------
-   教学片是母版，二十一个动作是刻度：左边一块屏，右边三列动作表。
-   点动作 → 视频跳到该秒；播放 → 当前动作、所在组、刻度同步亮起。
+   线上不放教学片，改用从原片截下的二十一张静帧：左边一块屏，右边三列动作表。
+   点动作 → 左边换成该动作的静帧；读数、所在组、刻度尺同步亮起。
    颜色只取页面 :root（--surface / --on / --accent / --line），不另造色。
-   无 JS 时：动作表与时间码照常可读，视频保留封面图（渐进增强）。
+   无 JS 时：动作表与时间码照常可读，屏上保留第一张静帧（渐进增强）。
    ========================================================================== */
 
 .bs-section{
@@ -37,7 +37,7 @@
 
 .bs-screen{position:relative;min-width:0}
 
-/* 影片 */
+/* 静帧：从教学片按二十一个动作逐帧截取，线上不放视频 */
 .bs-film{
   position:relative;
   margin:0;
@@ -45,34 +45,14 @@
   border:1px solid color-mix(in srgb,var(--on) 52%,transparent);
 }
 
-.bs-video{
+.bs-still{
   display:block;
   width:100%;
   height:auto;
   aspect-ratio:16 / 9;
+  object-fit:cover;
   background:#0A0E0C;
-  object-fit:contain;
   vertical-align:top;
-}
-
-.bs-vfallback{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:22px;
-  background:rgba(10,14,12,.94);
-  color:var(--surface);
-  text-align:center;
-  font-size:12.5px;
-  line-height:1.9;
-}
-.bs-vfallback[hidden]{display:none}
-.bs-vfallback a{
-  color:var(--surface);
-  text-decoration:underline;
-  text-underline-offset:3px;
 }
 
 /* 图注 */

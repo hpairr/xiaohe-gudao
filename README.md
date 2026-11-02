@@ -28,6 +28,7 @@ xiaohe-gudao-db/            ← 站点根目录（= GitHub 仓库根目录）
 │   ├── assets/motifs.js      # 纹样库：八角连弧外框 + 六枚主题内芯
 │   └── gen_themes.py         # 页面生成器（改版式只改这一处，五页同步）
 ├── 404.html                  # 找不到页面时的回退页（站内链接均为绝对地址）
+├── leave.html                # 外链中转提示页：离开站点前的确认页（noindex，见下文）
 ├── video/                    # 本地视频 19 个 ≈ 573 MB（不进仓库，见 .gitignore）
 ├── hero/                     # 首页风格试验场（本地过程文件，不进仓库）
 ├── tests/                    # 设计试验 / 早期测试件（本地过程文件，不进仓库）
@@ -41,6 +42,7 @@ xiaohe-gudao-db/            ← 站点根目录（= GitHub 仓库根目录）
 │   ├── fonts/                # 字体源 TTF（本地保留）+ site/ 下的全站 WOFF2 子集（进仓库）
 │   ├── img/                  # 首页与章节配图（hero / 女书 / 长鼓 / 风雨桥）
 │   ├── patterns/             # 石纹、纸纤维、卵石金钱纹、织锦、木纹（程序化 SVG）
+│   ├── leave-guard.js        # 外链守卫：外站链接先转 leave.html（三处页面均已接入）
 │   └── art/                  # 章节回填层（AI / Affinity 导出 PNG）
 ├── docs/                     # 文档：部署说明、视频外链对照表、素材说明、参考链接
 │   ├── 部署说明.md
@@ -115,6 +117,22 @@ python themes/gen_themes.py           # 重新生成五个专题页（女书、�
 
 完整榜单：<https://www.awwwards.com/websites/sites_of_the_year/>。改版决策、逐页对照与验收清单见
 [`docs/06-技术方案/08-子页面改版与Awwwards参考.md`](docs/06-技术方案/08-子页面改版与Awwwards参考.md)。
+
+## 外链中转（leave.html）
+
+点开站外链接时不再直接跳走，而是先落到 `leave.html` 确认。页面只留站点的基础令牌
+（墨黑 `#0A0E0C` / 纸色 `#F2EDE2` / 朱砂 `#B63A33`，Noto Serif SC + Noto Sans SC），
+一列 700px、上下细线分栏，不画插图、纹理与装饰线。
+
+- **接入**：`index.html`、`database.html` 引 `assets/leave-guard.js`；`themes/*.html` 引
+  `../assets/leave-guard.js`（`themes/gen_themes.py` 模板已同步，重新生成不会丢）
+- **参数**：`?to=<外部地址>`（只接受 http/https）、`&from=<来源页>`、`&tab=1`
+  （来自 `target="_blank"` 的链接：确认后开新标签页，本站不离开）、`&auto=0`（关闭 9 秒倒计时）
+- **单条跳过**：给链接加 `data-no-guard`；**脚本调用**：`window.leaveGuard.open('https://…')`
+- **不拦**：站内跳转、哈希路由（`database.html#/sounds`）、页内锚点、下载链接、`mailto:` / `tel:`
+- **语义**：`Esc` 或「留在本站」＝返回上一页（无来源时回首页）；没有 `?to=` 时只留
+  「没有目标地址」一句和回首页的按钮
+- 页面带 `noindex`，不进 sitemap；样式与脚本都内联，只有字体和图标走 `assets/`
 
 ## 视频策略（重要）
 

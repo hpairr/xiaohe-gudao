@@ -8,11 +8,14 @@ document.documentElement.classList.add('js');
 if(location.search.indexOf('arrive=')>-1){
   document.documentElement.classList.add('is-arriving');
   window.setTimeout(function(){
-    document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
     var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
-    if(v)v.style.display='none';
-    if(t)t.style.display='none';
-  },3600);
+    document.documentElement.classList.add('is-revealing');
+    window.setTimeout(function(){
+      document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
+      if(v)v.style.display='none';
+      if(t)t.style.display='none';
+    },680);
+  },6000);
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -70,7 +73,14 @@ if(location.search.indexOf('arrive=')>-1){
       <div class="hero-badges"><span class="badge hot">国家级非遗 · 2014 第四批</span><span class="badge">省级非遗 · 2008 第二批</span><span class="badge">歌本约八千行</span><span class="badge">三十六歌 · 七任曲</span></div>
     </div>
     <div class="hero-art">
-      <div class="motif-unit" data-motif-unit aria-hidden="true"></div>
+      <div class="hero-stack">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/panwang-layer-01.png" style="--i:0" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/panwang-layer-02.png" style="--i:1" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/panwang-layer-03.png" style="--i:2" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/panwang-layer-04.png" style="--i:3" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/panwang-layer-05.png" style="--i:4" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/panwang-layer-06.png" style="--i:5" width="700" height="700" decoding="async" alt="盘王大歌图案：四边三角纹带，中央层叠菱形与回纹，四角压朱红印纹。">
+      </div>
     </div>
   </div>
   <div class="wrap hero-footer">
@@ -150,26 +160,6 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </section>
-<section class="story-block story-block--sources" data-step="04" id="sources">
-  <div class="wrap">
-    <div class="story-grid">
-      <aside class="story-rail" aria-hidden="true">
-        <span class="story-no">04</span>
-        <span class="story-en">SOURCES / 出处</span>
-        <i></i>
-      </aside>
-      <div class="story-main">
-        <details class="source-fold">
-          <summary>
-            <span>资料来源 / Sources</span>
-            <span class="src-action">核对表 <span class="src-toggle" aria-hidden="true">＋</span></span>
-          </summary>
-          <div class="source-body"><table class="src"><tr><th>内容</th><th>说明</th><th>来源</th></tr><tr><td class="g">名录级别</td><td>2014 年 7 月经国家文化部公示，列入第四批国家级非物质文化遗产名录（民间文学类）</td><td>湖南省文化和旅游厅《永州江华〈盘王大歌〉——国家级非物质文化遗产》(2019-09)；华声在线 2014-07-18</td></tr><tr><td class="g">省级前身</td><td>2008 年列入湖南省第二批省级非遗名录项目；保护主体为江华瑶族自治县文化馆</td><td>江华瑶族自治县人民政府《盘王大歌》(2022-06-30，来源文旅云)</td></tr><tr><td class="g">歌本与版本</td><td>现存歌本约八千行；最早抄本为清乾隆年间；三十六/二十四/十二段三种版本；三十六段本含三十六歌、七曲</td><td>同上</td></tr><tr><td class="g">演唱形态</td><td>「还盘王愿」之「流乐」下卷由四位正师公、家主与歌娘一齐吟唱；男女对唱；清唱 / 伴乐器 / 以诵为主 / 又唱又诵</td><td>同上</td></tr><tr><td class="g">七任曲曲牌</td><td>梅花曲、南花子、飞江南、相逢贤曲、万段曲、亚六曲、荷叶杯</td><td>同上</td></tr><tr><td class="g">与长鼓舞</td><td>「与《盘王大歌》一起存在的长鼓及其歌舞」为瑶族文化不可缺少的部分</td><td>同上</td></tr><tr><td class="g">手抄本图像</td><td>江华县湘江乡《盘王大歌》清代手抄本图像，可作临摹参考（需注明出处）</td><td>湖南省文化和旅游厅 2019-09</td></tr><tr><td class="g">音视频</td><td>站内尚无声档；平台检索到腾讯视频、优酷等演出视频若干，未逐条核验，暂不引用</td><td>平台检索 2026-10</td></tr></table><p class="sec-note">⚠ 音视频暂缺：江华《盘王大歌》站内尚无可用音档。</p></div>
-        </details>
-      </div>
-    </div>
-  </div>
-</section>
 <section class="sound-line" id="sound" aria-labelledby="soundTitle">
   <div class="wrap sound-grid">
     <div class="sound-copy">
@@ -200,12 +190,12 @@ if(location.search.indexOf('arrive=')>-1){
       <p class="next-note">平地瑶的植物染色织锦，2018 年列入自治区级非遗。</p>
     </div>
     <nav class="chapter-strip" aria-label="六章色带">
-      <a class="" href="02-女书.html" style="--chip:#A9362E;--chip-fg:#F2EDE2"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
-      <a class="" href="03-蝴蝶歌.html" style="--chip:#2C5A4E;--chip-fg:#F2EDE2"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
-      <a class="" href="04-长鼓舞.html" style="--chip:#C08A2E;--chip-fg:#141A16"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
-      <a class="" href="05-风雨桥.html" style="--chip:#1D2652;--chip-fg:#F2EDE2"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
+      <a class="" href="02-女书.html" style="--chip:#1D2652;--chip-fg:#F2EDE2"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
+      <a class="" href="03-蝴蝶歌.html" style="--chip:#B8862F;--chip-fg:#141A16"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
+      <a class="" href="04-长鼓舞.html" style="--chip:#A9362E;--chip-fg:#F2EDE2"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
+      <a class="" href="05-风雨桥.html" style="--chip:#4C6C8B;--chip-fg:#F2EDE2"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
       <a class="is-current" href="06-盘王大歌.html" style="--chip:#15120F;--chip-fg:#F2EDE2" aria-current="page"><span class="cs-no">05 / 06</span><span class="cs-cn">盘王大歌</span><span class="cs-en">Panwang Da Ge</span></a>
-      <a class="" href="07-富川织锦.html" style="--chip:#1E2B26;--chip-fg:#F2EDE2"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Fuchuan Brocade</span></a>
+      <a class="" href="07-富川织锦.html" style="--chip:#5E3F55;--chip-fg:#F2EDE2"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Yao Brocade</span></a>
     </nav>
     <div class="foot-meta">
       <p>本站收录潇贺古道沿线六项文化遗产。图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示。<br><a href="01-潇贺古道.html">总述 · 潇贺古道</a> /
@@ -215,8 +205,40 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </footer>
+<section class="source-ledger" id="sources" aria-labelledby="sourceTitle">
+  <div class="wrap ledger-grid">
+    <div class="ledger-head">
+      <p class="eyebrow"><i></i>SOURCES / 出处</p>
+      <h2 id="sourceTitle">资料来源</h2>
+      <p class="ledger-note">本页每条事实的出处，逐条列出，可随时核对。完整来源说明见 <a href="../database.html#/about">「关于与来源」</a>。</p>
+      <div class="ledger-meta">
+        <span>04 / Sources · 8 条</span>
+        <a class="ledger-back" href="#main">回到页首 <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+    <div class="ledger-body">
+      <table class="src" aria-labelledby="sourceTitle">
+        <thead>
+          <tr><th scope="col">内容</th><th scope="col">说明</th><th scope="col">来源</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="g">名录级别</td><td>2014 年 7 月经国家文化部公示，列入第四批国家级非物质文化遗产名录（民间文学类）</td><td><a class="src-link" href="http://whhlyt.hunan.gov.cn/news/tpxw/201909/t20190910_5482779.html" target="_blank" rel="noopener noreferrer">湖南省文化和旅游厅</a>《永州江华〈盘王大歌〉——国家级非物质文化遗产》(2019-09)；<a class="src-link" href="https://hunan.voc.com.cn/" target="_blank" rel="noopener noreferrer">华声在线</a> 2014-07-18</td></tr>
+          <tr><td class="g">省级前身</td><td>2008 年列入湖南省第二批省级非遗名录项目；保护主体为江华瑶族自治县文化馆</td><td><a class="src-link" href="http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml" target="_blank" rel="noopener noreferrer">江华瑶族自治县人民政府</a>《盘王大歌》(2022-06-30，来源文旅云)</td></tr>
+          <tr><td class="g">歌本与版本</td><td>现存歌本约八千行；最早抄本为清乾隆年间；三十六/二十四/十二段三种版本；三十六段本含三十六歌、七曲</td><td><a class="src-link" href="http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml" target="_blank" rel="noopener noreferrer">同上</a></td></tr>
+          <tr><td class="g">演唱形态</td><td>「还盘王愿」之「流乐」下卷由四位正师公、家主与歌娘一齐吟唱；男女对唱；清唱 / 伴乐器 / 以诵为主 / 又唱又诵</td><td><a class="src-link" href="http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml" target="_blank" rel="noopener noreferrer">同上</a></td></tr>
+          <tr><td class="g">七任曲曲牌</td><td>梅花曲、南花子、飞江南、相逢贤曲、万段曲、亚六曲、荷叶杯</td><td><a class="src-link" href="http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml" target="_blank" rel="noopener noreferrer">同上</a></td></tr>
+          <tr><td class="g">与长鼓舞</td><td>「与《盘王大歌》一起存在的长鼓及其歌舞」为瑶族文化不可缺少的部分</td><td><a class="src-link" href="http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml" target="_blank" rel="noopener noreferrer">同上</a></td></tr>
+          <tr><td class="g">手抄本图像</td><td>江华县湘江乡《盘王大歌》清代手抄本图像，可作临摹参考（需注明出处）</td><td><a class="src-link" href="http://whhlyt.hunan.gov.cn/news/tpxw/201909/t20190910_5482779.html" target="_blank" rel="noopener noreferrer">湖南省文化和旅游厅</a> 2019-09</td></tr>
+          <tr><td class="g">音视频</td><td>站内尚无声档；平台检索到腾讯视频、优酷等演出视频若干，未逐条核验，暂不引用</td><td>平台检索 2026-10</td></tr>
+        </tbody>
+      </table>
+      <p class="ledger-fine">⚠ 音视频暂缺：江华《盘王大歌》站内尚无可用音档。</p>
+    </div>
+  </div>
+</section>
 <script src="../assets/audio-player.js" defer></script>
 <script src="assets/motifs.js" defer></script>
 <script src="experience.js" defer></script>
+<script src="../assets/leave-guard.js" defer></script>
 </body>
 </html>

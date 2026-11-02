@@ -8,11 +8,14 @@ document.documentElement.classList.add('js');
 if(location.search.indexOf('arrive=')>-1){
   document.documentElement.classList.add('is-arriving');
   window.setTimeout(function(){
-    document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
     var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
-    if(v)v.style.display='none';
-    if(t)t.style.display='none';
-  },3600);
+    document.documentElement.classList.add('is-revealing');
+    window.setTimeout(function(){
+      document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
+      if(v)v.style.display='none';
+      if(t)t.style.display='none';
+    },680);
+  },6000);
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +32,7 @@ if(location.search.indexOf('arrive=')>-1){
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#2C5A4E">
+<meta name="theme-color" content="#B8862F">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="alternate icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23F7F4EC'/%3E%3Cpath d='M3 12c1.5 0 1.5-4.5 3-4.5s1.5 9 3 9 1.5-13.5 3-13.5 1.5 9 3 9 1.5-4.5 3-4.5' fill='none' stroke='%23C3272B' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
@@ -41,7 +44,7 @@ if(location.search.indexOf('arrive=')>-1){
 </style>
 <link rel="stylesheet" href="theme-experience.css">
 <link rel="stylesheet" href="../assets/audio-player.css">
-<style>:root{--main:#2C5A4E;--on:#F2EDE2;--accent:#E3B85C;--surface:#18392F;--deep:#1B3B32}</style>
+<style>:root{--main:#B8862F;--on:#141A16;--accent:#2C5A4E;--surface:#E8C982;--deep:#7A5A1C}</style>
 </head>
 <body class="theme-page" data-theme="butterfly" data-audio-base="../assets/audio/">
 <a class="skip-link" href="#main">跳到正文</a>
@@ -70,7 +73,15 @@ if(location.search.indexOf('arrive=')>-1){
       <div class="hero-badges"><span class="badge hot">国家级非遗 · 2008 第二批</span><span class="badge">二声部民歌</span><span class="badge">衬词「蝴的蝶」</span><span class="badge">代表性传承人：欧玉梅</span></div>
     </div>
     <div class="hero-art">
-      <div class="motif-unit" data-motif-unit aria-hidden="true"></div>
+      <div class="hero-stack">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/butterfly-layer-01.png" style="--i:0" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/butterfly-layer-02.png" style="--i:1" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/butterfly-layer-03.png" style="--i:2" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/butterfly-layer-04.png" style="--i:3" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/butterfly-layer-05.png" style="--i:4" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/butterfly-layer-06.png" style="--i:5" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/butterfly-layer-07.png" style="--i:6" width="700" height="700" decoding="async" alt="蝴蝶歌图案：方框内回纹与折线格，弧线围出卷云与团花，四角各一枚星形。">
+      </div>
     </div>
   </div>
   <div class="wrap hero-footer">
@@ -147,26 +158,6 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </section>
-<section class="story-block story-block--sources" data-step="04" id="sources">
-  <div class="wrap">
-    <div class="story-grid">
-      <aside class="story-rail" aria-hidden="true">
-        <span class="story-no">04</span>
-        <span class="story-en">SOURCES / 出处</span>
-        <i></i>
-      </aside>
-      <div class="story-main">
-        <details class="source-fold">
-          <summary>
-            <span>资料来源 / Sources</span>
-            <span class="src-action">核对表 <span class="src-toggle" aria-hidden="true">＋</span></span>
-          </summary>
-          <div class="source-body"><table class="src"><tr><th>内容</th><th>说明</th><th>来源</th></tr><tr><td class="g">名录级别</td><td>第二批国家级非遗（2008），项目序号 61，编号 Ⅱ-30，扩展项目；申报地区广西富川瑶族自治县</td><td>国务院第二批国家级非物质文化遗产名录；<code>ihchina.cn/project_details/12474.html</code></td></tr><tr><td class="g">和声特征</td><td>和声音程以大小三度为主，经常出现长时值的大二度音程，然后解决到同度</td><td>中国非物质文化遗产网官方项目页原文</td></tr><tr><td class="g">报道用语</td><td>「流淌在翅膀上的蝴蝶歌」</td><td>广西日报 2023-01-11；国际在线同期报道</td></tr><tr><td class="g">代表性传承人</td><td>欧玉梅（第四代，富川白沙镇）</td><td><code>ihchina.cn/ccr_detail/29903.html</code></td></tr><tr><td class="g">音乐本体研究</td><td>《广西富川瑶族合唱作品〈蝴蝶歌〉音乐本体研究》</td><td>《黄河之声》2022 年第 14 期</td></tr><tr><td class="g">当代融合实践</td><td>传承人探索蝴蝶歌与现代音乐的融合，吸引年轻人加入</td><td>搜狐文化 2025《以喉为「翅」唱响融合新旋律》</td></tr><tr><td class="g">非音乐场合使用</td><td>富川：蝴蝶歌唱出廉政好声音</td><td>广西纪检监察网 2021-12</td></tr></table></div>
-        </details>
-      </div>
-    </div>
-  </div>
-</section>
 <section class="sound-line" id="sound" aria-labelledby="soundTitle">
   <div class="wrap sound-grid">
     <div class="sound-copy">
@@ -197,12 +188,12 @@ if(location.search.indexOf('arrive=')>-1){
       <p class="next-note">瑶族长鼓舞，2008 年列入第二批国家级非遗。</p>
     </div>
     <nav class="chapter-strip" aria-label="六章色带">
-      <a class="" href="02-女书.html" style="--chip:#A9362E;--chip-fg:#F2EDE2"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
-      <a class="is-current" href="03-蝴蝶歌.html" style="--chip:#2C5A4E;--chip-fg:#F2EDE2" aria-current="page"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
-      <a class="" href="04-长鼓舞.html" style="--chip:#C08A2E;--chip-fg:#141A16"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
-      <a class="" href="05-风雨桥.html" style="--chip:#1D2652;--chip-fg:#F2EDE2"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
+      <a class="" href="02-女书.html" style="--chip:#1D2652;--chip-fg:#F2EDE2"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
+      <a class="is-current" href="03-蝴蝶歌.html" style="--chip:#B8862F;--chip-fg:#141A16" aria-current="page"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
+      <a class="" href="04-长鼓舞.html" style="--chip:#A9362E;--chip-fg:#F2EDE2"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
+      <a class="" href="05-风雨桥.html" style="--chip:#4C6C8B;--chip-fg:#F2EDE2"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
       <a class="" href="06-盘王大歌.html" style="--chip:#15120F;--chip-fg:#F2EDE2"><span class="cs-no">05 / 06</span><span class="cs-cn">盘王大歌</span><span class="cs-en">Panwang Da Ge</span></a>
-      <a class="" href="07-富川织锦.html" style="--chip:#1E2B26;--chip-fg:#F2EDE2"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Fuchuan Brocade</span></a>
+      <a class="" href="07-富川织锦.html" style="--chip:#5E3F55;--chip-fg:#F2EDE2"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Yao Brocade</span></a>
     </nav>
     <div class="foot-meta">
       <p>本站收录潇贺古道沿线六项文化遗产。图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示。<br><a href="01-潇贺古道.html">总述 · 潇贺古道</a> /
@@ -212,8 +203,38 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </footer>
+<section class="source-ledger" id="sources" aria-labelledby="sourceTitle">
+  <div class="wrap ledger-grid">
+    <div class="ledger-head">
+      <p class="eyebrow"><i></i>SOURCES / 出处</p>
+      <h2 id="sourceTitle">资料来源</h2>
+      <p class="ledger-note">本页每条事实的出处，逐条列出，可随时核对。完整来源说明见 <a href="../database.html#/about">「关于与来源」</a>。</p>
+      <div class="ledger-meta">
+        <span>04 / Sources · 7 条</span>
+        <a class="ledger-back" href="#main">回到页首 <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+    <div class="ledger-body">
+      <table class="src" aria-labelledby="sourceTitle">
+        <thead>
+          <tr><th scope="col">内容</th><th scope="col">说明</th><th scope="col">来源</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="g">名录级别</td><td>第二批国家级非遗（2008），项目序号 61，编号 Ⅱ-30，扩展项目；申报地区广西富川瑶族自治县</td><td><a class="src-link" href="https://www.gov.cn/gongbao/content/2008/content_1025937.htm" target="_blank" rel="noopener noreferrer">国务院</a>第二批国家级非物质文化遗产名录；<a class="src-link src-link--code" href="https://www.ihchina.cn/project_details/12474.html" target="_blank" rel="noopener noreferrer"><code>ihchina.cn/project_details/12474.html</code></a></td></tr>
+          <tr><td class="g">和声特征</td><td>和声音程以大小三度为主，经常出现长时值的大二度音程，然后解决到同度</td><td><a class="src-link" href="https://www.ihchina.cn/project_details/12474.html" target="_blank" rel="noopener noreferrer">中国非物质文化遗产网</a>官方项目页原文</td></tr>
+          <tr><td class="g">报道用语</td><td>「流淌在翅膀上的蝴蝶歌」</td><td><a class="src-link" href="https://epaper.gxrb.com.cn/gxrb2/html/2023-01/11/content_1903893.htm" target="_blank" rel="noopener noreferrer">广西日报</a> 2023-01-11；<a class="src-link" href="https://big5.cri.cn/gate/big5/gx.cri.cn/2023-01-11/586816ce-4d6c-b326-c231-354012c8b272.html" target="_blank" rel="noopener noreferrer">国际在线</a>同期报道</td></tr>
+          <tr><td class="g">代表性传承人</td><td>欧玉梅（第四代，富川白沙镇）</td><td><a class="src-link src-link--code" href="https://www.ihchina.cn/ccr_detail/29903.html" target="_blank" rel="noopener noreferrer"><code>ihchina.cn/ccr_detail/29903.html</code></a></td></tr>
+          <tr><td class="g">音乐本体研究</td><td>《广西富川瑶族合唱作品〈蝴蝶歌〉音乐本体研究》</td><td><a class="src-link" href="https://www.cnki.com.cn/Article/CJFDTOTAL-HHZS202214002.htm" target="_blank" rel="noopener noreferrer">《黄河之声》</a> 2022 年第 14 期</td></tr>
+          <tr><td class="g">当代融合实践</td><td>传承人探索蝴蝶歌与现代音乐的融合，吸引年轻人加入</td><td><a class="src-link" href="https://cul.sohu.com/a/908964294_119038" target="_blank" rel="noopener noreferrer">搜狐文化</a> 2025《以喉为「翅」唱响融合新旋律》</td></tr>
+          <tr><td class="g">非音乐场合使用</td><td>富川：蝴蝶歌唱出廉政好声音</td><td><a class="src-link" href="https://www.gxjjw.gov.cn/staticpages/20211220/gxjjw61c05457-166041.shtml" target="_blank" rel="noopener noreferrer">广西纪检监察网</a> 2021-12</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 <script src="../assets/audio-player.js" defer></script>
 <script src="assets/motifs.js" defer></script>
 <script src="experience.js" defer></script>
+<script src="../assets/leave-guard.js" defer></script>
 </body>
 </html>

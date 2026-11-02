@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -19,8 +19,12 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:url" content="https://hpairr.github.io/xiaohe-gudao/database.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#F7F4EC">
+<meta name="theme-color" content="#F2EDE2">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23F7F4EC'/%3E%3Cpath d='M3 12c1.5 0 1.5-4.5 3-4.5s1.5 9 3 9 1.5-13.5 3-13.5 1.5 9 3 9 1.5-4.5 3-4.5' fill='none' stroke='%23C3272B' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+  /* 主页顶栏点击数据库入口后，整屏主色和标题从导航字的位置接力过来 */
+  if (new URLSearchParams(location.search).has('arrive')) document.documentElement.classList.add('is-arriving');
+</script>
 
 <style>
   @font-face{font-family:'Noto Sans Nushu';src:url('assets/fonts/site/NotoSansNushu-Regular.woff2') format('woff2');font-weight:400;font-style:normal}
@@ -100,6 +104,7 @@
   .logo .en{font-size:9.5px;color:var(--ink-soft);letter-spacing:.5px;display:block}
   nav.main{display:flex;gap:20px;margin-inline-start:auto}
   nav.main a{color:var(--ink);font-size:15px;padding:6px 2px;border-bottom:2px solid transparent}
+  nav.main a.nav-index{margin-left:4px;padding-left:16px;border-left:1px solid color-mix(in srgb,currentColor 30%,transparent)}
   nav.main a:hover{color:var(--qun);text-decoration:none;border-bottom-color:var(--tianshui)}
   nav.main a.active{color:var(--qun);border-bottom-color:var(--qun)}
   .lang-switch{display:flex;gap:6px;align-items:center}
@@ -323,10 +328,28 @@
   .drawer .drawer-box{position:absolute;inset-block-start:0;inset-inline-start:0;bottom:0;width:min(300px,82vw);background:var(--paper);padding:22px 18px;box-shadow:2px 0 14px rgba(31,45,61,.2);overflow:auto}
   .drawer .drawer-box a{display:block;font-size:16px;padding:13px 6px;border-bottom:1px solid var(--line);color:var(--ink)}
   .drawer .drawer-box a:hover{color:var(--qun);text-decoration:none}
+  .drawer .drawer-box a.drawer-index{margin-top:8px;border-top:1px solid var(--line)}
   .drawer .drawer-box .lang-switch{margin-block-start:18px}
   @media (max-width:960px){ .burger{display:block} }
 
   /* ===== 图志:路线可视化 + 可替换地图图片与坐标指示器 ===== */
+  .atlas-mapwrap{display:grid;grid-template-columns:58px minmax(0,1fr);gap:16px;align-items:start}
+  .atlas-rail{position:sticky;top:84px;padding-top:20px}
+  .atlas-switch{display:flex;flex-direction:column;border:1px solid #141A16;background:#F7F4EC}
+  .atlas-switch button{appearance:none;background:transparent;border:0;border-bottom:1px solid rgba(31,45,61,.22);padding:15px 0;font:inherit;font-size:12px;letter-spacing:.16em;color:#5A6B7B;cursor:pointer;white-space:nowrap;transition:background .25s ease,color .25s ease}
+  .atlas-switch button:last-child{border-bottom:0}
+  .atlas-switch button.is-on{background:#141A16;color:#F7F4EC}
+  .atlas-switch button:hover{color:#141A16}
+  .atlas-switch button.is-on:hover{color:#F7F4EC}
+  @media (max-width:760px){
+    .atlas-mapwrap{grid-template-columns:minmax(0,1fr);gap:0}
+    .atlas-rail{position:sticky;top:62px;padding:0;z-index:6;margin-bottom:12px}
+    .atlas-switch{flex-direction:row;width:max-content}
+    .atlas-switch button{border-bottom:0;border-right:1px solid rgba(31,45,61,.22);padding:9px 20px}
+    .atlas-switch button:last-child{border-right:0}
+  }
+  #mapFrame{overflow:visible}
+  .ed-map-frame img.atlas-img{max-height:none;width:100%;height:auto;display:block}
   .map-frame{position:relative;border:1px solid rgba(31,45,61,.08);border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#F7F4EC,#EFF4F8);min-height:400px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;user-select:none}
   .map-frame img{width:100%;height:auto;display:block;max-height:640px;object-fit:contain}
   .map-route{width:100%;max-width:760px;height:auto;display:block;padding:18px}
@@ -642,6 +665,15 @@
   .ed-snd-ext:hover{color:var(--qun);border-bottom-color:var(--qun);text-decoration:none}
   .ed-snd-row .snd-stage{grid-column:2 / -1;width:100%;margin-top:8px}
   .ed-snd-row .snd-stage iframe,.ed-snd-row .snd-stage video{width:100%;max-width:860px;display:block;background:#000}
+  /* 封面：点开先看到画面，点画面才加载原片 */
+  .snd-cover{position:relative;display:block;width:100%;max-width:860px;aspect-ratio:16/9;padding:0;border:0;background:#000;cursor:pointer;overflow:hidden;border-radius:6px}
+  .snd-cover img{width:100%;height:100%;object-fit:cover;display:block;opacity:.94;transition:opacity .25s ease,transform .7s cubic-bezier(.16,1,.3,1)}
+  .snd-cover:hover img,.snd-cover:focus-visible img{opacity:1;transform:scale(1.02)}
+  .snd-cover::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(10,14,12,.6),rgba(10,14,12,0) 52%)}
+  .snd-cover-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:rgba(242,237,226,.94);color:#141A16;box-shadow:0 2px 18px rgba(0,0,0,.35)}
+  .snd-cover-play svg{width:20px;height:20px;margin-left:2px}
+  .snd-cover-cap{position:absolute;left:16px;bottom:13px;z-index:2;color:#F2EDE2;font-size:11px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
+  .snd-cover:focus-visible{outline:2px solid var(--cinnabar);outline-offset:3px}
   .ed-note-block{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.55fr);gap:clamp(26px,4vw,58px);margin-top:34px;padding-top:18px;border-top:1px solid var(--ink)}
   .ed-note-block h2{font-family:var(--serif);font-size:22px;margin:0 0 10px}
   .ed-note-block p{font-size:12.5px;line-height:1.95;color:var(--ink-soft);margin:0 0 10px}
@@ -880,9 +912,178 @@
     .topbar > .lang-select{display:none}
     footer .foot-grid{grid-template-columns:1fr;gap:28px}
   }
+
+  /* ============================================================
+     2026-11 · 专题页式全色场 + 功能色
+     ------------------------------------------------------------
+     把专题页的做法搬进数据库栏目：栏目开篇是整幅特征色，
+     往下滑，内容块一块块换色——
+       声音：群青 → 蝴蝶歌秋香 → 长鼓舞朱砂 → 女书靛 →
+             上灯炸龙赭 → 古道群青 → 纸
+       图志：天水碧 → 浅天水碧（地图） → 秋香（节点） → 群青（城市）
+       档案：朱砂（索引/筛选） → 浅秋香（档案格）
+       关于：黛（方法） → 浅秋香（正文/来源）
+     色场不是装饰：每个色场把 --ink / --cinnabar / --qun 整套
+     换成在该底色上 ≥4.5:1 的前台色；详情、城市仍是纸面内页。
+     ============================================================ */
+  body{
+    --ink-base:#141A16;--ink-soft-base:#4C574F;
+    --cinnabar-base:#B63A33;--qun-base:#35518C;
+    --line-base:rgba(20,26,22,.16);--moon-base:#E9E1D2;
+    --main:var(--paper);--on:var(--ink-base);--accent:var(--cinnabar-base);
+    background-color:var(--main);color:var(--on);
+    transition:background-color .62s cubic-bezier(.4,0,.2,1);
+  }
+  body[data-sect="detail"]{--main:#F2E3E2}
+  body[data-sect="city"]{--main:#F2E3CD}
+  body[data-sect="archive"]{--main:#B63A33;--on:#F2EDE2;--accent:#F5E3BE}
+  body[data-sect="sounds"]{--main:#35518C;--on:#F2EDE2;--accent:#E8C982}
+  body[data-sect="atlas"]{--main:#2C5A4E;--on:#F2EDE2;--accent:#E8C982}
+  body[data-sect="about"]{--main:#4C574F;--on:#F2EDE2;--accent:#E8C982}
+  body[data-sect="archive"],
+  body[data-sect="sounds"],
+  body[data-sect="atlas"],
+  body[data-sect="about"]{
+    --ink:var(--on);
+    --ink-soft:var(--on);
+    --line:color-mix(in srgb,var(--on) 24%,transparent);
+    --cinnabar:var(--accent);
+    --qun:var(--accent);
+    --moon:color-mix(in srgb,var(--on) 12%,transparent);
+  }
+  .ed-page{overflow-x:clip}
+  body[data-sect="archive"] .ed-page,
+  body[data-sect="sounds"] .ed-page,
+  body[data-sect="atlas"] .ed-page,
+  body[data-sect="about"] .ed-page{padding-bottom:0}
+
+  /* 顶栏：跟着特征色走，字反白；logo 变成一枚反白印章 */
+  header.top{
+    background:rgba(242,237,226,.95);
+    background:color-mix(in srgb,var(--main) 92%,transparent);
+    border-bottom:1px solid var(--line);
+    color:var(--on);
+    transition:background-color .62s cubic-bezier(.4,0,.2,1);
+  }
+  .logo .cn{color:var(--on);transition:color .62s}
+  .logo .en{color:var(--on);opacity:.55;transition:color .62s}
+  .logo-mark{background:var(--cinnabar-base);color:var(--paper);transition:background-color .62s,color .62s}
+  nav.main a{color:var(--on);transition:color .3s ease,border-color .3s ease}
+  nav.main a:hover{color:var(--accent);border-bottom-color:var(--line)}
+  nav.main a.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .lang-select{color:var(--on);border-bottom-color:var(--line)}
+  .lang-select option{background:var(--paper);color:var(--ink-base)}
+  .burger{background:transparent;border-color:var(--line);color:var(--on)}
+  body[data-sect="archive"] .logo-mark,
+  body[data-sect="sounds"] .logo-mark,
+  body[data-sect="atlas"] .logo-mark,
+  body[data-sect="about"] .logo-mark{background:var(--on);color:var(--main)}
+
+  /* 栏目开篇：整幅特征色，标题反白；页身继续用特征色 */
+  .ed-head{
+    position:relative;
+    min-height:calc(100svh - 70px);
+    display:flex;flex-direction:column;justify-content:center;
+    padding-top:clamp(40px,6vw,76px);padding-bottom:clamp(34px,4.5vw,56px);
+    border-bottom:0;color:var(--on);
+  }
+  @media (max-width:760px){
+    .ed-head{min-height:calc(100svh - 62px)}
+  }
+  .ed-head .ed-kicker,
+  .ed-head .ed-kicker .cn,
+  .ed-head .ed-title,
+  .ed-head .ed-title .ed-en,
+  .ed-head .ed-lede,
+  .ed-head .ed-lede .muted,
+  .ed-head .ed-aside-row .lab,
+  .ed-head .ed-aside-row .val,
+  .ed-head .ed-aside .note{color:inherit}
+  .ed-head .ed-kicker .slash{color:var(--accent);opacity:1}
+  .ed-head .ed-aside{border-left-color:var(--line)}
+  .ed-head .ed-aside-row{border-bottom-color:var(--line)}
+  .ed-head .ed-aside-row:first-child{border-top-color:var(--line)}
+  .ed-head .ed-aside-row .val em{color:var(--accent)}
+
+  /* 色场：整幅出血的一块颜色；内容仍在 1280 栅格里 */
+  .ed-sheet{
+    position:relative;isolation:isolate;
+    padding:clamp(42px,6vw,76px) 0;margin:0;
+    --ink:var(--f-fg);
+    --ink-soft:var(--f-fg);
+    --line:color-mix(in srgb,var(--f-fg) 24%,transparent);
+    --cinnabar:var(--f-accent);
+    --qun:var(--f-accent);
+    --moon:color-mix(in srgb,var(--f-fg) 12%,transparent);
+    color:var(--f-fg);
+  }
+  .ed-sheet::before{
+    content:"";position:absolute;z-index:-1;inset:0;left:50%;
+    width:100vw;transform:translateX(-50%);
+    background-color:var(--f-bg);background-image:var(--paper-fiber);
+    background-size:260px 260px;
+  }
+  .ed-sheet--paper{
+    --f-bg:var(--paper);--f-fg:var(--ink-base);--f-accent:var(--cinnabar-base);
+    --ink:var(--ink-base);
+    --ink-soft:var(--ink-soft-base);
+    --line:var(--line-base);
+    --cinnabar:var(--cinnabar-base);
+    --qun:var(--qun-base);
+    --moon:var(--moon-base);
+    color:var(--ink-base);
+  }
+
+  /* 色场内的局部修正 */
+  .ed-snd-group.ed-sheet{margin-top:0}
+  .ed-sheet .ed-snd-row:hover{background:color-mix(in srgb,var(--f-fg) 7%,transparent)}
+  .ed-sheet .ed-snd-row.is-open{background:color-mix(in srgb,var(--f-fg) 11%,transparent)}
+  .ed-sheet .ed-atlas-layout,
+  .ed-sheet .ed-sec-head{margin-top:0}
+  .ed-sheet .ed-about{margin-top:0;padding-top:0}
+  .ed-field select option{background:var(--paper);color:var(--ink-base)}
+  .ed-page[data-page="archive"] .ed-plate{background:var(--main)}
+  .ed-filter input::placeholder{color:var(--ink-soft)}
+  .ed-sheet .ed-map-frame{
+    --ink:#141A16;--ink-soft:#4C574F;
+    --qun:#35518C;--cinnabar:#B63A33;
+    --line:rgba(20,26,22,.16);--moon:#E9E1D2;
+  }
+  .ed-map-caption .ed-map-legend i{background:#35518C}
+  .ed-map-caption .ed-map-legend i.red{background:none;border-top-color:#B63A33}
+
+  /* 内页（详情/城市）仍是纸面：页脚、提示条、抽屉保持墨色/纸色 */
+  footer{background:var(--ink-base)}
+  .ed-toast{background:var(--ink-base);color:var(--paper)}
+  .drawer .drawer-box{
+    --ink:var(--ink-base);--ink-soft:var(--ink-soft-base);
+    --line:var(--line-base);--qun:var(--qun-base);--cinnabar:var(--cinnabar-base);
+    --on:var(--ink-base);
+    background:var(--paper);color:var(--ink-base);
+  }
+
+  /* 数据库页开场：纯色整屏，退开即页面；不搬白色标题 */
+  .arrival-veil{position:fixed;inset:0;z-index:290;display:none;background:var(--main);pointer-events:none;opacity:1}
+  html.is-arriving{overflow-y:scroll}
+  html.is-arriving .arrival-veil{display:block}
+  html.is-arriving header.top,
+  html.is-arriving #app{pointer-events:none}
+  html.is-arriving.is-revealing .arrival-veil{opacity:0;transition:opacity .32s cubic-bezier(.4,0,.2,1)}
+  @media (prefers-reduced-motion:reduce){
+    .arrival-veil{display:none!important}
+  }
+
+  /* 首屏直接落在某个子页时不要把底色从宣纸渐变过去 */
+  body.no-sect-transition,body.no-sect-transition header.top{transition:none}
+
+  @media (prefers-reduced-motion:reduce){
+    body,header.top{transition:none}
+  }
 </style>
 </head>
-<body>
+<body class="no-sect-transition">
+
+<div class="arrival-veil" id="arrivalVeil" aria-hidden="true"></div>
 
 <header class="top">
   <div class="container topbar">
@@ -896,8 +1097,8 @@
       <a href="#/archive" data-nav="archive" data-i18n="nav_archive">文化档案</a>
       <a href="#/sounds" data-nav="sounds" data-i18n="nav_sounds">声音数据库</a>
       <a href="#/atlas" data-nav="atlas" data-i18n="nav_atlas">古道图志</a>
-      <a href="index.html#index" data-i18n="nav_chapters">六章</a>
       <a href="#/about" data-nav="about" data-i18n="nav_about">关于与来源</a>
+      <a href="index.html#index" class="nav-index" data-i18n="nav_chapters">六章</a>
     </nav>
     <button class="burger" id="burgerBtn" aria-label="菜单" aria-expanded="false" aria-controls="drawer"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     <select class="lang-select" aria-label="Language" title="Language">
@@ -918,8 +1119,8 @@
     <a href="#/archive" data-nav="archive" data-i18n="nav_archive">文化档案</a>
     <a href="#/sounds" data-nav="sounds" data-i18n="nav_sounds">声音数据库</a>
     <a href="#/atlas" data-nav="atlas" data-i18n="nav_atlas">古道图志</a>
-    <a href="index.html#index" data-i18n="nav_chapters">六章</a>
     <a href="#/about" data-nav="about" data-i18n="nav_about">关于与来源</a>
+    <a href="index.html#index" class="drawer-index" data-i18n="nav_chapters">六章</a>
     <div class="lang-switch" role="group" aria-label="Language">
       <select class="lang-select" aria-label="Language" title="Language">
         <option value="zh-CN">中文</option>
@@ -1236,12 +1437,45 @@ function biliEmbed(url){
   const p = (url.match(/[?&]p=(\d+)/i)||[])[1] || '1';
   return 'https://player.bilibili.com/player.html?bvid='+m[1]+'&page='+p+'&autoplay=1&high_quality=1&danmaku=0';
 }
+/* 每条本地视频的封面（tools/make_video_stills.py 从原片截取）。
+   点开先看到画面，点画面才加载原片；线上没有原片时仍自动回退到来源平台。 */
+const VIDEO_COVERS = (() => {
+  const ids = ['so1','so2','so4','so5','so7','so8','so9','so10','so11','so12','so13',
+               'so14','so15a','so15b','so15c','so16','so18','so19','so21'];
+  const map = {};
+  ids.forEach(id => { map[id] = 'assets/img/video-covers/' + id + '.jpg'; });
+  return map;
+})();
+function coverOf(id){ return VIDEO_COVERS[id] || ''; }
+function attr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
 function playSound(id, stage, b){
   const s = SOUNDS.find(x=>x.id===id) || {};
   const mine = (VIDEO_URLS[id]||'').trim();
   if(mine){ renderMedia(mine, stage, b); return; }
+  if(coverOf(id)){ renderCover(id, s, stage, b); return; }
+  playLocal(id, s, stage, b, '');
+}
+
+/* 先给一张静帧，点画面才开始加载原片 */
+function renderCover(id, s, stage, b){
+  const cover = coverOf(id);
+  const name = sndName(s);
+  stage.innerHTML =
+    '<button class="snd-cover" type="button" aria-label="'+attr(L.snd_play)+'：'+attr(name)+'">'
+    + '<img src="'+cover+'" alt="'+attr(name)+' 影像截图" width="960" height="540" loading="lazy" decoding="async">'
+    + '<span class="snd-cover-play" aria-hidden="true">'+iconPlay()+'</span>'
+    + '<span class="snd-cover-cap">'+L.snd_play+' · '+(isRemote(id)?L.snd_online:L.snd_local)+'</span>'
+    + '</button>';
+  stage.querySelector('.snd-cover')
+    .addEventListener('click', ()=>{ playLocal(id, s, stage, b, cover); }, {once:true});
+}
+
+function playLocal(id, s, stage, b, cover){
   const local = 'video/'+id+'.mp4';
-  stage.innerHTML = '<video controls autoplay playsinline style="width:100%;border-radius:6px;background:#000" src="'+local+'"></video>';
+  stage.innerHTML = '<video controls autoplay playsinline'
+    + (cover ? ' poster="'+cover+'"' : '')
+    + ' style="width:100%;border-radius:6px;background:#000" src="'+local+'"></video>';
   const v = stage.querySelector('video');
   /* 线上未随仓库上传原片时:自动改走来源平台,而不是留一块黑屏 */
   v.addEventListener('error', ()=>{ renderMedia(s.url||'', stage, b); }, {once:true});
@@ -1543,7 +1777,6 @@ const PH_GRAD = {
   '人物':'linear-gradient(150deg,#7A5C34,#B08A50)'
 };
 const IMG_MAP = {
-  p1:'images/图片/07-潇贺古道-百科.jpg',
   p2:'images/图片/22-谢沐关-百科.jpg',
   p3:'images/图片/08-潇贺古道纪录片-封面.jpg',
   s1:'images/图片/04-临贺故城-百科.jpg',
@@ -1551,13 +1784,9 @@ const IMG_MAP = {
   s3:'images/图片/11-秀水村-纪录片封面.jpg',
   s4:'images/图片/13-福溪村-百科.jpg',
   s5:'images/图片/15-岔山村-腾讯新闻.jpg',
-  s6:'images/图片/07-潇贺古道-百科.jpg',
-  s7:'images/图片/07-潇贺古道-百科.jpg',
-  s8:'images/图片/07-潇贺古道-百科.jpg',
   s9:'images/图片/20-富川明城遗址-百家号.jpg',
   s10:'images/图片/01-黄姚古镇-百科.jpg',
   s11:'images/图片/23-江永女书-百科.jpg',
-  s12:'images/图片/07-潇贺古道-百科.jpg',
   s13:'images/图片/31-富川瑶族风俗2-百家号.jpg',
   i1:'images/图片/23-江永女书-百科.jpg',
   i2:'images/图片/24-蝴蝶歌表演-广西新闻网.jpg',
@@ -1566,14 +1795,10 @@ const IMG_MAP = {
   i5:'images/图片/27-上灯炸龙节-封面.png',
   i6:'images/图片/30-富川瑶族风俗1-百家号.jpg',
   i8:'images/图片/30-富川瑶族风俗1-百家号.jpg',
-  f1:'images/图片/07-潇贺古道-百科.jpg',
-  f2:'images/图片/07-潇贺古道-百科.jpg',
   f3:'images/图片/22-谢沐关-百科.jpg',
   f4:'images/图片/22-谢沐关-百科.jpg',
-  f5:'images/图片/07-潇贺古道-百科.jpg',
   f6:'images/图片/22-谢沐关-百科.jpg',
-  f7:'images/图片/20-富川明城遗址-百家号.jpg',
-  f8:'images/图片/07-潇贺古道-百科.jpg'
+  f7:'images/图片/20-富川明城遗址-百家号.jpg'
 };
 function imgOf(item){ return IMG_MAP[item.id] || ''; }
 function iconPlay(){ return '<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>'; }
@@ -1820,6 +2045,7 @@ function viewArchive(){
         </div>
       </div>
 
+      <div class="ed-sheet" style="--f-bg:#E8D9B8;--f-fg:#141A16;--f-accent:#8C2822">
       <div class="ed-result">
         <span id="arCount" aria-live="polite"><b>${arListLen}</b>${ed('条档案',' records')}${favCnt?` · ${L.ar_fav.replace('{n}',favCnt)}`:''}</span>
         <span class="sort">${ed('按类型 · 地点排序','SORTED BY TYPE / PLACE')}</span>
@@ -1841,6 +2067,7 @@ function viewArchive(){
             <span class="ed-card-desc">${ds(i)}</span>
           </a>`).join('')}
       </div>` : `<div class="ed-empty">${L.ar_empty}</div>`}
+      </div>
     </div>
   </section>`;
 }
@@ -2039,27 +2266,23 @@ function viewAtlas(){
     {x:620,y:300,dx:16, dy:4,  anchor:'start'},
     {x:400,y:470,dx:0,  dy:22, anchor:'middle'}
   ];
-  const routeSvg = `<svg class="map-route" id="mapSvg" viewBox="0 0 800 520" role="img" aria-label="${L.at_title}">
-    <path d="M400,64 L400,112" fill="none" stroke="var(--qun)" stroke-width="3" stroke-linecap="round"/>
-    <path d="M400,112 C368,118 340,128 330,150 C312,182 276,200 270,235 C262,276 300,312 315,345 C332,382 372,412 400,432" fill="none" stroke="var(--qun)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M400,112 C428,120 452,130 470,150 C492,182 502,220 500,262 C496,330 462,398 400,432" fill="none" stroke="var(--qun)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M498,258 C540,272 578,288 620,300" fill="none" stroke="var(--cinnabar)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="5 5"/>
-    <path d="M400,432 L400,470" fill="none" stroke="var(--qun)" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="400" cy="432" r="4.5" fill="var(--qun)"/>
-    <text x="176" y="292" class="map-route-tag" text-anchor="middle">${isEn()?'West line · c. 170 km':'西线 · 陆路约 170 km'}</text>
-    <text x="540" y="196" class="map-route-tag" text-anchor="middle">${isEn()?'East line':'东线'}</text>
-    <text x="586" y="332" class="map-route-tag" text-anchor="middle" fill="var(--cinnabar)">${isEn()?'Guiling branch':'桂岭岔道'}</text>
-    ${stops.map((s,i)=>{
-      const p=pts[i];
-      const label=isEn()?(ATLAS_EN.stops[s.name]||s.name):s.name;
-      return `<g>
-        <circle cx="${p.x}" cy="${p.y}" r="7" fill="#fff" stroke="var(--cinnabar)" stroke-width="2.5"/>
-        <text x="${p.x+p.dx}" y="${p.y+p.dy}" text-anchor="${p.anchor}" class="map-route-label">${label}</text>
-      </g>`;
-    }).join('')}
-    <text x="34" y="44" class="map-route-ns" font-size="13">北 ↑</text>
-    <text x="34" y="500" class="map-route-ns" font-size="13">南 ↓</text>
-  </svg>`;
+  /* 路线:三张成图,按钮切换 */
+  const mapViews = [
+    { src:'assets/atlas/route-all.jpg',  label: ed('全线','All') },
+    { src:'assets/atlas/route-west.jpg', label: ed('西线','West') },
+    { src:'assets/atlas/route-east.jpg', label: ed('东线','East') }
+  ];
+  const routeSvg = `
+    <div class="atlas-mapwrap">
+      <div class="atlas-rail">
+        <div class="atlas-switch" id="atlasSwitch" role="tablist">
+          ${mapViews.map((v,i)=>`<button type="button" role="tab" data-src="${v.src}"${i===0?' class="is-on" aria-selected="true"':' aria-selected="false"'}>${v.label}</button>`).join('')}
+        </div>
+      </div>
+      <div class="map-frame ed-map-frame" id="mapFrame">
+        <img class="atlas-img" id="atlasMapImg" src="${mapViews[0].src}" width="1500" height="2807" alt="${L.at_title}" decoding="async">
+      </div>
+    </div>`;
   return `
   <section class="ed-page" data-page="atlas">
     <div class="container">
@@ -2084,18 +2307,12 @@ function viewAtlas(){
         </div>
       </header>
 
+      <div class="ed-sheet" style="--f-bg:#DDE8E1;--f-fg:#141A16;--f-accent:#8C2822">
       <div class="ed-atlas-layout">
         <div>
-          <div class="map-frame ed-map-frame" id="mapFrame">
-            ${routeSvg}
-          </div>
+          ${routeSvg}
           <div class="ed-map-caption">
             <span class="cap" data-i18n="at_tip">${L.at_tip}</span>
-            <div class="ed-map-legend" aria-label="${ed('图例','Legend')}">
-              <span><i></i>${ed('西线 / 东线','West / East')}</span>
-              <span><i class="red"></i>${ed('桂岭岔道','Guiling branch')}</span>
-              <span><i style="background:var(--cinnabar);height:1px"></i>${ed('节点','Stop')}</span>
-            </div>
           </div>
         </div>
         <aside class="ed-atlas-aside">
@@ -2107,8 +2324,10 @@ function viewAtlas(){
           <a class="ed-cite" href="#/archive" style="display:inline-block;margin-top:4px;text-decoration:none">${ed('从档案进入 →','Enter the archive →')}</a>
         </aside>
       </div>
+      </div>
 
-      <div class="ed-sec-head" style="margin-top:44px">
+      <div class="ed-sheet" style="--f-bg:#E8D9B8;--f-fg:#141A16;--f-accent:#8C2822">
+      <div class="ed-sec-head">
         <span class="no">01</span><h2>${ed('沿线节点','Stops along the road')}</h2><span class="en-tag">SEVEN STOPS</span>
       </div>
       <div class="ed-stops">
@@ -2122,8 +2341,10 @@ function viewAtlas(){
           </div>
         </div>`).join('')}
       </div>
+      </div>
 
-      <div class="ed-sec-head" style="margin-top:38px">
+      <div class="ed-sheet" style="--f-bg:#35518C;--f-fg:#F2EDE2;--f-accent:#E8C982">
+      <div class="ed-sec-head">
         <span class="no">02</span><h2 data-i18n="at_cities">${L.at_cities}</h2><span class="en-tag">CITIES</span>
       </div>
       <div class="ed-cities">
@@ -2133,23 +2354,42 @@ function viewAtlas(){
           <span class="arrow">↗</span>
         </a>`).join('')}
       </div>
+      </div>
     </div>
   </section>`;
 }
-function bindAtlas(){
-  /* 汉堡菜单(移动端) */
+function bindBurger(){
+  /* 移动端汉堡菜单：全局绑一次；图志页的 bindAtlas 也会调用，用 dataset 去重 */
   const burger = document.getElementById('burgerBtn');
   const drawer = document.getElementById('drawer');
-  if(burger && drawer){
-    burger.addEventListener('click', ()=>{
-      const open = drawer.classList.toggle('open');
-      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    drawer.addEventListener('click', e=>{
-      if(e.target === drawer || e.target.closest('a')){
-        drawer.classList.remove('open');
-        burger.setAttribute('aria-expanded','false');
-      }
+  if(!burger || !drawer || burger.dataset.bound) return;
+  burger.dataset.bound = '1';
+  burger.addEventListener('click', ()=>{
+    const open = drawer.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  drawer.addEventListener('click', e=>{
+    if(e.target === drawer || e.target.closest('a')){
+      drawer.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+  });
+}
+function bindAtlas(){
+  bindBurger();
+  const sw = document.getElementById('atlasSwitch');
+  const img = document.getElementById('atlasMapImg');
+  if(sw && img && !sw.dataset.bound){
+    sw.dataset.bound = '1';
+    sw.addEventListener('click', e=>{
+      const b = e.target.closest('button[data-src]');
+      if(!b || b.classList.contains('is-on')) return;
+      sw.querySelectorAll('button[data-src]').forEach(x=>{
+        const on = x === b;
+        x.classList.toggle('is-on', on);
+        x.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      img.src = b.dataset.src;
     });
   }
 }
@@ -2226,6 +2466,14 @@ function sndCard(s, idx){
     <div class="snd-stage" data-id="${s.id}"></div>
   </div>`;
 }
+/* 声音五个分组各自的色场：蝴蝶歌秋香 / 长鼓舞朱砂 / 女书靛 / 上灯炸龙赭 / 古道群青 */
+const SND_SHEETS = [
+  ['#B8862F','#141A16','#5A3A0E'],
+  ['#A9362E','#F2EDE2','#F5E3BE'],
+  ['#1D2652','#F2EDE2','#E8C982'],
+  ['#8E4E20','#F2EDE2','#F5E3BE'],
+  ['#35518C','#F2EDE2','#E8C982']
+];
 function viewSounds(){
   let n = 0;
   return `
@@ -2252,8 +2500,10 @@ function viewSounds(){
         </div>
       </header>
 
-      ${SOUND_GROUPS.map((g,gi)=>`
-        <div class="ed-snd-group">
+      ${SOUND_GROUPS.map((g,gi)=>{
+        const f = SND_SHEETS[gi] || SND_SHEETS[4];
+        return `
+        <div class="ed-snd-group ed-sheet" style="--f-bg:${f[0]};--f-fg:${f[1]};--f-accent:${f[2]}">
           <div class="ed-snd-group-head">
             <span class="no">${['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ'][gi]||String(gi+1).padStart(2,'0')}</span>
             <h2>${isEn()?(GROUP_EN[g.name]||g.name):g.name}<span style="font-family:var(--sans);font-size:10px;letter-spacing:.14em;color:var(--ink-soft);margin-left:12px">${g.items.length} ${ed('条','RECORDS')}</span></h2>
@@ -2262,9 +2512,10 @@ function viewSounds(){
           <div class="ed-snd-list">
             ${g.items.map(id=>{ const s=SOUNDS.find(x=>x.id===id); if(!s) return ''; n++; return sndCard(s,n); }).join('')}
           </div>
-        </div>`).join('')}
+        </div>`;
+      }).join('')}
 
-      <div class="ed-note-block">
+      <div class="ed-note-block ed-sheet ed-sheet--paper">
         <div>
           <h2 data-i18n="snd_notes">${L.snd_notes}</h2>
           <p data-i18n="snd_notes_t">${L.snd_notes_t}</p>
@@ -2326,6 +2577,7 @@ function viewAbout(){
         </div>
       </header>
 
+      <div class="ed-sheet" style="--f-bg:#E8D9B8;--f-fg:#141A16;--f-accent:#8C2822">
       <div class="ed-about">
         <div class="ed-prose">
           <h2 data-i18n="ab_p1t">${L.ab_p1t}</h2>
@@ -2348,6 +2600,7 @@ function viewAbout(){
             ${SOURCES.map(s=>`<li>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${esc(s.name)}</a>`:`<span>${esc(s.name)}</span>`}</li>`).join('')}
           </ol>
         </aside>
+      </div>
       </div>
     </div>
   </section>`;
@@ -2379,12 +2632,51 @@ function toggleFav(id){
 }
 function currentLang(){ return localStorage.getItem('xiaohe-lang') || 'zh-CN'; }
 
+/* 换页：整页底色交给 body 的 --main（.62s 过渡），#app 只做退场/入场。
+   用 WAAPI 而不是 CSS 类，是为了连续点击时能取消上一条动画：
+   旧页 150ms 退场 → 提交新页 → 460ms 入场，底色在两者之间完成换册。 */
+const SECT_OF = {archive:'archive',detail:'detail',sounds:'sounds',atlas:'atlas',city:'city',about:'about'};
+let routeKeyLast = null;
+let routeAnim = null;
+
+/* 数据库页开场：只有整屏渐变色退开；不搬白色标题，节奏比专题页紧 */
+function finishArrival(){
+  const veil = document.getElementById('arrivalVeil');
+  document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
+  if(veil) veil.style.display = 'none';
+  try{
+    const url = new URL(location.href);
+    if(url.searchParams.has('arrive')){
+      url.searchParams.delete('arrive');
+      history.replaceState(null, '', url.pathname + url.search + url.hash);
+    }
+  }catch(err){}
+}
+function runArrival(){
+  const veil = document.getElementById('arrivalVeil');
+  if(!veil || !document.documentElement.classList.contains('is-arriving')){
+    finishArrival();
+    return;
+  }
+  /* 让渐变先在整屏上落稳，再在下一帧退开 */
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      document.documentElement.classList.add('is-revealing');
+      window.setTimeout(finishArrival, 380);
+    });
+  });
+}
+window.addEventListener('pageshow', event => {
+  if(event.persisted && document.documentElement.classList.contains('is-arriving')) finishArrival();
+});
+
 function route(opts){
   opts = opts || {};
   const raw = location.hash.replace(/^#\/?/, '');
   const parts = raw.split('/').filter(Boolean);
   const path = parts[0] || 'home';
   const param = parts[1] || '';
+  const routeKey = location.hash || '#/archive';
   L = I18N[currentLang()];
   document.documentElement.lang = currentLang();
   document.querySelectorAll('.lang-select').forEach(s=>{ s.value = currentLang(); });
@@ -2403,16 +2695,58 @@ function route(opts){
   else if(path==='about'){ html = viewAbout(); }
   else html = `<section><div class="container"><div class="empty">404 · ${L.notfound}</div></div></section>`;
 
-  const prevY = window.scrollY;
-  app.innerHTML = html;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.dataset.i18n; if(L[k]!==undefined) el.textContent=L[k]; });
-  document.querySelectorAll('#mainNav a').forEach(a=>a.classList.toggle('active', a.dataset.nav===path));
-  if(opts.keepScroll){ window.scrollTo(0, prevY); } else { window.scrollTo(0,0); }
-  if(bind) bind();
-  observeReveals();
-  initHeroInk();
-  mqEnsure();
-  initTassel();   /* 首页跑马灯下的丝状摆动装饰(其它页没有 #tasselInner, 会自动跳过) */
+  /* 纸色在退场开始时就换，旧页淡出时已经能看到新纸 */
+  document.body.dataset.sect = SECT_OF[path] || 'archive';
+
+  const commit = ()=>{
+    const prevY = window.scrollY;
+    app.innerHTML = html;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.dataset.i18n; if(L[k]!==undefined) el.textContent=L[k]; });
+    document.querySelectorAll('#mainNav a').forEach(a=>a.classList.toggle('active', a.dataset.nav===path));
+    if(opts.keepScroll){ window.scrollTo(0, prevY); } else { window.scrollTo(0,0); }
+    if(bind) bind();
+    observeReveals();
+    initHeroInk();
+    mqEnsure();
+    initTassel();   /* 首页跑马灯下的丝状摆动装饰(其它页没有 #tasselInner, 会自动跳过) */
+    /* 第一屏已经按自己的纸色画好，再允许后续换页做颜色过渡 */
+    if(document.body.classList.contains('no-sect-transition')){
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        document.body.classList.remove('no-sect-transition');
+      }));
+    }
+  };
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canAnimate = !opts.keepScroll && routeKeyLast !== null &&
+                     routeKey !== routeKeyLast && !reduceMotion && !!app.animate;
+  routeKeyLast = routeKey;
+
+  if(!canAnimate){
+    if(routeAnim){ routeAnim.cancel(); routeAnim = null; }
+    commit();
+    return;
+  }
+
+  if(routeAnim) routeAnim.cancel();
+  const out = app.animate(
+    [{opacity:1, transform:'translateY(0)'},{opacity:0, transform:'translateY(-8px)'}],
+    {duration:150, easing:'cubic-bezier(.4,0,1,1)', fill:'forwards'}
+  );
+  routeAnim = out;
+  out.finished.then(()=>{
+    if(routeAnim !== out) return;
+    commit();
+    const enter = app.animate(
+      [{opacity:0, transform:'translateY(14px)'},{opacity:1, transform:'translateY(0)'}],
+      {duration:460, easing:'cubic-bezier(.16,1,.3,1)'}
+    );
+    routeAnim = enter;
+    out.cancel();          /* 撤掉 forwards 填充；入场动画在它之后合成，不会闪 */
+    enter.finished.then(()=>{ if(routeAnim===enter) routeAnim = null; }).catch(()=>{});
+  }).catch(err=>{
+    if(err && err.name !== 'AbortError') console.error('route transition failed', err);
+  });
 }
 function safeDecode(s){
   try{ return decodeURIComponent(s); }catch(e){ return s; }  /* 非法编码不崩溃,回退原样 */
@@ -2840,7 +3174,6 @@ window.addEventListener('resize', ()=>{ mqLoop = 0; }, {passive:true});
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ mqLoop = 0; });
 
 window.addEventListener('hashchange', route);
-window.addEventListener('DOMContentLoaded', route);
 window.addEventListener('scroll', ()=>{
   const vh = window.innerHeight || 1;
   const scY = window.scrollY || 0;
@@ -3004,7 +3337,13 @@ document.querySelectorAll('.lang-select').forEach(s=>s.addEventListener('change'
   route();
 }));
 
+bindBurger();
 route();
+if(document.documentElement.classList.contains('is-arriving')){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishArrival();
+  else runArrival();
+}
 </script>
+<script src="assets/leave-guard.js" defer></script>
 </body>
 </html>

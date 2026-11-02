@@ -1,0 +1,234 @@
+{
+ "nushu": [
+  {
+   "order": 1,
+   "name": "底色",
+   "file": "nushu-layer-01.png"
+  },
+  {
+   "order": 2,
+   "name": "八角花",
+   "file": "nushu-layer-02.png"
+  },
+  {
+   "order": 3,
+   "name": "最外框回型装订",
+   "file": "nushu-layer-03.png"
+  },
+  {
+   "order": 4,
+   "name": "最外框角落花",
+   "file": "nushu-layer-04.png"
+  },
+  {
+   "order": 5,
+   "name": "中间女书",
+   "file": "nushu-layer-05.png"
+  },
+  {
+   "order": 6,
+   "name": "外框女书",
+   "file": "nushu-layer-06.png"
+  },
+  {
+   "order": 7,
+   "name": "中心",
+   "file": "nushu-layer-07.png"
+  }
+ ],
+ "butterfly": [
+  {
+   "order": 1,
+   "name": "底色",
+   "file": "butterfly-layer-01.png"
+  },
+  {
+   "order": 2,
+   "name": "最外框",
+   "file": "butterfly-layer-02.png"
+  },
+  {
+   "order": 3,
+   "name": "外框红花",
+   "file": "butterfly-layer-03.png"
+  },
+  {
+   "order": 4,
+   "name": "大波型",
+   "file": "butterfly-layer-04.png"
+  },
+  {
+   "order": 5,
+   "name": "小波型",
+   "file": "butterfly-layer-05.png"
+  },
+  {
+   "order": 6,
+   "name": "蝴蝶",
+   "file": "butterfly-layer-06.png"
+  },
+  {
+   "order": 7,
+   "name": "内框",
+   "file": "butterfly-layer-07.png"
+  }
+ ],
+ "drum": [
+  {
+   "order": 1,
+   "name": "底色",
+   "file": "drum-layer-01.png"
+  },
+  {
+   "order": 2,
+   "name": "角落半圆",
+   "file": "drum-layer-02.png"
+  },
+  {
+   "order": 3,
+   "name": "外框方块",
+   "file": "drum-layer-03.png"
+  },
+  {
+   "order": 4,
+   "name": "小鼓身",
+   "file": "drum-layer-04.png"
+  },
+  {
+   "order": 5,
+   "name": "内框图形",
+   "file": "drum-layer-05.png"
+  },
+  {
+   "order": 6,
+   "name": "三框",
+   "file": "drum-layer-06.png"
+  },
+  {
+   "order": 7,
+   "name": "内框花纹",
+   "file": "drum-layer-07.png"
+  },
+  {
+   "order": 8,
+   "name": "鼓花",
+   "file": "drum-layer-08.png"
+  },
+  {
+   "order": 9,
+   "name": "鼓身",
+   "file": "drum-layer-09.png"
+  }
+ ],
+ "bridge": [
+  {
+   "order": 1,
+   "name": "底色",
+   "file": "bridge-layer-01.png"
+  },
+  {
+   "order": 2,
+   "name": "中心",
+   "file": "bridge-layer-02.png"
+  },
+  {
+   "order": 3,
+   "name": "外框花纹",
+   "file": "bridge-layer-03.png"
+  },
+  {
+   "order": 4,
+   "name": "内框花纹",
+   "file": "bridge-layer-04.png"
+  },
+  {
+   "order": 5,
+   "name": "最外框花纹",
+   "file": "bridge-layer-05.png"
+  },
+  {
+   "order": 6,
+   "name": "内框房檐",
+   "file": "bridge-layer-06.png"
+  },
+  {
+   "order": 7,
+   "name": "角落内框花纹",
+   "file": "bridge-layer-07.png"
+  }
+ ],
+ "panwang": [
+  {
+   "order": 1,
+   "name": "底色",
+   "file": "panwang-layer-01.png"
+  },
+  {
+   "order": 2,
+   "name": "内框花纹",
+   "file": "panwang-layer-02.png"
+  },
+  {
+   "order": 3,
+   "name": "外框角落花纹",
+   "file": "panwang-layer-03.png"
+  },
+  {
+   "order": 4,
+   "name": "外框花纹",
+   "file": "panwang-layer-04.png"
+  },
+  {
+   "order": 5,
+   "name": "内框花",
+   "file": "panwang-layer-05.png"
+  },
+  {
+   "order": 6,
+   "name": "中心",
+   "file": "panwang-layer-06.png"
+  }
+ ],
+ "brocade": [
+  {
+   "order": 1,
+   "name": "底色",
+   "file": "brocade-layer-01.png"
+  },
+  {
+   "order": 2,
+   "name": "内框花纹",
+   "file": "brocade-layer-02.png"
+  },
+  {
+   "order": 3,
+   "name": "内框中间花纹",
+   "file": "brocade-layer-03.png"
+  },
+  {
+   "order": 4,
+   "name": "中心",
+   "file": "brocade-layer-04.png"
+  },
+  {
+   "order": 5,
+   "name": "内框左右花纹",
+   "file": "brocade-layer-05.png"
+  },
+  {
+   "order": 6,
+   "name": "外框上下花纹",
+   "file": "brocade-layer-06.png"
+  },
+  {
+   "order": 7,
+   "name": "最外框左右花纹",
+   "file": "brocade-layer-07.png"
+  },
+  {
+   "order": 8,
+   "name": "内框角落花纹",
+   "file": "brocade-layer-08.png"
+  }
+ ]
+}

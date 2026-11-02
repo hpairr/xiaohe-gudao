@@ -8,11 +8,14 @@ document.documentElement.classList.add('js');
 if(location.search.indexOf('arrive=')>-1){
   document.documentElement.classList.add('is-arriving');
   window.setTimeout(function(){
-    document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
     var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
-    if(v)v.style.display='none';
-    if(t)t.style.display='none';
-  },3600);
+    document.documentElement.classList.add('is-revealing');
+    window.setTimeout(function(){
+      document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
+      if(v)v.style.display='none';
+      if(t)t.style.display='none';
+    },680);
+  },6000);
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +32,7 @@ if(location.search.indexOf('arrive=')>-1){
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1E2B26">
+<meta name="theme-color" content="#5E3F55">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="alternate icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23F7F4EC'/%3E%3Cpath d='M3 12c1.5 0 1.5-4.5 3-4.5s1.5 9 3 9 1.5-13.5 3-13.5 1.5 9 3 9 1.5-4.5 3-4.5' fill='none' stroke='%23C3272B' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
@@ -41,7 +44,7 @@ if(location.search.indexOf('arrive=')>-1){
 </style>
 <link rel="stylesheet" href="theme-experience.css">
 <link rel="stylesheet" href="../assets/audio-player.css">
-<style>:root{--main:#1E2B26;--on:#F2EDE2;--accent:#C08A2E;--surface:#101815;--deep:#101815}</style>
+<style>:root{--main:#5E3F55;--on:#F2EDE2;--accent:#C08A2E;--surface:#2E1F2A;--deep:#3A2735}</style>
 </head>
 <body class="theme-page" data-theme="brocade" data-audio-base="../assets/audio/">
 <a class="skip-link" href="#main">跳到正文</a>
@@ -63,14 +66,23 @@ if(location.search.indexOf('arrive=')>-1){
 <header class="theme-hero" data-theme-key="brocade">
   <div class="wrap hero-layout">
     <div class="hero-copy">
-      <div class="hero-chapter"><span>CHAPTER 06 / 06</span><span>FUCHUAN YAO BROCADE</span></div>
+      <div class="hero-chapter"><span>CHAPTER 06 / 06</span><span>YAO BROCADE</span></div>
       <h1 class="hero-title hero-title--long" id="themeTitle">瑶族织锦</h1>
-      <div class="hero-en">Fuchuan Yao Brocade</div>
+      <div class="hero-en">Yao Brocade</div>
       <p class="hero-lead">流传于广西富川瑶族自治县平地瑶居住区的一种传统织锦技艺。以植物染色的经纬线织出几何纹样，用于被面、枕头、花带、口水围、头帕与服饰。2018 年列入广西壮族自治区级非物质文化遗产代表性项目名录。</p>
       <div class="hero-badges"><span class="badge hot">自治区级非遗 · 2018</span><span class="badge">平地瑶</span><span class="badge">植物染色</span><span class="badge">经纬显花</span></div>
     </div>
     <div class="hero-art">
-      <div class="motif-unit" data-motif-unit aria-hidden="true"></div>
+      <div class="hero-stack">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/brocade-layer-01.png" style="--i:0" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/brocade-layer-02.png" style="--i:1" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/brocade-layer-03.png" style="--i:2" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/brocade-layer-04.png" style="--i:3" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/brocade-layer-05.png" style="--i:4" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/brocade-layer-06.png" style="--i:5" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/brocade-layer-07.png" style="--i:6" width="700" height="700" decoding="async" alt="">
+        <img class="hero-layer" src="../assets/theme-pattern/layers/brocade-layer-08.png" style="--i:7" width="700" height="700" decoding="async" alt="瑶族织锦图案：菱格与三角星放射排开，中央白框挑花内红白四瓣相对。">
+      </div>
     </div>
   </div>
   <div class="wrap hero-footer">
@@ -87,7 +99,7 @@ if(location.search.indexOf('arrive=')>-1){
         <i></i>
       </aside>
       <div class="story-main">
-        <div class="story-head"><h2>富川织锦是什么</h2><span class="en-tag">What it is</span></div>
+        <div class="story-head"><h2>瑶族织锦是什么</h2><span class="en-tag">What it is</span></div>
         <div class="story-body"><div class="prose">
         <p>据《消费日报》2022 年 3 月 9 日报道：<b>「瑶族织锦技艺正是流传在瑶族平地瑶居住区妇女世世代代流传的一种传统技艺，至今已有 1000 余年历史。2018 年，瑶族织锦技艺正式入选广西壮族自治区级非遗名录。」</b></p>
         <p>贺州平地瑶主要分布在富川瑶族自治县的<b>富阳镇、葛坡镇、朝东镇、麦岭镇</b>以及钟山县的两安瑶族乡等地；传统服饰以<b>大边衣、绑腿、球形髻</b>为识别点（袁兴《广西贺州瑶族服饰文化传承中的形态及设计转化》，2023）。</p>
@@ -135,26 +147,6 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </section>
-<section class="story-block story-block--sources" data-step="04" id="sources">
-  <div class="wrap">
-    <div class="story-grid">
-      <aside class="story-rail" aria-hidden="true">
-        <span class="story-no">04</span>
-        <span class="story-en">SOURCES / 出处</span>
-        <i></i>
-      </aside>
-      <div class="story-main">
-        <details class="source-fold">
-          <summary>
-            <span>资料来源 / Sources</span>
-            <span class="src-action">核对表 <span class="src-toggle" aria-hidden="true">＋</span></span>
-          </summary>
-          <div class="source-body"><table class="src"><tr><th>内容</th><th>说明</th><th>来源</th></tr><tr><td class="g">名录级别</td><td>2018 年，瑶族织锦技艺正式入选广西壮族自治区级非遗名录</td><td>消费日报《千年瑶族织锦技艺“染”出时代风采》(2022-03-09)</td></tr><tr><td class="g">历史与支系</td><td>流传于平地瑶居住区，至今 1000 余年；富川平地瑶分布在富阳、葛坡、朝东、麦岭及钟山两安</td><td>消费日报 2022-03-09；袁兴《广西贺州瑶族服饰文化传承中的形态及设计转化》(2023)</td></tr><tr><td class="g">纹样分类与构图</td><td>动物、植物、人物、几何、复合五类；二方／四方连续；对称／中心／围合／套嵌四式</td><td>袁兴 2023</td></tr><tr><td class="g">五色</td><td>瑶族「好五色衣服」，贺州瑶族服饰以青、白、红、黑、黄为主</td><td>袁兴 2023</td></tr><tr><td class="g">用途与嫁妆</td><td>被面、枕头、花带、口水围、头帕、服饰；出嫁时织锦被面绑在嫁妆木箱上，送给男方亲戚</td><td>消费日报 2022-03-09</td></tr><tr><td class="g">八宝被（对照）</td><td>江华瑶族织锦俗称八宝被，因被面织有八种吉祥图案而得名</td><td>湖南省文化和旅游厅《江华瑶家手工艺品的瑰宝：“八宝被”织锦》(2015-12-01)</td></tr><tr><td class="g">传承人</td><td>李冬梅，富川瑶族织锦技艺自治区级代表性传承人，平地瑶织锦、刺绣</td><td>袁兴 2023</td></tr><tr><td class="g">本地文创</td><td>富川特色瑶绣列入「潇贺古道 千年乡愁」线路创意产品</td><td>文化和旅游部「广西·潇贺古道 千年乡愁」(2024-07-16)</td></tr></table></div>
-        </details>
-      </div>
-    </div>
-  </div>
-</section>
 <section class="sound-line" id="sound" aria-labelledby="soundTitle">
   <div class="wrap sound-grid">
     <div class="sound-copy">
@@ -185,12 +177,12 @@ if(location.search.indexOf('arrive=')>-1){
       <p class="next-note">江永女书，目前已知唯一的女性专用文字。</p>
     </div>
     <nav class="chapter-strip" aria-label="六章色带">
-      <a class="" href="02-女书.html" style="--chip:#A9362E;--chip-fg:#F2EDE2"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
-      <a class="" href="03-蝴蝶歌.html" style="--chip:#2C5A4E;--chip-fg:#F2EDE2"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
-      <a class="" href="04-长鼓舞.html" style="--chip:#C08A2E;--chip-fg:#141A16"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
-      <a class="" href="05-风雨桥.html" style="--chip:#1D2652;--chip-fg:#F2EDE2"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
+      <a class="" href="02-女书.html" style="--chip:#1D2652;--chip-fg:#F2EDE2"><span class="cs-no">01 / 06</span><span class="cs-cn">女书</span><span class="cs-en">Nüshu</span></a>
+      <a class="" href="03-蝴蝶歌.html" style="--chip:#B8862F;--chip-fg:#141A16"><span class="cs-no">02 / 06</span><span class="cs-cn">蝴蝶歌</span><span class="cs-en">Butterfly Song</span></a>
+      <a class="" href="04-长鼓舞.html" style="--chip:#A9362E;--chip-fg:#F2EDE2"><span class="cs-no">03 / 06</span><span class="cs-cn">长鼓舞</span><span class="cs-en">Long Drum Dance</span></a>
+      <a class="" href="05-风雨桥.html" style="--chip:#4C6C8B;--chip-fg:#F2EDE2"><span class="cs-no">04 / 06</span><span class="cs-cn">富川风雨桥</span><span class="cs-en">Wind-Rain Bridge</span></a>
       <a class="" href="06-盘王大歌.html" style="--chip:#15120F;--chip-fg:#F2EDE2"><span class="cs-no">05 / 06</span><span class="cs-cn">盘王大歌</span><span class="cs-en">Panwang Da Ge</span></a>
-      <a class="is-current" href="07-富川织锦.html" style="--chip:#1E2B26;--chip-fg:#F2EDE2" aria-current="page"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Yao Brocade</span></a>
+      <a class="is-current" href="07-富川织锦.html" style="--chip:#5E3F55;--chip-fg:#F2EDE2" aria-current="page"><span class="cs-no">06 / 06</span><span class="cs-cn">瑶族织锦</span><span class="cs-en">Yao Brocade</span></a>
     </nav>
     <div class="foot-meta">
       <p>本站收录潇贺古道沿线六项文化遗产。图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示。<br><a href="01-潇贺古道.html">总述 · 潇贺古道</a> /
@@ -200,8 +192,39 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </footer>
+<section class="source-ledger" id="sources" aria-labelledby="sourceTitle">
+  <div class="wrap ledger-grid">
+    <div class="ledger-head">
+      <p class="eyebrow"><i></i>SOURCES / 出处</p>
+      <h2 id="sourceTitle">资料来源</h2>
+      <p class="ledger-note">本页每条事实的出处，逐条列出，可随时核对。完整来源说明见 <a href="../database.html#/about">「关于与来源」</a>。</p>
+      <div class="ledger-meta">
+        <span>04 / Sources · 8 条</span>
+        <a class="ledger-back" href="#main">回到页首 <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+    <div class="ledger-body">
+      <table class="src" aria-labelledby="sourceTitle">
+        <thead>
+          <tr><th scope="col">内容</th><th scope="col">说明</th><th scope="col">来源</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="g">名录级别</td><td>2018 年，瑶族织锦技艺正式入选广西壮族自治区级非遗名录</td><td><a class="src-link" href="http://www.clii.com.cn/zhhylm/zhhylmHangYeJuJiao/202203/t20220311_3953213.html" target="_blank" rel="noopener noreferrer">消费日报</a>《千年瑶族织锦技艺“染”出时代风采》(2022-03-09)</td></tr>
+          <tr><td class="g">历史与支系</td><td>流传于平地瑶居住区，至今 1000 余年；富川平地瑶分布在富阳、葛坡、朝东、麦岭及钟山两安</td><td><a class="src-link" href="http://www.clii.com.cn/zhhylm/zhhylmHangYeJuJiao/202203/t20220311_3953213.html" target="_blank" rel="noopener noreferrer">消费日报</a> 2022-03-09；<a class="src-link" href="https://www.ihchina.cn/art/detail/id/27194.html" target="_blank" rel="noopener noreferrer">袁兴《广西贺州瑶族服饰文化传承中的形态及设计转化》(2023)</a></td></tr>
+          <tr><td class="g">纹样分类与构图</td><td>动物、植物、人物、几何、复合五类；二方／四方连续；对称／中心／围合／套嵌四式</td><td><a class="src-link" href="https://www.ihchina.cn/art/detail/id/27194.html" target="_blank" rel="noopener noreferrer">袁兴 2023</a></td></tr>
+          <tr><td class="g">五色</td><td>瑶族「好五色衣服」，贺州瑶族服饰以青、白、红、黑、黄为主</td><td><a class="src-link" href="https://www.ihchina.cn/art/detail/id/27194.html" target="_blank" rel="noopener noreferrer">袁兴 2023</a></td></tr>
+          <tr><td class="g">用途与嫁妆</td><td>被面、枕头、花带、口水围、头帕、服饰；出嫁时织锦被面绑在嫁妆木箱上，送给男方亲戚</td><td><a class="src-link" href="http://www.clii.com.cn/zhhylm/zhhylmHangYeJuJiao/202203/t20220311_3953213.html" target="_blank" rel="noopener noreferrer">消费日报</a> 2022-03-09</td></tr>
+          <tr><td class="g">八宝被（对照）</td><td>江华瑶族织锦俗称八宝被，因被面织有八种吉祥图案而得名</td><td><a class="src-link" href="http://whhlyt.hunan.gov.cn/" target="_blank" rel="noopener noreferrer">湖南省文化和旅游厅</a>《江华瑶家手工艺品的瑰宝：“八宝被”织锦》(2015-12-01)</td></tr>
+          <tr><td class="g">传承人</td><td>李冬梅，富川瑶族织锦技艺自治区级代表性传承人，平地瑶织锦、刺绣</td><td><a class="src-link" href="https://www.ihchina.cn/art/detail/id/27194.html" target="_blank" rel="noopener noreferrer">袁兴 2023</a></td></tr>
+          <tr><td class="g">本地文创</td><td>富川特色瑶绣列入「潇贺古道 千年乡愁」线路创意产品</td><td><a class="src-link" href="https://zhuanti.mct.gov.cn/xcss2024_xcygj/guangxi/detail/7172.html" target="_blank" rel="noopener noreferrer">文化和旅游部</a>「广西·潇贺古道 千年乡愁」(2024-07-16)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 <script src="../assets/audio-player.js" defer></script>
 <script src="assets/motifs.js" defer></script>
 <script src="experience.js" defer></script>
+<script src="../assets/leave-guard.js" defer></script>
 </body>
 </html>

@@ -14,6 +14,8 @@
 
 版式：Chromatic Field —— 一整屏主题色、可切换纹样工作台、现场图版、
       声纹条与六章色带；正文保留事实与出处，但不再做白色文档页。
+      资料来源不折叠，作为常驻核对表排在整页最下面（页脚之后），
+      机构名与网址做成外链；没有公开网页的文献保持纯文字。
 
 依据：
     · 版式与配色  docs/06-技术方案/06-主页纹样与主题页设计说明.md
@@ -21,8 +23,13 @@
     · 素材目录    images/视觉转化素材库/NN-主题/
 """
 
+# 注意（2026-10-31）：当前 themes/02–07 已有手工增补，直接重跑会覆盖；
+# 重跑前先备份，或只改本文件的 CHAPTERS / page_* 名称与颜色。
+
 import io
 import os
+import re
+from html import unescape
 from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -34,17 +41,17 @@ SITE = "https://hpairr.github.io/xiaohe-gudao/"
 
 CHAPTERS = [
     dict(href="02-女书.html", no="壹", num="01", cn="女书", en="Nüshu", key="nushu",
-         color="#A9362E", fg="#F2EDE2", surface="#661E19", place="湖南 · 江永"),
+         color="#1D2652", fg="#F2EDE2", surface="#0B1028", place="湖南 · 江永"),
     dict(href="03-蝴蝶歌.html", no="贰", num="02", cn="蝴蝶歌", en="Butterfly Song", key="butterfly",
-         color="#2C5A4E", fg="#F2EDE2", surface="#18392F", place="广西 · 富川"),
+         color="#B8862F", fg="#141A16", surface="#E8C982", place="广西 · 富川"),
     dict(href="04-长鼓舞.html", no="叁", num="03", cn="长鼓舞", en="Long Drum Dance", key="drum",
-         color="#C08A2E", fg="#141A16", surface="#E8C982", place="湘桂 · 瑶族地区"),
+         color="#A9362E", fg="#F2EDE2", surface="#661E19", place="湘桂 · 瑶族地区"),
     dict(href="05-风雨桥.html", no="肆", num="04", cn="富川风雨桥", en="Wind-Rain Bridge", key="bridge",
-         color="#1D2652", fg="#F2EDE2", surface="#0B1028", place="广西 · 富川"),
+         color="#4C6C8B", fg="#F2EDE2", surface="#193854", place="广西 · 富川"),
     dict(href="06-盘王大歌.html", no="伍", num="05", cn="盘王大歌", en="Panwang Da Ge", key="panwang",
          color="#15120F", fg="#F2EDE2", surface="#070504", place="湖南 · 江华"),
     dict(href="07-富川织锦.html", no="陆", num="06", cn="瑶族织锦", en="Yao Brocade", key="brocade",
-         color="#1E2B26", fg="#F2EDE2", surface="#101815", place="广西 · 富川"),
+         color="#5E3F55", fg="#F2EDE2", surface="#2E1F2A", place="广西 · 富川"),
 ]
 
 # 每章的视觉转译说明：不是新增史料，而是解释本章界面为什么这样构成。
@@ -209,30 +216,11 @@ def hero(m, ratio_note, no=""):
 def sec(no, cn, en, body, note=""):
     """正文是「色场里的版面」，不是白色文档页。
 
-    资料来源默认折叠：保留可核对的出处，但不让考据表压住视觉叙事。
+    资料来源不再折叠：正文里只留一个标记，由 source_ledger() 统一排到整页最下面，
+    常驻可见，不设展开/收起开关。
     """
-    n = '<p class="sec-note">%s</p>' % note if note else ""
     if cn == "资料来源":
-        return """<section class="story-block story-block--sources" data-step="%(no)s" id="sources">
-  <div class="wrap">
-    <div class="story-grid">
-      <aside class="story-rail" aria-hidden="true">
-        <span class="story-no">%(no)s</span>
-        <span class="story-en">SOURCES / 出处</span>
-        <i></i>
-      </aside>
-      <div class="story-main">
-        <details class="source-fold">
-          <summary>
-            <span>资料来源 / Sources</span>
-            <span class="src-action">展开核对表 <span class="src-toggle" aria-hidden="true">＋</span></span>
-          </summary>
-          <div class="source-body">%(body)s%(note)s</div>
-        </details>
-      </div>
-    </div>
-  </div>
-</section>""" % dict(no=no, body=body, note=n)
+        return SOURCE_MARK + body + (SOURCE_NOTE + note if note else "")
     return """<section class="story-block" data-step="%(no)s" id="story-%(no)s">
   <div class="wrap">
     <div class="story-grid">
@@ -248,6 +236,48 @@ def sec(no, cn, en, body, note=""):
     </div>
   </div>
 </section>""" % dict(no=no, cn=cn, en=en, body=body)
+
+
+SOURCE_MARK = "<!--SOURCES-->"
+SOURCE_NOTE = "<!--SOURCE-NOTE-->"
+
+
+def source_ledger(raw):
+    """整页最下面的资料来源核对表：常驻显示，没有折叠开关。"""
+    if not raw.startswith(SOURCE_MARK):
+        return ""
+    raw = raw[len(SOURCE_MARK):]
+    body, _, note = raw.partition(SOURCE_NOTE)
+    rows = re.findall(r"<tr>.*?</tr>", body, re.S)
+    if not rows:
+        return ""
+    head = rows[0].replace("<th>", '<th scope="col">').strip()
+    data = rows[1:]
+    rows_html = "\n".join("          " + r.strip() for r in data)
+    note_html = '\n      <p class="ledger-fine">%s</p>' % note.strip() if note else ""
+    return """<section class="source-ledger" id="sources" aria-labelledby="sourceTitle">
+  <div class="wrap ledger-grid">
+    <div class="ledger-head">
+      <p class="eyebrow"><i></i>SOURCES / 出处</p>
+      <h2 id="sourceTitle">资料来源</h2>
+      <p class="ledger-note">本页每条事实的出处，逐条列出，可随时核对。完整来源说明见 <a href="../database.html#/about">「关于与来源」</a>。</p>
+      <div class="ledger-meta">
+        <span>04 / Sources · %(count)d 条</span>
+        <a class="ledger-back" href="#main">回到页首 <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+    <div class="ledger-body">
+      <table class="src" aria-labelledby="sourceTitle">
+        <thead>
+          %(head)s
+        </thead>
+        <tbody>
+%(rows)s
+        </tbody>
+      </table>%(note)s
+    </div>
+  </div>
+</section>""" % dict(count=len(data), head=head, rows=rows_html, note=note_html)
 
 
 def facts(items):
@@ -284,11 +314,178 @@ def variants(items):
         for c in items)
 
 
+# ---------------------------------------------------------------- 来源外链
+#
+# 来源表里的机构名与网址做成外链；链接取自
+# A毕设图形/10-主题视觉转化研究报告.md 与 docs/参考链接。
+# 没有公开网页的纯文献引用（论文集、期刊、公开资料整理）保持文字，不硬指到首页。
+
+SOURCE_LINK_TOKENS = {
+    "《女书文化：织锦、刺绣、八角花篇》":
+        "https://www.sohu.com/a/218107329_488835",
+    "《女书与「八角花」图案》":
+        "https://www.cnki.com.cn/Article/CJFDTotal-YSTS200901036.htm",
+    "《女书「三朝书」探析》":
+        "https://wap.cnki.net/touch/web/Journal/Article/MZYS201303027.html",
+    "《黄河之声》":
+        "https://www.cnki.com.cn/Article/CJFDTOTAL-HHZS202214002.htm",
+    "搜狐《探索神秘的瑶族长鼓》":
+        "https://www.sohu.com/a/360026096_120493167",
+    "袁兴《广西贺州瑶族服饰文化传承中的形态及设计转化》(2023)":
+        "https://www.ihchina.cn/art/detail/id/27194.html",
+    "袁兴 2023":
+        "https://www.ihchina.cn/art/detail/id/27194.html",
+    "广西壮族自治区文化和旅游厅官网":
+        "http://wlt.gxzf.gov.cn/gddt/t27799838.shtml",
+    "富川瑶族自治县人民政府官网":
+        "http://www.gxfc.gov.cn/fcgk/jdjj/t10824361.shtml",
+    "富川瑶族自治县文旅局":
+        "http://fclv.tourage.cn/news/detail-270.html",
+    "富川县政府官网":
+        "http://www.gxfc.gov.cn/fcgk/jdjj/t10824361.shtml",
+    "江华瑶族自治县人民政府":
+        "http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml",
+    "湖南省文化和旅游厅":
+        "http://whhlyt.hunan.gov.cn/news/tpxw/201909/t20190910_5482779.html",
+    "永州市人民政府网":
+        "https://www.yzcity.gov.cn/wlgtj/0202/201704/26dab8a53f654a24b1e459ceab8498c7.shtml",
+    "广西纪检监察网":
+        "https://www.gxjjw.gov.cn/staticpages/20211220/gxjjw61c05457-166041.shtml",
+    "中国非物质文化遗产网":
+        "https://www.ihchina.cn/",
+    "福建省文物局":
+        "http://wwj.wlt.fujian.gov.cn/xwzx/wbyw/202410/t20241021_6550891.htm",
+    "人民网广西":
+        "http://gx.people.com.cn/n2/2023/0607/c179435-40447424.html",
+    "文化和旅游部":
+        "https://zhuanti.mct.gov.cn/xcss2024_xcygj/guangxi/detail/7172.html",
+    "广西日报":
+        "https://epaper.gxrb.com.cn/gxrb2/html/2023-01/11/content_1903893.htm",
+    "国际在线":
+        "https://big5.cri.cn/gate/big5/gx.cri.cn/2023-01-11/586816ce-4d6c-b326-c231-354012c8b272.html",
+    "搜狐文化":
+        "https://cul.sohu.com/a/908964294_119038",
+    "知网空间":
+        "https://www.cnki.com.cn/",
+    "万方":
+        "https://www.wanfangdata.com.cn/",
+    "中新网":
+        "https://www.chinanews.com/sh/2023/11-09/10109090.shtml",
+    "央广网":
+        "https://www.cnr.cn/hunan/flxw/wl/20231108/t20231108_526479383.shtml",
+    "腾讯新闻":
+        "https://news.qq.com/rain/a/20211020A0A3EE00",
+    "消费日报":
+        "http://www.clii.com.cn/zhhylm/zhhylmHangYeJuJiao/202203/t20220311_3953213.html",
+    "华声在线":
+        "https://hunan.voc.com.cn/",
+    "维基百科":
+        "https://zh.wikipedia.org/wiki/%E7%91%B6%E6%97%8F%E9%95%BF%E9%BC%93%E8%88%9E",
+    "360 百科":
+        "https://baike.so.com/doc/858308-907478.html",
+    "国务院":
+        "https://www.gov.cn/gongbao/content/2008/content_1025937.htm",
+    "抖音":
+        "https://www.douyin.com/",
+}
+
+# 同一机构在不同主题里指向不同条目：按「来源原文」覆盖默认链接。
+SOURCE_LINK_OVERRIDES = {
+    "中国非物质文化遗产网 ihchina.cn": {
+        "中国非物质文化遗产网": "https://www.ihchina.cn/art/detail/id/11280.html",
+    },
+    "中国非物质文化遗产网官方项目页原文": {
+        "中国非物质文化遗产网": "https://www.ihchina.cn/project_details/12474.html",
+    },
+    "知网空间「三朝书」词条；万方《江永〈三朝书〉中图案研究及服装创新设计》": {
+        "知网空间": "https://wiki.cnki.com.cn/HotWord/2144601.htm",
+    },
+    "湖南省文化和旅游厅《江华瑶家手工艺品的瑰宝：“八宝被”织锦》(2015-12-01)": {
+        "湖南省文化和旅游厅": "http://whhlyt.hunan.gov.cn/",
+    },
+    "抖音；仅作公众关注度参考，不作学术引用": {
+        "抖音": "https://www.douyin.com/video/7438907555595799844",
+    },
+    "同上": {
+        "同上": "http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml",
+    },
+}
+
+_TAG_SPLIT = re.compile(r"(<[^>]+>)")
+_CODE_TAG = re.compile(r"<code>([^<]+)</code>")
+_OPEN_A = re.compile(r"<a(?:\s|>)", re.I)
+_CLOSE_A = re.compile(r"</a\s*>", re.I)
+
+
+def _plain_text(text):
+    """去掉标签、还原实体、压平空白，用于按原文匹配覆盖链接。"""
+    return re.sub(r"\s+", " ", unescape(re.sub(r"<[^>]+>", "", text))).strip()
+
+
+def _code_url(text):
+    """把 <code> 里的域名/路径补成 https/http 地址。"""
+    t = text.strip()
+    if t.startswith("http://") or t.startswith("https://"):
+        return t
+    if not re.match(r"^[a-z0-9.-]+\.[a-z]{2,}(?:[/?#]|$)", t, re.I):
+        return None
+    if t.startswith("ihchina.cn"):
+        return "https://www." + t
+    if t.startswith("douyin.com"):
+        return "https://www." + t
+    if t.startswith("gxfc.gov.cn"):
+        return "http://www." + t
+    if t.startswith("github.com") or t.startswith("www."):
+        return "https://" + t
+    return "https://" + t
+
+
+def _link_codes(text):
+    def repl(m):
+        raw = m.group(1)
+        url = _code_url(raw)
+        if not url:
+            return m.group(0)
+        return ('<a class="src-link src-link--code" href="%s" target="_blank" rel="noopener noreferrer">'
+                '<code>%s</code></a>' % (url, raw))
+    return _CODE_TAG.sub(repl, text)
+
+
+def _link_names(text, urls):
+    token_re = re.compile("|".join(
+        re.escape(t) for t in sorted(urls, key=len, reverse=True)))
+    depth = 0
+    out = []
+    for part in _TAG_SPLIT.split(text):
+        if part.startswith("<"):
+            if _OPEN_A.match(part):
+                depth += 1
+            elif _CLOSE_A.match(part):
+                depth = max(0, depth - 1)
+            out.append(part)
+        elif depth:
+            out.append(part)
+        else:
+            out.append(token_re.sub(
+                lambda m: '<a class="src-link" href="%s" target="_blank" rel="noopener noreferrer">%s</a>'
+                % (urls[m.group(0)], m.group(0)), part))
+    return "".join(out)
+
+
+def linkify_source(text):
+    """给来源单元格加外链；已经加过就原样返回（可重复执行）。"""
+    if 'class="src-link"' in text:
+        return text
+    urls = dict(SOURCE_LINK_TOKENS)
+    urls.update(SOURCE_LINK_OVERRIDES.get(_plain_text(text), {}))
+    return _link_names(_link_codes(text), urls)
+
+
 def srctable(rows):
     """资料来源表：面向公众，只写「说了什么 / 出处」，不列内部 A/B/C/D 分级。"""
     tr = "".join(
         '<tr><td class="g">%s</td><td>%s</td><td>%s</td></tr>'
-        % (k, t, u) for (k, lv, t, u) in rows)
+        % (k, t, linkify_source(u)) for (k, lv, t, u) in rows)
     return ('<table class="src"><tr><th>内容</th><th>说明</th><th>来源</th></tr>%s</table>' % tr)
 
 
@@ -435,11 +632,14 @@ document.documentElement.classList.add('js');
 if(location.search.indexOf('arrive=')>-1){
   document.documentElement.classList.add('is-arriving');
   window.setTimeout(function(){
-    document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
     var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
-    if(v)v.style.display='none';
-    if(t)t.style.display='none';
-  },3600);
+    document.documentElement.classList.add('is-revealing');
+    window.setTimeout(function(){
+      document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
+      if(v)v.style.display='none';
+      if(t)t.style.display='none';
+    },680);
+  },6000);
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -483,7 +683,9 @@ if(location.search.indexOf('arrive=')>-1){
 %%SOUND%%
 </main>
 %%FOOT%%
+%%SOURCES%%
 <script src="../assets/audio-player.js" defer></script>
+<script src="../assets/leave-guard.js" defer></script>
 <script src="assets/motifs.js" defer></script>
 <script src="experience.js" defer></script>
 %%EXTRA_SCRIPTS%%
@@ -651,7 +853,7 @@ def page_nushu():
              "字形纤瘦右斜、菱角分明，基本笔画只有点、竖、斜、弧四种，写在纸扇、手帕和三朝书上。",
         badges=["国家级非遗 · 2006 第一批", "目前已知唯一女性文字", "已入 Unicode", "载体：扇书 · 帕书 · 三朝书"],
         motif="女书字形与书写载体（扇面、手帕、三朝书）",
-        main="#A9362E", accent="#D2A03F", deep="#7A1F1A", on="#F2EDE2")
+        main="#1D2652", accent="#D2A03F", deep="#101735", on="#F2EDE2")
     secs = []
 
     secs.append(sec("01", "女书是什么", "What it is",
@@ -728,7 +930,7 @@ def page_butterfly():
              "两个声部同起同收，被称作「流淌在翅膀上的山歌」。",
         badges=["国家级非遗 · 2008 第二批", "二声部民歌", "衬词「蝴的蝶」", "代表性传承人：欧玉梅"],
         motif="两个声部的旋律线：由分开走向合一",
-        main="#2C5A4E", accent="#E3B85C", deep="#1B3B32", on="#F2EDE2")
+        main="#B8862F", accent="#2C5A4E", deep="#7A5A1C", on="#141A16")
     secs = []
 
     secs.append(sec("01", "蝴蝶歌是什么", "What it is",
@@ -806,7 +1008,7 @@ def page_drum():
              "广西贺州、富川一带流传的是高台长鼓舞分支。",
         badges=["国家级非遗 · 2008 第二批", "鼓身细长 · 中腰束腰", "宋代已流传", "富川分支：高台长鼓舞"],
         motif="长鼓形制：两端鼓面、中腰束腰",
-        main="#C08A2E", accent="#8C2822", deep="#7A5216", on="#141A16")
+        main="#A9362E", accent="#D2A03F", deep="#7A1F1A", on="#F2EDE2")
     secs = []
 
     secs.append(sec("01", "长鼓舞是什么", "What it is",
@@ -870,14 +1072,14 @@ def page_drum():
 
 def page_bridge():
     m = dict(
-        cn="风雨桥", en="Wind-rain Bridge", key="bridge",
+        cn="富川风雨桥", en="Wind-Rain Bridge", key="bridge",
         plate=("04", "回澜风雨桥：三孔石拱与桥廊", "富川朝东镇油沐村"),
         lead="富川瑶族风雨桥群现存 27 座，2013 年列入第七批全国重点文物保护单位。"
              "回澜风雨桥由三孔石桥、桥廊、桥亭与阁楼组成。桥名取自韩愈《进学解》"
              "「会百川而东之，回狂澜之即倒」。",
         badges=["全国重点文保 · 2013 第七批", "现存 27 座", "回澜桥 · 三孔石拱", "青龙桥 · 单孔 · 俗称阴阳桥"],
         motif="回澜风雨桥形制：三孔石拱、桥廊与重檐阁楼",
-        main="#1D2652", accent="#B7C3D6", deep="#101735", on="#F2EDE2")
+        main="#4C6C8B", accent="#B7C3D6", deep="#2E241D", on="#F2EDE2")
     secs = []
 
     secs.append(sec("01", "风雨桥是什么", "What it is",
@@ -1111,16 +1313,16 @@ def page_panwang():
 
 def page_jinzhi():
     m = dict(
-        cn="富川织锦", en="Fuchuan Yao Brocade", key="brocade",
+        cn="瑶族织锦", en="Yao Brocade", key="brocade",
         plate=("06", "富川平地瑶织锦与服饰", "富川平地瑶聚居区"),
         lead="流传于广西富川瑶族自治县平地瑶居住区的一种传统织锦技艺。以植物染色的经纬线织出几何纹样，"
              "用于被面、枕头、花带、口水围、头帕与服饰。2018 年列入广西壮族自治区级非物质文化遗产代表性项目名录。",
         badges=["自治区级非遗 · 2018", "平地瑶", "植物染色", "经纬显花"],
         motif="富川平地瑶服饰（资料图）。",
-        main="#1E2B26", accent="#C08A2E", deep="#101815", on="#F2EDE2")
+        main="#5E3F55", accent="#C08A2E", deep="#3A2735", on="#F2EDE2")
     secs = []
 
-    secs.append(sec("01", "富川织锦是什么", "What it is",
+    secs.append(sec("01", "瑶族织锦是什么", "What it is",
         """<div class="prose">
         <p>据《消费日报》2022 年 3 月 9 日报道：<b>「瑶族织锦技艺正是流传在瑶族平地瑶居住区妇女世世代代流传的一种传统技艺，至今已有 1000 余年历史。2018 年，瑶族织锦技艺正式入选广西壮族自治区级非遗名录。」</b></p>
         <p>贺州平地瑶主要分布在富川瑶族自治县的<b>富阳镇、葛坡镇、朝东镇、麦岭镇</b>以及钟山县的两安瑶族乡等地；传统服饰以<b>大边衣、绑腿、球形髻</b>为识别点（袁兴《广西贺州瑶族服饰文化传承中的形态及设计转化》，2023）。</p>
@@ -1184,6 +1386,8 @@ PAGES = [
 
 def build(name, fn):
     m, secs = fn()
+    sources = next((s for s in secs if s.startswith(SOURCE_MARK)), "")
+    secs = [s for s in secs if not s.startswith(SOURCE_MARK)]
     chapter = next(c for c in CHAPTERS if c["href"] == name)
     m["key"] = chapter["key"]
     # 用 %%KEY%% 做占位替换：页面里 CSS / SVG 有大量 %，不走 % 格式化。
@@ -1207,6 +1411,7 @@ def build(name, fn):
         "%%SECTIONS%%": "\n".join(secs),
         "%%SOUND%%": sound_line(m),
         "%%FOOT%%": foot(name),
+        "%%SOURCES%%": source_ledger(sources),
     }
     if name == "02-女书.html":
         subs["%%PRELUDE%%"] = LEXICON
