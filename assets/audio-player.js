@@ -571,7 +571,7 @@
       if (ctx.state === 'running') {
         autoUnlocked = true;
         if (soundPillPaint) soundPillPaint();
-        runAuto();
+        kickAuto();
         return true;
       }
       return false;
@@ -585,8 +585,19 @@
     const active = activeStagePlayer() || activeChapterPlayer();
     if (active) lastAutoKey = active.key;
     if (soundPillPaint) soundPillPaint();
-    runAuto();
+    kickAuto();
   }
+
+  /* 解锁那一刻舞台可能还在过渡（没有 is-active），随后补几次，
+     避免“按钮已经变成 声音开，但一直没响”。 */
+  const kickAuto = () => {
+    runAuto();
+    [500, 1400, 3000].forEach(ms => {
+      window.setTimeout(() => {
+        if (autoUnlocked && soundEnabled && AUTOPLAY) runAuto();
+      }, ms);
+    });
+  };
 
   const unlockFromGesture = event => {
     if (!soundEnabled) return;
@@ -617,12 +628,8 @@
   });
 
   if (AUTOPLAY && soundEnabled) {
-    tryUnlock().then(ok => {
-      if (!ok) {
-        const active = activeStagePlayer() || themePlayer;
-        if (active) active.setStatus('未播放');
-      }
-    });
+    /* 不在页面加载时就创建 AudioContext：没有手势时 resume() 会一直挂着，
+       之后再点也可能卡在这个死掉的上下文上。改成第一次手势里再创建。 */
     scheduleAuto();
   }
 
@@ -672,11 +679,11 @@
     btn.addEventListener('click', () => {
       if (!soundEnabled) {
         setSound(true);
-        tryUnlock().then(ok => { if (ok) runAuto(); paint(); });
+        tryUnlock().then(ok => { if (ok) kickAuto(); paint(); });
         return;
       }
       if (!autoUnlocked) {
-        tryUnlock().then(ok => { if (ok) runAuto(); paint(); });
+        tryUnlock().then(ok => { if (ok) kickAuto(); paint(); });
         return;
       }
       setSound(false);
