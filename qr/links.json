@@ -1,0 +1,84 @@
+{
+  "site": "https://hpairr.github.io/xiaohe-gudao",
+  "generated": "2026-11-02",
+  "note": "七枚固定入口。改站点只改 target，不要改 slug —— 已印出去的二维码靠 slug 活着。",
+  "entries": [
+    {
+      "id": "home",
+      "no": "00",
+      "title": "潇贺古道",
+      "en": "XIAOHE ANCIENT ROAD",
+      "meta": "有声文化数据库 · 总入口",
+      "char": "潇",
+      "color": "#141A16",
+      "slug": null,
+      "target": "index.html"
+    },
+    {
+      "id": "nushu",
+      "no": "01",
+      "title": "女书",
+      "en": "NÜSHU",
+      "meta": "湖南江永 · 国家级非遗 2006",
+      "char": "女",
+      "color": "#1D2652",
+      "slug": "nushu",
+      "target": "themes/02-女书.html"
+    },
+    {
+      "id": "butterfly",
+      "no": "02",
+      "title": "蝴蝶歌",
+      "en": "BUTTERFLY SONG",
+      "meta": "广西富川 · 国家级非遗 2008",
+      "char": "蝴",
+      "color": "#B8862F",
+      "slug": "butterfly",
+      "target": "themes/03-蝴蝶歌.html"
+    },
+    {
+      "id": "drum",
+      "no": "03",
+      "title": "长鼓舞",
+      "en": "LONG DRUM DANCE",
+      "meta": "湘桂瑶族地区 · 国家级非遗 2008",
+      "char": "长",
+      "color": "#A9362E",
+      "slug": "drum",
+      "target": "themes/04-长鼓舞.html"
+    },
+    {
+      "id": "bridge",
+      "no": "04",
+      "title": "富川风雨桥",
+      "en": "WIND-RAIN BRIDGE",
+      "meta": "瑶族桥群 · 全国重点文保 2013",
+      "char": "风",
+      "color": "#4C6C8B",
+      "slug": "bridge",
+      "target": "themes/05-风雨桥.html"
+    },
+    {
+      "id": "panwang",
+      "no": "05",
+      "title": "盘王大歌",
+      "en": "PANWANG DA GE",
+      "meta": "湖南江华 · 国家级非遗 2014",
+      "char": "盘",
+      "color": "#15120F",
+      "slug": "panwang",
+      "target": "themes/06-盘王大歌.html"
+    },
+    {
+      "id": "brocade",
+      "no": "06",
+      "title": "瑶族织锦",
+      "en": "YAO BROCADE",
+      "meta": "广西富川 · 自治区级非遗 2018",
+      "char": "织",
+      "color": "#5E3F55",
+      "slug": "brocade",
+      "target": "themes/07-富川织锦.html"
+    }
+  ]
+}

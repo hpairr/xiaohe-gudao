@@ -12,6 +12,7 @@ const pages = [
   'index.html',
   'database.html',
   '404.html',
+  'qr/index.html',
   ...fs.readdirSync(path.join(ROOT, 'themes')).filter(f => f.endsWith('.html')).sort().map(f => 'themes/' + f),
 ];
 

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>七枚入口 · 潇贺古道有声文化数据库</title>
+<meta name="description" content="潇贺古道有声文化数据库的七枚固定二维码：一个主页、六个专题。码指向 /go/ 短链，站点更新后仍可使用。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="七枚入口 · 潇贺古道有声文化数据库">
+<meta property="og:description" content="一个主页、六个专题的固定二维码，站点更新后仍可使用。">
+<meta property="og:url" content="https://hpairr.github.io/xiaohe-gudao/qr/">
+<meta property="og:image" content="https://hpairr.github.io/xiaohe-gudao/assets/img/og-cover.jpg">
+<meta name="theme-color" content="#F2EDE2">
+<link rel="canonical" href="https://hpairr.github.io/xiaohe-gudao/qr/">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/site/NotoSerifSC-Bold.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/site/NotoSansSC-Regular.woff2" crossorigin>
+<style>
+@font-face{font-family:'Noto Serif SC';src:url('../assets/fonts/site/NotoSerifSC-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Noto Sans SC';src:url('../assets/fonts/site/NotoSansSC-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+:root{
+  --paper:#F2EDE2;--ink:#141A16;--soft:#4C574F;--line:rgba(20,26,22,.16);
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',STSong,serif;
+  --sans:'Noto Sans SC','Source Han Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+  --gap:clamp(14px,1.6vw,22px);
+}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid #B63A33;outline-offset:3px}
+.wrap{width:min(100%,1120px);margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+
+/* 顶栏 */
+.bar{border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  min-height:64px;padding-block:12px}
+.back{display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+  font-size:12px;letter-spacing:.06em;color:var(--soft)}
+.back:hover{color:var(--ink)}
+.back svg{width:14px;height:14px}
+.print{appearance:none;border:1px solid var(--ink);background:transparent;color:var(--ink);
+  font:12px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;
+  padding:11px 16px;cursor:pointer;transition:background .18s,color .18s}
+.print:hover{background:var(--ink);color:var(--paper)}
+
+/* 引言 */
+.intro{padding:clamp(40px,7vw,88px) 0 clamp(30px,4vw,46px)}
+h1{margin:0;font-family:var(--serif);font-weight:700;
+  font-size:clamp(40px,7.4vw,84px);line-height:1.02;letter-spacing:-.02em}
+.lead{max-width:30em;margin:clamp(18px,2.4vw,26px) 0 0;
+  font-size:clamp(14px,1.35vw,17px);line-height:1.95;color:var(--soft)}
+.lead b{font-weight:400;color:var(--ink);border-bottom:1px solid var(--line);white-space:nowrap}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:clamp(20px,3vw,30px);
+  padding-top:14px;border-top:1px solid var(--line);
+  font-size:11px;letter-spacing:.14em;color:var(--soft)}
+.meta-row span{white-space:nowrap}
+
+/* 卡片 */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--gap);padding-bottom:clamp(48px,7vw,80px)}
+.tile{
+  /* 注意：container-type 的元素自身不能用 cqw，所以下面只用百分比 */
+  container-type:inline-size;
+  position:relative;aspect-ratio:93/56;padding:5.2%;
+  background:var(--paper);color:var(--ink);border:1px solid var(--line);
+  display:grid;grid-template-columns:minmax(0,1fr) 37%;
+  grid-template-rows:1fr auto;
+  grid-template-areas:"id qr" "addr addr";
+}
+.tile.home{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tile.home .seal{background:var(--paper);color:var(--ink)}
+.tile.home .sub,.tile.home .addr{color:rgba(242,237,226,.74)}
+.tile.home .addr{border-top-color:rgba(242,237,226,.28)}
+
+.id{grid-area:id;align-self:center;display:flex;flex-direction:column;
+  justify-content:center;padding-right:2cqw}
+.head{display:flex;align-items:center;gap:2.6cqw}
+.seal{flex:none;width:8.4cqw;height:8.4cqw;display:grid;place-items:center;
+  background:var(--c);color:var(--on,var(--paper));
+  font-family:var(--serif);font-weight:700;font-size:5.1cqw;line-height:1}
+.no{font-size:2.35cqw;letter-spacing:.2em;text-transform:uppercase;
+  color:inherit;opacity:.72;white-space:nowrap}
+.no i{font-style:normal;opacity:.5;margin:0 .5em}
+
+.cn{margin:2.6cqw 0 0;font-family:var(--serif);font-weight:700;
+  font-size:6.3cqw;line-height:1.14;letter-spacing:-.01em}
+.sub{margin:1.4cqw 0 0;font-size:2.45cqw;line-height:1.5;
+  letter-spacing:.02em;color:var(--soft)}
+
+.addr{grid-area:addr;display:flex;align-items:baseline;gap:1.4cqw;
+  border-top:1px solid var(--line);padding-top:1.6cqw;
+  font-size:2.3cqw;line-height:1.35;color:var(--soft);
+  text-decoration:none;word-break:break-all}
+.addr:hover{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.addr b{flex:none;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  font-size:.86em;opacity:.7}
+
+.qr{grid-area:qr;align-self:center;justify-self:end;display:block;
+  width:100%;height:auto;background:#fff;
+  box-shadow:0 0 0 1px rgba(20,26,22,.1)}
+
+/* 说明卡 */
+.colophon .id{grid-column:1/-1;justify-content:flex-start;padding-right:0}
+.colophon h2{margin:0;font-family:var(--serif);font-weight:700;
+  font-size:4.6cqw;line-height:1.2}
+.colophon .stamp{margin:.8cqw 0 1.6cqw;font-size:2.1cqw;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--soft)}
+.colophon p{margin:1.2cqw 0 0;font-size:2.4cqw;line-height:1.62;color:var(--soft)}
+.colophon p b{font-weight:400;color:var(--ink)}
+.colophon .slugs{margin-top:1.6cqw;font-family:ui-monospace,'SF Mono',Consolas,monospace;
+  font-size:2.05cqw;line-height:1.85;letter-spacing:.02em;color:var(--ink);opacity:.75}
+
+/* 页脚 */
+.foot{border-top:1px solid var(--line);padding-block:22px 34px;
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-size:11px;letter-spacing:.1em;color:var(--soft)}
+.foot a{text-decoration:none;border-bottom:1px solid var(--line)}
+
+@media(max-width:720px){
+  .grid{grid-template-columns:1fr}
+  .tile{aspect-ratio:auto;padding:6cqw;
+    grid-template-columns:minmax(0,1fr) 36%;grid-template-rows:auto auto;
+    grid-template-areas:"id qr" "addr addr";row-gap:4cqw}
+  .cn{font-size:6.6cqw}
+  .no{font-size:10px}
+  .sub{font-size:11px}
+  .addr{font-size:11px}
+  .colophon{aspect-ratio:auto}
+  .colophon .id{grid-column:1/-1}
+  .colophon p{font-size:11.5px}
+  .colophon .stamp{font-size:10px}
+  .colophon .slugs{font-size:10.5px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- 打印：A4 纵向，2 × 4，含说明卡 ---------- */
+@page{size:A4 portrait;margin:10mm}
+@media print{
+  html,body{background:#fff;color:#141A16;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bar,.foot{display:none!important}
+  .wrap{width:auto;padding:0}
+  .intro{padding:0 0 4.5mm}
+  h1{font-size:21pt;line-height:1.1}
+  .lead{font-size:8.6pt;line-height:1.65;margin-top:3mm;max-width:150mm}
+  .meta-row{font-size:7pt;margin-top:3.5mm;padding-top:2mm;gap:6px 18px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:4mm;padding:0}
+  .tile{aspect-ratio:auto;height:56mm;padding:4.4mm 4.8mm;
+    border:.4pt solid #141A16;background:#fff;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
+  .tile.home{background:#141A16;color:#F2EDE2;border-color:#141A16}
+  .tile.home .addr{border-top-color:rgba(242,237,226,.34)}
+  .tile.home .sub,.tile.home .addr{color:rgba(242,237,226,.8)}
+  .qr{box-shadow:none;border:.4pt solid rgba(20,26,22,.25)}
+  .tile.home .qr{border-color:#141A16}
+  a{text-decoration:none;color:inherit}
+  .colophon .id{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="back" href="../">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>
+      潇贺古道有声文化数据库
+    </a>
+    <button class="print" type="button" onclick="window.print()">打印 A4 / Print</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="intro">
+    <h1>七枚入口</h1>
+    <p class="lead">一个主页，六个专题。七枚码都不指向具体文件名，而是指向 <b>/go/ 固定短链</b>——页面改名、站点重排、内容更新，已经印出去的码照样能扫。</p>
+    <p class="meta-row">
+      <span>07 枚 · 1 主页 + 6 专题</span>
+      <span>生成 2026.11.02</span>
+      <span>印刷边长 ≥ 28 mm</span>
+      <span>白底黑码 · 四周留白 4 模块</span>
+    </p>
+  </section>
+
+  <section class="grid" aria-label="七枚入口二维码">
+
+    <article class="tile home" id="home">
+      <div class="id">
+        <div class="head">
+          <span class="seal" aria-hidden="true">潇</span>
+          <span class="no">00<i>/</i>Home</span>
+        </div>
+        <h2 class="cn">潇贺古道</h2>
+        <p class="sub">有声文化数据库 · 总入口</p>
+      </div>
+      <img class="qr" src="codes/home.svg" width="200" height="200" alt="二维码：潇贺古道有声文化数据库首页，https://hpairr.github.io/xiaohe-gudao/">
+      <a class="addr" href="https://hpairr.github.io/xiaohe-gudao/"><b>扫码</b>hpairr.github.io/xiaohe-gudao/</a>
+    </article>
+
+    <article class="tile" id="nushu" style="--c:#1D2652">
+      <div class="id">
+        <div class="head">
+          <span class="seal" aria-hidden="true">女</span>
+          <span class="no">01<i>/</i>Nüshu</span>
+        </div>
+        <h2 class="cn">女书</h2>
+        <p class="sub">湖南江永 · 国家级非遗 2006</p>
+      </div>
+      <img class="qr" src="codes/nushu.svg" width="200" height="200" alt="二维码：女书专题页，https://hpairr.github.io/xiaohe-gudao/go/nushu/">
+      <a class="addr" href="https://hpairr.github.io/xiaohe-gudao/go/nushu/"><b>扫码</b>hpairr.github.io/xiaohe-gudao/go/nushu/</a>
+    </article>
+
+    <article class="tile" id="butterfly" style="--c:#B8862F;--on:#141A16">
+      <div class="id">
+        <div class="head">
+          <span class="seal" aria-hidden="true">蝴</span>
+          <span class="no">02<i>/</i>Butterfly Song</span>
+        </div>
+        <h2 class="cn">蝴蝶歌</h2>
+        <p class="sub">广西富川 · 国家级非遗 2008</p>
+      </div>
+      <img class="qr" src="codes/butterfly.svg" width="200" height="200" alt="二维码：蝴蝶歌专题页，https://hpairr.github.io/xiaohe-gudao/go/butterfly/">
+      <a class="addr" href="https://hpairr.github.io/xiaohe-gudao/go/butterfly/"><b>扫码</b>hpairr.github.io/xiaohe-gudao/go/butterfly/</a>
+    </article>
+
+    <article class="tile" id="drum" style="--c:#A9362E">
+      <div class="id">
+        <div class="head">
+          <span class="seal" aria-hidden="true">长</span>
+          <span class="no">03<i>/</i>Long Drum</span>
+        </div>
+        <h2 class="cn">长鼓舞</h2>
+        <p class="sub">湘桂瑶族地区 · 国家级非遗 2008</p>
+      </div>
+      <img class="qr" src="codes/drum.svg" width="200" height="200" alt="二维码：长鼓舞专题页，https://hpairr.github.io/xiaohe-gudao/go/drum/">
+      <a class="addr" href="https://hpairr.github.io/xiaohe-gudao/go/drum/"><b>扫码</b>hpairr.github.io/xiaohe-gudao/go/drum/</a>
+    </article>
+
+    <article class="tile" id="bridge" style="--c:#4C6C8B">
+      <div class="id">
+        <div class="head">
+          <span class="seal" aria-hidden="true">风</span>
+          <span class="no">04<i>/</i>Wind-Rain Bridge</span>
+        </div>
+        <h2 class="cn">富川风雨桥</h2>
+        <p class="sub">瑶族桥群 · 全国重点文保 2013</p>
+      </div>
+      <img class="qr" src="codes/bridge.svg" width="200" height="200" alt="二维码：富川风雨桥专题页，https://hpairr.github.io/xiaohe-gudao/go/bridge/">
+      <a class="addr" href="https://hpairr.github.io/xiaohe-gudao/go/bridge/"><b>扫码</b>hpairr.github.io/xiaohe-gudao/go/bridge/</a>
+    </article>
+
+    <article class="tile" id="panwang" style="--c:#15120F">
+      <div class="id">
+        <div class="head">
+          <span class="seal" aria-hidden="true">盘</span>
+          <span class="no">05<i>/</i>Panwang Da Ge</span>
+        </div>
+        <h2 class="cn">盘王大歌</h2>
+        <p class="sub">湖南江华 · 国家级非遗 2014</p>
+      </div>
+      <img class="qr" src="codes/panwang.svg" width="200" height="200" alt="二维码：盘王大歌专题页，https://hpairr.github.io/xiaohe-gudao/go/panwang/">
+      <a class="addr" href="https://hpairr.github.io/xiaohe-gudao/go/panwang/"><b>扫码</b>hpairr.github.io/xiaohe-gudao/go/panwang/</a>
+    </article>
+
+    <article class="tile" id="brocade" style="--c:#5E3F55">
+      <div class="id">
+        <div class="head">
+          <span class="seal" aria-hidden="true">织</span>
+          <span class="no">06<i>/</i>Yao Brocade</span>
+        </div>
+        <h2 class="cn">瑶族织锦</h2>
+        <p class="sub">广西富川 · 自治区级非遗 2018</p>
+      </div>
+      <img class="qr" src="codes/brocade.svg" width="200" height="200" alt="二维码：瑶族织锦专题页，https://hpairr.github.io/xiaohe-gudao/go/brocade/">
+      <a class="addr" href="https://hpairr.github.io/xiaohe-gudao/go/brocade/"><b>扫码</b>hpairr.github.io/xiaohe-gudao/go/brocade/</a>
+    </article>
+
+    <article class="tile colophon" id="colophon">
+      <div class="id">
+        <h2>固定入口</h2>
+        <p class="stamp">07 枚 · 2026.11</p>
+        <p>码指向 <b>/go/ 短链</b>，不指向文件名。改版只改跳转页，纸上的码不动。</p>
+        <p class="slugs">nushu · butterfly · drum<br>bridge · panwang · brocade</p>
+        <p>印刷：边长 ≥ <b>28 mm</b>，白底黑码，四周留白 4 个模块，别加滤镜或透明底。</p>
+      </div>
+    </article>
+
+  </section>
+</main>
+
+<footer class="foot wrap">
+  <span>潇贺古道有声文化数据库 · 北起潇水，南抵贺江</span>
+  <a href="../">回到首页</a>
+</footer>
+
+</body>
+</html>
