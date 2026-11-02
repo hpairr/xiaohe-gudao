@@ -86,30 +86,48 @@
     return audioContext;
   };
 
+  /* 优先直接取 MP3（561 KB，浏览器当媒体资源处理，比 748 KB 的 base64 脚本稳）；
+     fetch 不可用时（file:// 预览）才退回 data/<key>.js。 */
+  const loadDataScript = key => new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = audioBase + 'data/' + key + '.js';
+    script.onload = () => {
+      if (window.XiaoheAudioData && window.XiaoheAudioData[key]) {
+        resolve(window.XiaoheAudioData[key]);
+      } else {
+        reject(new Error('Audio data missing: ' + key));
+      }
+    };
+    script.onerror = () => reject(new Error('Audio data script failed: ' + key));
+    document.head.appendChild(script);
+  });
+
   const loadData = key => {
-    if (window.XiaoheAudioData && window.XiaoheAudioData[key]) {
-      return Promise.resolve(window.XiaoheAudioData[key]);
-    }
     if (dataCache[key]) return dataCache[key];
 
-    dataCache[key] = new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = audioBase + 'data/' + key + '.js';
-      script.onload = () => {
-        if (window.XiaoheAudioData && window.XiaoheAudioData[key]) {
-          resolve(window.XiaoheAudioData[key]);
-        } else {
-          reject(new Error('Audio data missing: ' + key));
-        }
-      };
-      script.onerror = () => reject(new Error('Audio data script failed: ' + key));
-      document.head.appendChild(script);
-    });
+    dataCache[key] = (async () => {
+      try {
+        const res = await fetch(audioBase + key + '.mp3', { cache: 'force-cache' });
+        const buf = res.ok ? await res.arrayBuffer() : null;
+        /* 有的本地预览环境会把媒体请求回成 204/空 body，这种要走脚本兜底 */
+        if (!buf || buf.byteLength < 1024) throw new Error('empty audio body');
+        return buf;
+      } catch (err) {
+        return await loadDataScript(key);
+      }
+    })();
     return dataCache[key];
   };
 
-  const decodeDataUrl = async (dataUrl, context) => {
-    const binary = atob(dataUrl.split(',')[1] || '');
+  const decodeDataUrl = async (payload, context) => {
+    if (typeof payload !== 'string') {
+      /* ArrayBuffer：decodeAudioData 会把它 detach，复制一份，缓存还能复用 */
+      return new Promise((resolve, reject) => {
+        const task = context.decodeAudioData(payload.slice(0), resolve, reject);
+        if (task && task.then) task.then(resolve, reject);
+      });
+    }
+    const binary = atob(payload.split(',')[1] || '');
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     return new Promise((resolve, reject) => {
