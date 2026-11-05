@@ -744,7 +744,7 @@ body.skip-loader .loader{display:none}
 
 /* ---------- 尾声 ---------- */
 .closing{position:relative;min-height:100vh;background:var(--ink-2);color:var(--paper);overflow:hidden;display:flex;flex-direction:column}
-.closing::before{content:"";position:absolute;left:50%;bottom:-40vh;width:90vw;height:90vw;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(182,58,51,.2),transparent 62%);pointer-events:none}
+.closing::before{content:"";position:absolute;left:50%;bottom:-40vh;width:90vw;height:90vw;transform:translateX(-50%);border-radius:50%;background:none;pointer-events:none;display:none}
 .closing-main{position:relative;z-index:2;flex:1;display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(30px,5vw,90px);align-items:center;padding:clamp(100px,15vh,170px) var(--pad) clamp(50px,8vh,90px)}
 .closing-label{font:10px/1 var(--f-en);letter-spacing:.24em;text-transform:uppercase;color:rgba(242,237,226,.5);display:flex;align-items:center;gap:12px;margin-bottom:clamp(20px,4vh,40px)}
 .closing-label i{display:block;width:42px;height:1px;background:var(--cinnabar)}
@@ -756,15 +756,22 @@ body.skip-loader .loader{display:none}
 .closing-copy p b{color:var(--paper);font-weight:500}
 .closing-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px}
 .btn{
+  --btn-c:#35518C;
   display:inline-flex;align-items:center;justify-content:space-between;gap:26px;
-  min-width:210px;padding:16px 20px;border:1px solid rgba(242,237,226,.6);
+  min-width:210px;padding:16px 20px;
+  border:1px solid color-mix(in srgb,var(--btn-c) 72%,#F2EDE2);
+  color:var(--paper);
   font:11px/1 var(--f-en);letter-spacing:.14em;text-transform:uppercase;
   transition:background .35s,color .35s,border-color .35s;
 }
 .btn span{font-family:var(--f-serif);font-size:14px;letter-spacing:.12em;text-transform:none}
-.btn:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
-.btn.solid{background:var(--cinnabar);border-color:var(--cinnabar);color:var(--paper)}
-.btn.solid:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.btn:hover{background:var(--btn-c);border-color:var(--btn-c);color:var(--paper)}
+.btn.solid{background:var(--btn-c);border-color:var(--btn-c);color:var(--paper)}
+.btn.solid:hover{
+  background:color-mix(in srgb,var(--btn-c) 78%,#F2EDE2);
+  border-color:color-mix(in srgb,var(--btn-c) 78%,#F2EDE2);
+  color:var(--paper);
+}
 .closing-meta{display:grid;grid-template-columns:1fr 1fr;gap:18px;border-top:1px solid rgba(242,237,226,.16);padding-top:18px;font:9px/1.7 var(--f-en);letter-spacing:.14em;text-transform:uppercase;color:rgba(242,237,226,.6)}
 .closing-meta b{display:block;color:rgba(242,237,226,.8);font-family:var(--f-serif);font-size:12px;letter-spacing:.1em;text-transform:none;margin-bottom:2px;font-weight:500}
 .footer{position:relative;z-index:3;padding:10px var(--pad) 26px;background:var(--ink-2)}
@@ -1306,7 +1313,7 @@ body.is-wiping{overflow:hidden;cursor:progress}
 }
 </style>
 <link rel="stylesheet" href="assets/theme-stage.css?v=20261030a">
-<link rel="stylesheet" href="assets/audio-player.css">
+<link rel="stylesheet" href="assets/audio-player.css?v=20261102a">
 <style>
 .intro-fade{
   position:fixed;inset:0;z-index:219;display:none;pointer-events:none;
@@ -1585,30 +1592,33 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
 </style>
 <style>
 /* ============================================================
-   00 首屏：一整张风景，四字是蒙版上的窗
+   00 首屏：一整张风景，照片压暗到墨，纸从中心长出来，四字是纸上开的窗
    ------------------------------------------------------------
-   ① 一开始只有照片。题名的底图与照片层是**同一张图、同一组
-      background 参数**，所以四字落在照片上时完全不可见
-      （已逐像素比对：两张渲染图 maxdiff = 0）。
-   ② 向下滚动，照片整体褪成纸（没有边、没有水线，是一次均匀的淡化）。
-      字不跟着褪，于是字变成画面里最黑的一块 —— 题名就这样浮出来。
-   ③ 字从 1.7 倍（比屏幕还宽，两侧溢出画面）一路拉回到 1 倍，
-      缩到定稿位置；落款随后出现。
+   ① 一开始只有照片。题名与照片层是**同一张图、同一组 background 参数**
+      （都带 background-attachment:fixed），所以四字落在照片上时逐像素重合、不可见。
+   ② 向下滚动，照片整片压暗到墨（.h6-dim）；题名里也压了同样的一层墨
+      （.h6-title::after，用的是同一个 --dim），所以字始终跟着照片一起暗，
+      不会提前露出来。这一步只改「照片有多黑」，不改字色。
+   ③ 照片暗下去的同时，一张纸从正中心按圆放大盖过整屏（.h6-veil）：
+      纸到哪儿，字就在哪儿显影 —— 字是纸上开的窗，窗外就是那张已经压黑的照片。
+   ④ 纸铺满后，四字是一幅墨色题名（照片已经黑透），从 1.7 倍缩回 1 倍落定；
+      落款随后出现（墨色，底是纸）。
+
+   底色永远是纸，字永远是「那张照片」—— 不反转。收口和「序」的纸面接上。
 
    硬约束：这一段里**不能出现任何 transform**（含父级）。
-   只要祖先链上有 transform，background-attachment:fixed 就会
-   改挂到该元素自身，字的底图立刻与照片层错位，字会提前露出来。
-   所以缩放走 font-size 动画，居中走 flex，不用 translate(-50%,-50%)。
+   只要祖先链上有 transform，background-attachment:fixed 就会挂到该元素上，
+   字的底图立刻与照片层错位，字会提前露出来。（.h6-veil 自己带 transform，
+   但它是兄弟节点、不在字的祖先链上，不影响。）
    ============================================================ */
 .h6{
   --t-size:min(19vw,38svh);      /* 题名定稿字号：四字合起来约 76vw；上限用 svh，宽屏才不至于被压小 */
-  /* 2026-11-02：原 hero-road.webp（来源不可考的古镇水口照）已删除。
-     首屏改为纯 CSS 纸墨场：字仍从「底」里浮出，但不依赖任何第三方照片。
-     将来拍到合格的古道原片，把下面这行换回 url(...) 即可，其余不用动。 */
-  --h6-photo:radial-gradient(ellipse 62% 46% at 50% 44%,
-      #F2E9D4 0%, #E2CFA6 30%, #B9975F 52%, #5C4A31 72%, #16191A 100%);
-  --veil:0;                      /* 纸（圆形蒙版）铺满屏幕的程度：0 没出现，1 盖满四角 */
-  --tscale:1.7;                  /* 题名缩放（用字号做，不用 transform） */
+  /* 2026-11-03：首屏换上甘棠村航拍（江永 · 谢沐河）。
+     换图只改这一行。来源与授权：docs/首屏影像来源.md */
+  --h6-photo:url("assets/img/hero-shanggantang.jpg");
+  --dim:0;                       /* 照片压暗到墨的进度（题名跟着一起压） */
+  --veil:0;                      /* 纸从正中心铺开的进度 */
+  --tscale:1.7;                  /* 题名缩放（走字号，不用 transform） */
   --t-box:1;                     /* 题名占几行字高（窄屏排 2×2 时是 2） */
   --foot:0;                      /* 落款 */
   --rule:0;                      /* 落款上方那道细线（路） */
@@ -1630,13 +1640,18 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   background-attachment:fixed;
 }
 .h6-photo{position:absolute;inset:0;z-index:0}
+/* 一整层墨：只压照片，不压纸（纸在它上面） */
+.h6-dim{
+  position:absolute;inset:0;z-index:1;
+  background:var(--ink-2);        /* 与站内深色底同一支墨，别另开一个黑 */
+  opacity:var(--dim);
+  pointer-events:none;
+}
 /* 一张纸从正中心按圆放大，直到盖满整屏 —— 与六章舞台同一种擦除：
    只写 transform（合成器属性），不做均匀淡化，也不用 clip-path（每帧重画整屏）。
-   直径由 JS 按对角线算好写进 --veil-size，scale:1 时正好盖住四角。
-   字在纸之上：纸没到的地方，字与照片逐像素重合（看不见）；
-   纸过到哪儿，字就在哪儿变成画面上仅剩的影像，于是从中心往外浮出来。 */
+   直径由 JS 按对角线算好写进 --veil-size，scale:1 时正好盖住四角。 */
 .h6-veil{
-  position:absolute;z-index:1;left:50%;top:50%;
+  position:absolute;z-index:2;left:50%;top:50%;
   width:var(--veil-size,150vmax);height:var(--veil-size,150vmax);
   margin:calc(var(--veil-size,150vmax) / -2) 0 0 calc(var(--veil-size,150vmax) / -2);
   border-radius:50%;
@@ -1647,7 +1662,7 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   pointer-events:none;
 }
 .h6-typewrap{
-  position:absolute;inset:0;z-index:2;
+  position:absolute;inset:0;z-index:3;
   display:flex;align-items:center;justify-content:center;
   padding-top:3svh;                /* 视线中心略低于几何中心 */
   pointer-events:none;
@@ -1655,18 +1670,32 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
 .h6-title{
   /* flex:none 不能省：窄屏 2×2 的宽度是 2em，放大时若被 flex 压缩，
      就会退化成每行一个字（竖排），版式跟定稿对不上。 */
-  flex:none;margin:0;white-space:nowrap;
+  flex:none;margin:0;white-space:nowrap;position:relative;
   font-family:var(--f-serif);font-weight:700;line-height:1;letter-spacing:0;
   font-size:calc(var(--t-size) * var(--tscale));
   color:transparent;
   -webkit-text-fill-color:transparent;
   -webkit-background-clip:text;background-clip:text;
 }
+/* 字里也压同样的一层墨，--dim 与照片层共用：照片黑到哪，字的填色就黑到哪。
+   于是字在纸上「显影」之前一直与照片严丝合缝，不会露面。
+   用 attr() 取同一句题名，不复制 DOM（屏幕阅读器只读到 h1 本身）。 */
+.h6-title::after{
+  content:attr(data-text);
+  position:absolute;left:0;top:0;
+  background:var(--ink-2);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+  opacity:var(--dim);
+  pointer-events:none;
+}
 .h6-foot{
-  position:absolute;z-index:3;left:0;right:0;
+  position:absolute;z-index:4;left:0;right:0;
   top:calc(50% + var(--t-size) * var(--t-box) * .5 + 4.6svh + 26px);
   text-align:center;opacity:var(--foot);
 }
+/* 落款只在纸铺满之后才出现（--foot 从 0.78 起），底一定是纸，所以用墨色。 */
 .h6-rule{
   display:block;width:clamp(120px,20vw,240px);height:1px;margin:0 auto 15px;
   background:var(--ink);opacity:.5;
@@ -1677,11 +1706,12 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   white-space:nowrap;
 }
 .h6-cap em{
+  display:block;margin:7px 0 0;
   font:9px/1 var(--f-en);letter-spacing:.24em;font-style:normal;
-  margin-left:14px;color:rgba(20,26,22,.62);
+  color:rgba(20,26,22,.62);
 }
 .h6-cue{
-  position:absolute;z-index:4;left:50%;bottom:clamp(20px,3.6vh,38px);
+  position:absolute;z-index:5;left:50%;bottom:clamp(20px,3.6vh,38px);
   transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:11px;
   opacity:var(--cue);
@@ -1695,10 +1725,8 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
 }
 @keyframes h6cue{0%{transform:translateY(-120%)}62%,100%{transform:translateY(240%)}}
 
-/* 照片还亮着的时候，顶栏翻成浅色（深墨压在暗照片上等于没有字）。
-   由 setHero 在照片还占着屏顶时挂 body.hero-on-photo。 */
-.hero-on-photo .topbar[data-tone="dark"]{--nav-fg:var(--paper)}
-.hero-on-photo .topbar::before{opacity:1}
+/* 首屏从照片收到纸面，底色始终是纸 —— 顶栏一路用墨字，不必换色。
+   只有中段压到墨的那一截是暗的，那时 --nav-op 正好是 0。 */
 
 @media (max-width:760px){
   /* 窄屏：四字排成 2×2，字才立得住；宽度 2em 让浏览器按字折行 */
@@ -1710,12 +1738,13 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   .h6-cap em{display:block;margin:6px 0 0}
 }
 @media (prefers-reduced-motion:reduce){
-  .h6{height:100svh;min-height:100svh;--veil:1;--tscale:1;--foot:1;--rule:1;--cue:0}
+  /* 不动画：直接停在成稿那一帧 —— 纸铺满、墨色题名、落款齐全。 */
+  .h6{height:100svh;min-height:100svh;--dim:1;--veil:1;--tscale:1;--foot:1;--rule:1;--cue:0}
   .h6-cue{display:none}
   .h6-cue i::after{animation:none}
 }
-/* 无 JS：直接停在成稿状态，不然首屏会只剩一张照片 */
-html.no-js .h6{--veil:1;--tscale:1;--foot:1;--rule:1;--cue:0}
+/* 无 JS：同上，一次给全，别停在只有照片的半成品上 */
+html.no-js .h6{--dim:1;--veil:1;--tscale:1;--foot:1;--rule:1;--cue:0}
 /* 序章的尺同理：没有 JS 就一次给全，别留一条空线 */
 html.no-js .route .path{stroke-dashoffset:0}
 html.no-js .route .ticks{opacity:1}
@@ -1788,7 +1817,7 @@ html.no-js .route .path-water{opacity:.62}
     <a href="database.html#/atlas">古道图志 <em>ATLAS</em></a>
     <a href="database.html">数据库 <em>DATABASE</em></a>
   </div>
-  <div class="menu-foot"><span>潇贺古道有声文化数据库</span><span>贺州学院视觉传达设计 / 2026</span></div>
+  <div class="menu-foot"><span>潇贺古道有声文化数据库</span><span>2026</span></div>
 </div>
 
 <!-- 右侧悬浮章节索引：鼠标移到最右边自动唤出 -->
@@ -1808,17 +1837,18 @@ html.no-js .route .path-water{opacity:.62}
 </div>
 
 <main>
-  <!-- ========== 00 首屏：一整张风景 · 四字是蒙版上的窗 ========== -->
+  <!-- ========== 00 首屏：一整张风景 · 压暗到墨，再化进纸里 ========== -->
   <section class="h6" id="hero" data-tone="dark" aria-label="潇贺古道">
     <div class="h6-pin">
       <div class="h6-photo" aria-hidden="true"></div>
+      <div class="h6-dim" aria-hidden="true"></div>
       <div class="h6-veil" aria-hidden="true"></div>
       <div class="h6-typewrap">
-        <h1 class="h6-title">潇贺古道</h1>
+        <h1 class="h6-title" data-text="潇贺古道">潇贺古道</h1>
       </div>
       <div class="h6-foot">
         <i class="h6-rule" aria-hidden="true"></i>
-        <p class="h6-cap">纸面 · 墨 · 档案<em>PAPER · INK · ARCHIVE</em></p>
+        <p class="h6-cap">潇贺古道有声文化数据库<em>XIAOHE ANCIENT ROAD</em></p>
       </div>
       <div class="h6-cue" aria-hidden="true"><span>Scroll</span><i></i></div>
     </div>
@@ -2006,8 +2036,8 @@ html.no-js .route .path-water{opacity:.62}
       <div class="closing-copy">
         <p>古道沿线，女书、蝴蝶歌、长鼓舞、富川风雨桥、盘王大歌与瑶族织锦各有自己的声音与手艺。<br>数据库收录可核对的条目、录音与影像，供查阅与引用。</p>
         <div class="closing-actions">
-          <a class="btn solid" href="database.html#/sounds"><span>进入声音数据库</span>SOUND →</a>
-          <a class="btn" href="database.html#/atlas"><span>打开古道图志</span>ATLAS ↗</a>
+          <a class="btn solid" href="database.html#/sounds" data-arrive="sounds" data-color="#35518C" style="--btn-c:#35518C"><span>进入声音数据库</span>SOUND →</a>
+          <a class="btn" href="database.html#/atlas" data-arrive="atlas" data-color="#2C5A4E" style="--btn-c:#2C5A4E"><span>打开古道图志</span>ATLAS ↗</a>
         </div>
         <div class="closing-meta">
           <div><b>潇贺古道有声文化数据库</b>文化档案 · 声音 · 图志</div>
@@ -2023,7 +2053,7 @@ html.no-js .route .path-water{opacity:.62}
     </div>
     <footer class="footer">
       <div class="footer-top">
-        <span class="footer-cn">© 2026 潇贺古道有声文化数据库 · 贺州学院视觉传达设计</span>
+        <span class="footer-cn">© 2026 潇贺古道有声文化数据库</span>
         <span>IMAGES / 潇贺古道沿线影像与非遗图像 · 公开资料图，仅作文化展示</span>
         <span>FONTS / Noto Serif SC · Noto Sans SC · Ma Shan Zheng · SIL OFL 1.1</span>
         <a href="#hero">BACK TO TOP ↑</a>
@@ -2106,7 +2136,6 @@ html.no-js .route .path-water{opacity:.62}
   let lastTone = '';
   let heroOut = false;
   let heroNavPast = false;
-  let heroOnPhoto = false;
   /* ?hp=0.55 把首屏钉在某个进度上（看稿 / 截图 / 答辩演示用） */
   const heroPin = params.has('hp') ? clamp(parseFloat(params.get('hp')) || 0, 0, 1) : null;
   let writeStarted = false;
@@ -2225,15 +2254,18 @@ html.no-js .route .path-water{opacity:.62}
     el.style.setProperty(name, v);
   }
 
-  /* ---------------- 首屏：纸色蒙版 + 题名缩放 ----------------
-     p = 0 → 只有照片；p = 1 → 纸面上一幅落款题名。
-     蒙版是一张纸自下而上淹没照片；字在纸上开口，纸过到哪儿字就在哪儿显影。
+  /* ---------------- 首屏：照片压暗到墨，纸从中心长出来 ----------------
+     p = 0 → 只有照片（字与照片逐像素重合，看不见）；
+     p = 1 → 纸面上一幅墨色题名与落款。
+     压暗只作用在照片上（.h6-dim），题名里同时压了同样的墨（::after），
+     所以字始终跟着照片走；纸（.h6-veil）盖到哪儿，字就在哪儿显影。
      tscale 走字号（不用 transform，否则题名底图会挂到字自己身上、
      和照片层错位 —— 见 CSS 注释里的硬约束）。 */
   function setHero(p) {
-    /* 淡化拉得很长（约 0.57 屏 ≈ 920px，十几次滚轮才走完）：
-       一格的亮度变化只有原来的三分之一，不会出现"一下亮起来"的闪。 */
-    const veil = smoothstep(0.05, 0.62, p);      /* 纸圆从正中心放大，半径线性；不做均匀淡化 */
+    /* 亮度是独立的一条线：跟着滚动一路压到黑（0→1），不另设阶段、不延后。
+       纸、缩放、落款都还是原来那套时间。 */
+    const dim = smoothstep(0, 1, p);             /* 照片（与字）的亮度 */
+    const veil = smoothstep(0.05, 0.62, p);      /* 纸从正中心铺开 */
     const shrink = smoothstep(0.05, 0.82, p);    /* 大字：1.7 → 1，慢慢拉到定稿 */
     /* 倍数上限：宽屏放得开，四个字被切掉两边也读得出"比屏幕大"；
        窄屏是 2×2，放到 2 倍只剩四条竖杠，反而读不出字，收到 1.45。 */
@@ -2243,22 +2275,17 @@ html.no-js .route .path-water{opacity:.62}
     const rule = smoothstep(0.82, 0.92, p);
     const cue = 1 - smoothstep(0.02, 0.09, p);
 
+    setNum(hero, '--dim', dim, 'hero-dim');
     setNum(hero, '--veil', veil, 'hero-veil');
     setNum(hero, '--tscale', tscale, 'hero-tscale');
     setNum(hero, '--foot', foot, 'hero-foot');
     setNum(hero, '--rule', rule, 'hero-rule');
     setNum(hero, '--cue', cue, 'hero-cue');
 
-    /* 顶栏：开场在照片上用浅字 → 蒙版推进时退场 → 纸面落定后回来 */
-    const navOp = clamp(1 - smoothstep(0.04, 0.10, p) + smoothstep(0.46, 0.56, p), 0, 1);
+    /* 顶栏一路用墨字（照片上是 6.9:1，纸上更足），只在暗下去的那一截退场，
+       等纸把顶栏四角也盖住再回来 —— 回来早了墨字会落在墨底上。 */
+    const navOp = clamp(1 - smoothstep(0.04, 0.10, p) + smoothstep(0.90, 0.96, p), 0, 1);
     setNum(document.documentElement, '--nav-op', navOp, 'hero-navop');
-
-    /* 纸还没漫上来时，顶栏用浅色（深墨压在暗照片上等于没有字） */
-    const onPhoto = p < 0.10;
-    if (onPhoto !== heroOnPhoto) {
-      heroOnPhoto = onPhoto;
-      body.classList.toggle('hero-on-photo', onPhoto);
-    }
   }
 
   function setWriting(wt) {
@@ -2357,11 +2384,6 @@ html.no-js .route .path-water{opacity:.62}
     if (!reduced) {
       if (heroPin !== null) setHero(heroPin);
       else if (curY < heroEnd) setHero(clamp((curY - heroTop) / heroRange, 0, 1));
-      else if (heroOnPhoto) {
-        /* 越过首屏后兜底：别让顶栏一直停在浅色 */
-        heroOnPhoto = false;
-        body.classList.remove('hero-on-photo');
-      }
       if (writeStarted && !writeDone) {
         const wt = clamp((performance.now() - writeStart) / 1150, 0, 1);
         setWriting(wt);
@@ -2589,7 +2611,12 @@ html.no-js .route .path-water{opacity:.62}
       window.setTimeout(() => { themeWipe.classList.add('is-filled'); }, 340);
 
       const target = arriveUrl(href, key);
-      window.setTimeout(() => { location.href = target; }, 1420);
+      window.setTimeout(() => {
+        /* 整屏已经被主题色盖住：这时候换文档看不见接缝，而且音频不会断。
+           没有 soft-nav（脚本没加载/只换一次已经用过）就退回普通跳转。 */
+        if (window.XiaoheSoftNav && window.XiaoheSoftNav.go) window.XiaoheSoftNav.go(target);
+        else location.href = target;
+      }, 1420);
     };
 
     themeCards.forEach(card => {
@@ -2629,7 +2656,8 @@ html.no-js .route .path-water{opacity:.62}
       window.setTimeout(() => { location.href = target; }, 320);
     };
 
-    $$('.topbar .nav a[data-arrive]').forEach(link => {
+    /* 顶栏导航与尾声的两颗按钮走同一套色扫：颜色取各自栏目的主色 */
+    $$('a[data-arrive]').forEach(link => {
       link.addEventListener('click', e => {
         const key = link.getAttribute('data-arrive');
         const color = link.getAttribute('data-color') || '#B63A33';
@@ -2749,7 +2777,8 @@ html.no-js .route .path-water{opacity:.62}
 
 <script src="assets/scroll-inertia.js?v=20261029a" defer></script>
 <script src="assets/theme-stage.js?v=20261031a" defer></script>
-<script src="assets/audio-player.js" defer></script>
+<script src="assets/audio-player.js?v=20261102a" defer></script>
+<script src="assets/soft-nav.js?v=20261102a" defer></script>
 <script>
 (function(){
   var done = function(){ document.documentElement.classList.add('h6-done'); };

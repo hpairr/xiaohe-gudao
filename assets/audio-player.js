@@ -1,7 +1,7 @@
 /* ==========================================================================
    潇贺古道 · 六章声音播放器
    --------------------------------------------------------------------------
-   · 音频以 MP3 短片段存放在 assets/audio/，同时生成 data/<key>.js 的 base64。
+   · 音频只保留 MP3 一种格式，存放在 assets/audio/。
    · Web Audio API 解码 + AnalyserNode 分析，波形来自正在播放的声音。
    · 首页六章：滚到哪一章就自动起哪一章的声音，换章时旧声音先淡出（0.9s）、
      新声音同时淡入，不是硬切；滚出六章（#chapter-stage 离屏）就淡出并停。
@@ -14,10 +14,33 @@
 
   /* 自动播放总开关：true = 首页滚到某一章就自动起该章的声音。 */
   const AUTOPLAY = true;
-  /* 自动播放时的目标音量（手动点播放仍是 0.9） */
+  /* 自动播放时的目标音量（手动点播放仍是 MANUAL_GAIN） */
   const AUTO_GAIN = 0.62;
+  const MANUAL_GAIN = 0.9;
+  /* 换曲的节奏：旧声先淡出，新声错开 SWITCH_LAG 再起来，听感是「消散 → 接上」 */
+  const FADE_OUT = 1.05;
+  const FADE_IN = 0.9;
+  const SWITCH_LAG = 0.38;
+  /* 双击本地文件打开时浏览器禁止 fetch，Web Audio 解码走不通，改走 <audio> */
+  const FILE_MODE = window.location.protocol === 'file:';
   /* 声音总开关的本地记忆：off = 用户主动关掉，不再自动出声 */
   const SOUND_KEY = 'xiaohe-sound';
+  /* 音量（0–1）与跨页播放状态的本地记忆 */
+  const VOLUME_KEY = 'xiaohe-volume';
+  const STATE_KEY = 'xiaohe-audio-state';
+  /* 跨页续播的时间窗：超过这么久还打开，就当是新的一次访问 */
+  const RESUME_WINDOW = 30000;
+
+  let masterVolume = 1;
+  try {
+    /* 注意：没有存过时 getItem 返回 null，Number(null) 是 0 ——
+       直接比较会把首次访问的音量设成静音，必须先判空 */
+    const rawVolume = window.localStorage.getItem(VOLUME_KEY);
+    if (rawVolume !== null && rawVolume !== '') {
+      const saved = Number(rawVolume);
+      if (isFinite(saved) && saved >= 0 && saved <= 1) masterVolume = saved;
+    }
+  } catch (err) { /* 隐私模式忽略 */ }
 
   const META = {
     nushu: {
@@ -59,7 +82,12 @@
   };
 
   const body = document.body;
-  const audioBase = (body.dataset.audioBase || 'assets/audio/').replace(/\/?$/, '/');
+  /* 转成绝对地址：软导航 pushState 之后 document.baseURI 会变成专题页 URL，
+     相对路径会解析到 /themes/ 下面去，音频就 404 了 */
+  const audioBase = new URL(
+    (body.dataset.audioBase || 'assets/audio/').replace(/\/?$/, '/'),
+    window.location.href
+  ).href;
   const dataCache = Object.create(null);
   const players = [];
   let audioContext = null;
@@ -86,28 +114,12 @@
     return audioContext;
   };
 
-  /* 优先直接取 MP3（561 KB，浏览器当媒体资源处理，比 748 KB 的 base64 脚本稳）；
-     fetch 不可用时（file:// 预览）才退回 data/<key>.js。 */
-  const loadDataScript = key => new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = audioBase + 'data/' + key + '.js';
-    script.onload = () => {
-      if (window.XiaoheAudioData && window.XiaoheAudioData[key]) {
-        resolve(window.XiaoheAudioData[key]);
-      } else {
-        reject(new Error('Audio data missing: ' + key));
-      }
-    };
-    script.onerror = () => reject(new Error('Audio data script failed: ' + key));
-    document.head.appendChild(script);
-  });
-
+  /* 音源只有 MP3 一种格式：交给浏览器原生媒体加载，不再维护 base64 副本。 */
   const loadData = key => {
     if (dataCache[key]) return dataCache[key];
 
     dataCache[key] = (async () => {
-      /* 浏览器到 CDN 偶尔会把某一个文件挂住：给每次请求设超时，
-         超时就换一个带查询串的地址重试一次，再不行退回 base64 脚本。 */
+      /* 浏览器到 CDN 偶尔会把某一个文件挂住：给每次请求设超时，超时就换带查询串的地址重试一次。 */
       const attempt = async (url, ms) => {
         const ctrl = window.AbortController ? new AbortController() : null;
         const timer = ctrl ? window.setTimeout(() => ctrl.abort(), ms) : 0;
@@ -127,11 +139,7 @@
       try {
         return await attempt(audioBase + key + '.mp3', 4000);
       } catch (err) {
-        try {
-          return await attempt(audioBase + key + '.mp3?r=' + Date.now(), 6000);
-        } catch (err2) {
-          return await loadDataScript(key);
-        }
+        return await attempt(audioBase + key + '.mp3?r=' + Date.now(), 6000);
       }
     })();
     return dataCache[key];
@@ -192,6 +200,7 @@
 
     const player = {
       el,
+      elAudio: null,
       key,
       meta,
       chapter,
@@ -214,6 +223,10 @@
       loading: false,
       finished: false,
       userPaused: false,
+      /* 本次是否接在另一首的淡出之后起来（决定要不要错开 SWITCH_LAG） */
+      delayIn: false,
+      /* 正在淡出中：此时不算“在播”，但声音还没散完 */
+      fading: false,
       /* 每次 play/pause 自增：异步解码回来时若 token 变了，说明已经被取消，
          否则快速滚过两章会出现两首同时响 */
       token: 0,
@@ -240,6 +253,11 @@
     };
 
     const draw = () => {
+      /* 软导航后旧 body 已被换掉：停止画波形，但声音继续——音频节点活在 JS 里，和 DOM 无关 */
+      if (!el.isConnected) {
+        player.raf = 0;
+        return;
+      }
       if (!player.playing || !player.analyser) return;
       player.analyser.getByteFrequencyData(player.data);
       const bins = player.data.length;
@@ -263,8 +281,122 @@
       setBarsIdle();
     };
 
+    /* ---------- 本地直接打开（file://）的兜底 ----------
+       浏览器不允许 fetch 读本地文件，Web Audio 解码这条路走不通。
+       改用 <audio> 元素直接播：声音照常，波形退化为静止条。 */
+    const fadeElement = (audio, to, lag, dur) => {
+      const from = audio.volume;
+      const startAt = performance.now() + (lag || 0) * 1000;
+      const step = now => {
+        const t = Math.min(1, Math.max(0, (now - startAt) / (dur * 1000)));
+        audio.volume = Math.max(0, Math.min(1, from + (to - from) * t));
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    const drawElement = () => {
+      if (!el.isConnected) { player.raf = 0; return; }
+      const audio = player.elAudio;
+      if (!audio || !player.playing) return;
+      player.time.textContent = formatTime(audio.currentTime);
+      player.raf = requestAnimationFrame(drawElement);
+    };
+
+    const pauseElement = auto => {
+      const audio = player.elAudio;
+      if (!audio) return;
+      if (!player.playing) {
+        if (player.loading) {
+          player.loading = false;
+          el.classList.remove('is-loading');
+          toggle.disabled = false;
+          setStatus(auto ? '自动播放已暂停' : '已暂停');
+        }
+        return;
+      }
+      player.offset = audio.currentTime;
+      player.playing = false;
+      player.fading = true;
+      fadeElement(audio, 0.0001, 0, 0.55);
+      window.clearTimeout(player.stopTimer);
+      player.stopTimer = window.setTimeout(() => {
+        audio.pause();
+        player.fading = false;
+      }, 620);
+      setPlayingUI(false);
+      stopDraw();
+      setStatus(auto ? '自动播放已暂停' : '已暂停');
+      writeState();
+    };
+
+    const playFile = async ({ auto = false } = {}) => {
+      if (auto && (!AUTOPLAY || !soundEnabled)) return false;
+      if (player.playing) return true;
+      if (player.loading) return false;
+
+      players.forEach(other => {
+        if (other !== player && (other.playing || other.loading)) {
+          player.delayIn = true;
+          other.pause({ auto: true });
+        }
+      });
+
+      try {
+        if (!player.elAudio) {
+          const audio = new Audio();
+          audio.preload = 'auto';
+          audio.src = audioBase + key + '.mp3';
+          audio.addEventListener('ended', () => { if (player.playing) finish(); });
+          player.elAudio = audio;
+        }
+        const audio = player.elAudio;
+        player.loading = true;
+        player.finished = false;
+        player.userPaused = false;
+        el.classList.add('is-loading');
+        el.classList.remove('is-unavailable');
+        setStatus('正在载入声音…');
+
+        if (player.offset > 0.2) {
+          try { audio.currentTime = player.offset; } catch (err) { /* 还不到可 seek 的阶段 */ }
+        }
+        await audio.play();
+
+        player.loading = false;
+        player.playing = true;
+        player.auto = auto;
+        live = player;
+        el.classList.remove('is-loading');
+        el.classList.add('is-ready');
+        toggle.disabled = false;
+        setPlayingUI(true);
+        setStatus('播放中');
+        audio.volume = 0;
+        fadeElement(
+          audio,
+          Math.max(0.0001, (auto ? AUTO_GAIN : MANUAL_GAIN) * masterVolume),
+          player.delayIn ? SWITCH_LAG : 0,
+          FADE_IN
+        );
+        drawElement();
+        writeState();
+        return true;
+      } catch (err) {
+        player.loading = false;
+        player.playing = false;
+        el.classList.remove('is-loading', 'is-playing');
+        el.classList.add('is-unavailable');
+        toggle.disabled = true;
+        setPlayingUI(false);
+        setStatus('音频不可用');
+        return false;
+      }
+    };
+
     const pause = ({ auto = false } = {}) => {
       player.token++;               /* 作废还在载入的那一次 play */
+      if (player.elAudio) { pauseElement(auto); return; }
       if (!player.playing) {
         if (player.loading) {
           player.loading = false;
@@ -286,26 +418,44 @@
           gain.cancelScheduledValues(now);
           gain.setValueAtTime(Math.max(0.0001, gain.value), now);
         }
-        /* 0.9s 淡出：足够“慢慢消失”，又不会拖到下一章已经进来了还在响 */
-        gain.linearRampToValueAtTime(0.0001, now + 0.9);
+        /* 慢慢消失：淡出期间仍算“正在散音”，下一首会错开 SWITCH_LAG 再起 */
+        gain.linearRampToValueAtTime(0.0001, now + FADE_OUT);
+        player.fading = true;
       }
 
       const source = player.source;
       if (source) {
         source.onended = null;
-        try { source.stop(now + 0.95); } catch (err) { /* already stopped */ }
+        try { source.stop(now + FADE_OUT + 0.06); } catch (err) { /* already stopped */ }
         window.clearTimeout(player.stopTimer);
         player.stopTimer = window.setTimeout(() => {
           if (player.source === source) player.source = null;
-        }, 1000);
+          player.fading = false;
+        }, (FADE_OUT + 0.1) * 1000);
+      } else {
+        player.fading = false;
       }
 
       setPlayingUI(false);
       stopDraw();
       setStatus(auto ? '自动播放已暂停' : '已暂停');
+      writeState();
     };
 
     const finish = () => {
+      if (player.elAudio) {
+        player.playing = false;
+        player.offset = 0;
+        player.finished = true;
+        try { player.elAudio.pause(); player.elAudio.currentTime = 0; } catch (err) { /* 已停止 */ }
+        setPlayingUI(false);
+        stopDraw();
+        setStatus('播放完毕');
+        player.time.textContent = '00:00';
+        live = player;
+        writeState();
+        return;
+      }
       player.playing = false;
       player.offset = 0;
       player.source = null;
@@ -314,6 +464,8 @@
       stopDraw();
       setStatus('播放完毕');
       player.time.textContent = '00:00';
+      live = player;
+      writeState();
     };
 
     const ensureBuffer = async () => {
@@ -327,11 +479,15 @@
     const play = async ({ auto = false } = {}) => {
       if (auto && !AUTOPLAY) return false;
       if (auto && !soundEnabled) return false;
+      if (FILE_MODE) return playFile({ auto });
       if (player.loading) return false;
       if (player.playing) return true;
 
       players.forEach(other => {
-        if (other !== player && (other.playing || other.loading)) other.pause({ auto: true });
+        if (other !== player && (other.playing || other.loading)) {
+          player.delayIn = true;      /* 有旧声在散，新声错开半拍再起 */
+          other.pause({ auto: true });
+        }
       });
 
       try {
@@ -380,31 +536,38 @@
 
         const now = ctx.currentTime;
         const gain = player.gain.gain;
-        const level = auto ? AUTO_GAIN : 0.9;
+        const level = Math.max(0.0001, (auto ? AUTO_GAIN : MANUAL_GAIN) * masterVolume);
+        /* 接在别的曲子淡出之后：错开 SWITCH_LAG，让「先消散、后起来」听得分明 */
+        const t0 = now + (player.delayIn ? SWITCH_LAG : 0);
         gain.cancelScheduledValues(now);
         gain.setValueAtTime(0.0001, now);
-        const fadeIn = Math.min(1.15, Math.max(0.35, buffer.duration - player.offset));
-        gain.linearRampToValueAtTime(level, now + fadeIn);
+        gain.setValueAtTime(0.0001, t0);
+        const fadeIn = Math.min(FADE_IN + 0.25, Math.max(0.4, buffer.duration - player.offset));
+        gain.linearRampToValueAtTime(level, t0 + fadeIn);
 
         const remaining = buffer.duration - player.offset;
         if (remaining > 2.2) {
-          const fadeStart = now + remaining - 1.35;
-          if (fadeStart > now + fadeIn) gain.setValueAtTime(level, fadeStart);
-          gain.linearRampToValueAtTime(0.0001, now + remaining);
+          const fadeStart = t0 + remaining - 1.35;
+          if (fadeStart > t0 + fadeIn) gain.setValueAtTime(level, fadeStart);
+          gain.linearRampToValueAtTime(0.0001, t0 + remaining);
         } else {
-          gain.linearRampToValueAtTime(0.0001, now + Math.max(0.35, remaining));
+          gain.linearRampToValueAtTime(0.0001, t0 + Math.max(0.35, remaining));
         }
 
         const source = ctx.createBufferSource();
         source.buffer = buffer;
         source.connect(player.analyser);
-        source.start(0, player.offset);
+        source.start(t0, player.offset);
         player.source = source;
-        player.startedAt = ctx.currentTime - player.offset;
+        player.startedAt = t0 - player.offset;
+        player.fading = false;
         player.playing = true;
         player.loading = false;
         el.classList.remove('is-loading');
         el.classList.add('is-ready');
+        player.auto = auto;
+        live = player;
+        writeState();
         toggle.disabled = false;
         setPlayingUI(true);
         setStatus(auto ? '实时分析' : '实时分析中');
@@ -445,20 +608,126 @@
     player.pause = pause;
     player.play = play;
     player.setStatus = setStatus;
+    player.syncUI = () => setPlayingUI(player.playing);
+    player.startDraw = draw;
     players.push(player);
     return player;
   };
 
   document.querySelectorAll('[data-audio-player]').forEach(makePlayer);
 
-  const chapterPlayers = players.filter(player => player.isChapter);
-  const stagePlayers = players.filter(player => player.isStage);
-  const themePlayer = players.find(player => player.el.classList.contains('audio-player--theme'));
+  /* ---------- 谁在发声：不能靠查 DOM ----------
+     软导航只替换 body，旧的播放器元素被丢弃，但 AudioBufferSourceNode 与
+     GainNode 活在 JS 里照样发声。所以“当前是哪一首”必须自己记，不能靠
+     document.querySelector 反查，否则一跨页就找不到声音了。 */
+  let live = null;          /* 正在发声（含淡出中）的 player */
+  let resumeIntent = null;  /* 上一页留下的续播意图 { key, position } */
+
+  let chapterPlayers = players.filter(player => player.isChapter);
+  let stagePlayers = players.filter(player => player.isStage);
+  let themePlayer = players.find(player => player.el.classList.contains('audio-player--theme')) || null;
+
+  /* body 换过之后重新分组：只认还挂在文档里的界面 */
+  const recomputeGroups = () => {
+    const alive = players.filter(player => player.el.isConnected);
+    chapterPlayers = alive.filter(player => player.isChapter);
+    stagePlayers = alive.filter(player => player.isStage);
+    themePlayer = alive.find(player => player.el.classList.contains('audio-player--theme')) || null;
+  };
+
+  const livePosition = player => {
+    if (!player) return 0;
+    if (player.elAudio) return Math.max(0, player.elAudio.currentTime || 0);
+    if (!player.playing || !player.buffer || !audioContext) return player.offset || 0;
+    return Math.min(player.buffer.duration, Math.max(0, audioContext.currentTime - player.startedAt));
+  };
+
+  /* ---------- 跨页交接：离开页面时把“放的是哪首、放到哪”存下来 ---------- */
+  const writeState = () => {
+    try {
+      window.sessionStorage.setItem(STATE_KEY, JSON.stringify({
+        key: live ? live.key : '',
+        position: livePosition(live),
+        playing: !!(live && (live.playing || live.fading)),
+        at: Date.now()
+      }));
+    } catch (err) { /* 隐私模式忽略 */ }
+  };
+
+  (() => {
+    let saved = null;
+    try { saved = JSON.parse(window.sessionStorage.getItem(STATE_KEY) || 'null'); } catch (err) { return; }
+    if (!saved || !saved.key || !saved.playing || !saved.at) return;
+    if (Date.now() - saved.at > RESUME_WINDOW) return;
+    /* 补上「页面加载 + 跳转」这段时间，音乐听起来才像是接着刚才那口气 */
+    resumeIntent = {
+      key: saved.key,
+      position: Math.max(0, (Number(saved.position) || 0) + (Date.now() - saved.at) / 1000)
+    };
+  })();
+
+  /* ---------- 音量 ---------- */
+  const applyMasterVolume = () => {
+    const player = live;
+    if (!player || !player.gain || !audioContext) return;
+    const level = Math.max(0.0001, (player.auto ? AUTO_GAIN : MANUAL_GAIN) * masterVolume);
+    const gain = player.gain.gain;
+    const now = audioContext.currentTime;
+    if (gain.cancelAndHoldAtTime) gain.cancelAndHoldAtTime(now);
+    else {
+      gain.cancelScheduledValues(now);
+      gain.setValueAtTime(Math.max(0.0001, gain.value), now);
+    }
+    gain.linearRampToValueAtTime(level, now + 0.25);
+  };
+
+  /* ---------- 绑定新出现的播放器界面（软导航之后） ---------- */
+  const bindNewPlayers = () => {
+    document.querySelectorAll('[data-audio-player]').forEach(el => {
+      if (el.dataset.audioBound === '1') return;
+      const bound = makePlayer(el);
+      if (bound) el.dataset.audioBound = '1';
+    });
+  };
+
+  /* 把正在响的那一路音频交给新界的播放器，声音本身不中断 */
+  const adoptLive = () => {
+    if (!live || !(live.playing || live.fading)) return;
+    const target = players.find(player =>
+      player !== live && player.el.isConnected && player.key === live.key && !player.buffer
+    );
+    if (!target) return;
+
+    target.buffer = live.buffer;
+    target.source = live.source;
+    target.analyser = live.analyser;
+    target.gain = live.gain;
+    target.data = live.data;
+    target.levels = live.levels;
+    target.startedAt = live.startedAt;
+    target.offset = live.offset;
+    target.playing = live.playing;
+    target.fading = live.fading;
+    target.auto = live.auto;
+    target.token = live.token;
+
+    /* 旧对象交出发音权：不再 stop 同一个 source，也不再画波形 */
+    live.source = null;
+    live.playing = false;
+    live.fading = false;
+    if (live.raf) cancelAnimationFrame(live.raf);
+    live = target;
+
+    target.el.classList.add('is-ready');
+    target.syncUI();
+    target.startDraw();
+  };
 
 
   /* 六章舞台：滚出 #chapter-stage（索引/尾声/首屏）就不再算“在章里”，
-     否则舞台进度会停在最后一章，声音会一直响到页面结束。 */
-  const stageSection = document.getElementById('chapter-stage');
+     否则舞台进度会停在最后一章，声音会一直响到页面结束。
+     let：软导航换 body 之后要把它置空，切到专题页的逻辑。 */
+  let stageSection = document.getElementById('chapter-stage');
   const stageInView = () => {
     if (!stageSection) return true;
     const rect = stageSection.getBoundingClientRect();
@@ -481,7 +750,6 @@
     const i = stagePlayers.indexOf(player);
     const next = i >= 0 ? stagePlayers[i + 1] : null;
     if (!next) return;
-    if (window.XiaoheAudioData && window.XiaoheAudioData[next.key]) return;
     if (dataCache[next.key]) return;
     loadData(next.key).catch(() => {});
   };
@@ -502,10 +770,28 @@
   };
 
   const runAuto = () => {
-    /* 只在首页六章舞台自动配乐；专题页的播放器保持手动，点了才响 */
-    if (!AUTOPLAY || !soundEnabled || !stageSection) return;
+    if (!AUTOPLAY || !soundEnabled) return;
+
+    /* 专题页：接过上一页正在放的那一首，从原位置接着响；
+       没有交接状态（直接打开专题页）就放本专题自己的声音 */
+    if (!stageSection) {
+      if (!themePlayer) return;
+      if (!autoUnlocked) {
+        if (!themePlayer.playing) themePlayer.setStatus('未播放');
+        return;
+      }
+      if (themePlayer.playing || themePlayer.userPaused || themePlayer.finished) return;
+      const intent = resumeIntent;
+      resumeIntent = null;
+      if (intent && intent.key === themePlayer.key) {
+        themePlayer.offset = Math.max(0, intent.position);
+      }
+      themePlayer.play({ auto: true });
+      return;
+    }
+
     if (!autoUnlocked) {
-      const active = activeStagePlayer() || themePlayer || activeChapterPlayer();
+      const active = activeStagePlayer() || activeChapterPlayer();
       if (active && !active.playing) active.setStatus('未播放');
       return;
     }
@@ -656,67 +942,170 @@
       players.forEach(player => {
         if (player.playing) player.pause();
       });
+    },
+    /* 自测用：控制台敲 XiaoheAudioPlayer.debug() 就能看到真实状态 */
+    debug() {
+      return {
+        key: live ? live.key : null,
+        playing: !!(live && (live.playing || live.fading)),
+        context: audioContext ? audioContext.state : 'none',
+        position: Math.round(livePosition(live) * 10) / 10,
+        unlocked: autoUnlocked,
+        enabled: soundEnabled,
+        volume: Math.round(masterVolume * 100) / 100,
+        bound: players.filter(player => player.el.isConnected).length
+      };
+    },
+    /* 软导航换完 body 之后由 soft-nav.js 调用：绑定新界面、接管仍在响的音频 */
+    refresh() {
+      /* 六章舞台已经不在这份文档里了，否则滚动逻辑还会按首页跑 */
+      if (stageSection && !stageSection.isConnected) stageSection = null;
+      bindNewPlayers();
+      adoptLive();
+      recomputeGroups();
+      attachControls();
+      scheduleAuto();
     }
   };
 
-  /* ---------- 首页：左下角声音总开关 ----------
-     浏览器不给手势就不让出声，所以第一次进来先显示「开启声音」；
-     点一下之后整页都能自动切歌，再点就是静音，选择记在 localStorage。 */
-  if (AUTOPLAY && stageSection && stagePlayers.length && document.body) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'xh-sound';
-    btn.innerHTML =
-      '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" ' +
-      'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path d="M2.8 6.1h2.4L8 3.4v9.2L5.2 9.9H2.8z"/>' +
-      '<path class="w1" d="M10.3 5.7a3.3 3.3 0 0 1 0 4.6"/>' +
-      '<path class="w2" d="M12.1 4.1a5.6 5.6 0 0 1 0 7.8"/>' +
-      '<path class="slash" d="M2.4 2.4l11.2 11.2"/>' +
-      '</svg><span class="xh-sound__text">开启声音</span>';
+  /* ---------- 声音控制条 ----------
+     浏览器不给手势就不让出声：第一次进来只有一个「开启声音」按钮，
+     解锁之后展开完整控制（上一章/下一章、音量）。
+     元素只建一次，软导航换 body 之后由 attachControls() 重新挂上去。 */
+  let controls = null;
+  let paintControls = null;
 
-    const text = btn.querySelector('.xh-sound__text');
+  const buildControls = () => {
+    if (controls || !document.body) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'xh-sound-cluster';
+    wrap.innerHTML = [
+      '<button class="xh-sound" type="button" aria-pressed="false">',
+      '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" ',
+      'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+      '<path d="M2.8 6.1h2.4L8 3.4v9.2L5.2 9.9H2.8z"/>',
+      '<path class="w1" d="M10.3 5.7a3.3 3.3 0 0 1 0 4.6"/>',
+      '<path class="w2" d="M12.1 4.1a5.6 5.6 0 0 1 0 7.8"/>',
+      '<path class="slash" d="M2.4 2.4l11.2 11.2"/>',
+      '</svg>',
+      '<span class="xh-sound__text">开启声音</span>',
+      '</button>',
+      '<div class="xh-sound__tools">',
+      '<button class="xh-sound__step" type="button" data-step="-1" aria-label="上一章声音">',
+      '<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" ',
+      'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+      '<path d="M10 3L5 8l5 5"/></svg>',
+      '</button>',
+      '<button class="xh-sound__step" type="button" data-step="1" aria-label="下一章声音">',
+      '<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" ',
+      'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">',
+      '<path d="M6 3l5 5-5 5"/></svg>',
+      '</button>',
+      '<input class="xh-sound__vol" type="range" min="0" max="100" step="2" aria-label="音量">',
+      '</div>'
+    ].join('');
 
-    const paint = () => {
-      const state = !soundEnabled ? 'off' : (autoUnlocked ? 'on' : 'locked');
-      btn.dataset.state = state;
-      btn.setAttribute('aria-pressed', soundEnabled ? 'true' : 'false');
-      btn.setAttribute('aria-label',
-        state === 'off' ? '打开声音' : state === 'locked' ? '点击开启声音' : '关闭声音');
-      text.textContent = state === 'off' ? '声音 关' : state === 'locked' ? '开启声音' : '声音 开';
-    };
-    soundPillPaint = paint;
+    const btn = wrap.querySelector('.xh-sound');
+    const text = wrap.querySelector('.xh-sound__text');
+    const tools = wrap.querySelector('.xh-sound__tools');
+    const vol = wrap.querySelector('.xh-sound__vol');
+    const steps = wrap.querySelectorAll('.xh-sound__step');
 
     const setSound = on => {
       soundEnabled = on;
       try { window.localStorage.setItem(SOUND_KEY, on ? 'on' : 'off'); } catch (err) { /* 忽略 */ }
-      if (!on) players.forEach(player => { if (player.playing || player.loading) player.pause({ auto: true }); });
-      paint();
+      if (!on) players.forEach(player => {
+        if (player.playing || player.fading || player.loading) player.pause({ auto: true });
+      });
+      if (paintControls) paintControls();
+    };
+
+    paintControls = () => {
+      const state = !soundEnabled ? 'off' : (autoUnlocked ? 'on' : 'locked');
+      wrap.dataset.state = state;
+      btn.dataset.state = state;
+      btn.setAttribute('aria-pressed', soundEnabled ? 'true' : 'false');
+      btn.setAttribute('aria-label',
+        state === 'off' ? '打开声音' : state === 'locked' ? '点击开启声音' : '暂停或继续声音');
+      text.textContent = state === 'off' ? '声音 关' : state === 'locked' ? '开启声音' : '声音 开';
+      /* 上一章/下一章只在首页六章成立；专题页只有一个声音，藏起来 */
+      tools.hidden = state !== 'on' || stagePlayers.length < 2;
+      vol.value = String(Math.round(Math.sqrt(Math.max(0, masterVolume)) * 100));
     };
 
     btn.addEventListener('click', () => {
       if (!soundEnabled) {
         setSound(true);
-        tryUnlock().then(ok => { if (ok) kickAuto(); paint(); });
+        tryUnlock().then(ok => { if (ok) kickAuto(); if (paintControls) paintControls(); });
         return;
       }
       if (!autoUnlocked) {
-        tryUnlock().then(ok => { if (ok) kickAuto(); paint(); });
+        tryUnlock().then(ok => { if (ok) kickAuto(); if (paintControls) paintControls(); });
         return;
       }
       setSound(false);
     });
 
-    /* 插进顶栏（导航与年份之间）；没有顶栏时退回左下角浮动 */
+    steps.forEach(step => {
+      step.addEventListener('click', () => {
+        const dir = Number(step.dataset.step) || 1;
+        const list = stagePlayers;
+        if (list.length < 2) return;
+        const here = live ? list.indexOf(live) : -1;
+        const index = here >= 0 ? here : 0;
+        const next = list[(index + dir + list.length) % list.length];
+        /* 声音跟着六章走，所以“下一章声音”= 滚到那一章，由滚动逻辑接管切换 */
+        if (next && next.chapter) {
+          next.chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          markAudioUnlocked();
+        }
+      });
+    });
+
+    vol.addEventListener('input', () => {
+      const raw = Math.max(0, Math.min(100, Number(vol.value) || 0)) / 100;
+      /* 线性滑杆在低音量区太灵敏，按听感曲线压一下 */
+      masterVolume = Math.max(0, Math.min(1, raw * raw));
+      try { window.localStorage.setItem(VOLUME_KEY, String(masterVolume)); } catch (err) { /* 忽略 */ }
+      applyMasterVolume();
+    });
+
+    wrap.querySelector('.xh-sound').addEventListener('pointerdown', event => {
+      event.stopPropagation();
+    });
+
+    controls = wrap;
+    window.XiaoheAudioPlayer.setSound = setSound;
+    soundPillPaint = paintControls;
+  };
+
+  /* 挂到顶栏；专题页没有 #topbar 就挂到 top-nav；都没有就浮在左下角 */
+  const attachControls = () => {
+    if (!controls) return;
     const bar = document.getElementById('topbar');
     if (bar) {
       const anchor = bar.querySelector('.top-year') || bar.querySelector('.menu-btn');
-      bar.insertBefore(btn, anchor);
+      bar.insertBefore(controls, anchor || null);
+      controls.classList.remove('xh-sound-cluster--float');
     } else {
-      btn.classList.add('xh-sound--float');
-      document.body.appendChild(btn);
+      const nav = document.getElementById('themeNav') || document.querySelector('.top-nav');
+      if (nav) {
+        nav.appendChild(controls);
+        controls.classList.remove('xh-sound-cluster--float');
+      } else if (document.body) {
+        controls.classList.add('xh-sound-cluster--float');
+        document.body.appendChild(controls);
+      }
     }
-    paint();
-    window.XiaoheAudioPlayer.setSound = setSound;
+    if (paintControls) paintControls();
+  };
+
+  if (document.body) {
+    buildControls();
+    attachControls();
   }
+
+  /* 离开页面前把“放到哪了”记下来，下一个页面接着放 */
+  window.addEventListener('pagehide', writeState);
+  window.addEventListener('beforeunload', writeState);
 })();

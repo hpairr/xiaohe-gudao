@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 六个主题专题页生成器
 ====================
@@ -613,7 +613,7 @@ def foot(current):
       引用请回到各页「资料来源」。<br><a href="01-潇贺古道.html">总述 · 潇贺古道</a> /
       <a href="08-上灯炸龙.html">附 · 上灯炸龙</a> /
       <a href="../database.html#/archive">文化档案</a></p>
-      <p class="foot-credit">潇贺古道有声文化数据库<br>贺州学院视觉传达设计 / 2026</p>
+      <p class="foot-credit">潇贺古道有声文化数据库</p>
     </div>
   </div>
 </footer>""" % dict(next_href=next_ch["href"], next_num=next_ch["num"],

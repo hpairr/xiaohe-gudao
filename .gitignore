@@ -34,6 +34,21 @@ Thumbs.db
 .tmp-*
 *.log
 
+# 首屏/图版试装（第三方图，授权未核实 → 别提交到公开仓库）
+assets/img/_trial/
+_test-hero.html
+
+# 截图 / 调试用的临时页面（页面副本 + 定位脚本，只在本机看，不上线）
+_shot-*.html
+_scene*.html
+_clean-*.html
+_stage-only.html
+themes/_shot-*.html
+assets/theme-stage-debug.js
+
+# 离线归档（大文件/旧版素材的原件，留本机）
+_离线归档-*/
+
 # ── Python 缓存 ────────────────────────────────────────────────
 __pycache__/
 *.pyc

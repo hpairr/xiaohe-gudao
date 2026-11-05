@@ -10,10 +10,9 @@ window.XH_EN_CORE = {
   /* —— 品牌 / 站点名 —— */
   '潇贺古道有声文化数据库': 'Xiaohe Ancient Road Audio Heritage Database',
   '潇贺古道 · 有声文化数据库': 'Xiaohe Ancient Road · Audio Heritage Database',
-  '潇贺古道有声文化数据库 · 贺州学院视觉传达设计 2026': 'Xiaohe Ancient Road Audio Heritage Database · Hezhou University, Visual Communication Design, 2026',
-  '© 2026 潇贺古道有声文化数据库 · 贺州学院视觉传达设计': '© 2026 Xiaohe Ancient Road Audio Heritage Database · Hezhou University, Visual Communication Design',
+  '潇贺古道有声文化数据库 · 2026': 'Xiaohe Ancient Road Audio Heritage Database · 2026',
+  '© 2026 潇贺古道有声文化数据库': '© 2026 Xiaohe Ancient Road Audio Heritage Database',
   '潇贺古道有声文化数据库 | Xiaohe Ancient Road Audio Heritage Database': 'Xiaohe Ancient Road Audio Heritage Database',
-  '贺州学院视觉传达设计 / 2026': 'Hezhou University · Visual Communication Design / 2026',
   '有声文化数据库': 'Audio Heritage Database',
   '潇贺古道': 'Xiaohe Ancient Road',
 
@@ -48,7 +47,7 @@ window.XH_EN_CORE = {
   '图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示。': 'Images and footage remain the copyright of their authors and publishers; used for non-commercial cultural display only.',
   '本站收录潇贺古道沿线六项文化遗产。图片与影像版权归原作者及发布机构所有，仅作非商业性的文化展示。': 'This site documents six cultural heritage items along the Xiaohe Ancient Road. Images and footage remain the copyright of their authors and publishers; used for non-commercial cultural display only.',
   '「关于与来源」': 'About & Sources',
-  '潇贺古道有声文化数据库 · 贺州学院视觉传达设计 2026': 'Xiaohe Ancient Road Audio Heritage Database · Hezhou University, Visual Communication Design, 2026',
+  '潇贺古道有声文化数据库 · 2026': 'Xiaohe Ancient Road Audio Heritage Database · 2026',
   '中国非物质文化遗产网': 'China Intangible Cultural Heritage Network',
   '国务院': 'State Council',
   '湖南省文化和旅游厅': 'Hunan Provincial Department of Culture and Tourism',

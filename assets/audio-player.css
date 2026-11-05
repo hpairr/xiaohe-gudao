@@ -170,3 +170,56 @@
   position:fixed;left:18px;bottom:18px;z-index:80;
   background:rgba(242,237,226,.94);color:#141A16;border-color:rgba(20,26,22,.35);
 }
+
+/* ==========================================================================
+   声音控制条（解锁后展开：上一章 / 下一章 / 音量）
+   --------------------------------------------------------------------------
+   只有拿到手势（state="on"）才显示 .xh-sound__tools，之前仍是一个「开启声音」。
+   手机端保留翻章，音量滑杆收起（竖屏顶栏放不下）。
+   ========================================================================== */
+.xh-sound-cluster{display:inline-flex;align-items:center;gap:6px;margin-inline-start:6px}
+.xh-sound-cluster .xh-sound{margin-inline-start:0}
+.xh-sound__tools{display:inline-flex;align-items:center;gap:2px}
+.xh-sound__tools[hidden]{display:none}
+.xh-sound__step{
+  display:grid;place-items:center;width:24px;height:24px;padding:0;
+  border:1px solid color-mix(in srgb,currentColor 26%,transparent);
+  background:transparent;color:inherit;cursor:pointer;opacity:.75;
+  transition:opacity .18s ease,border-color .18s ease;
+}
+.xh-sound__step:hover{opacity:1;border-color:currentColor}
+.xh-sound__step:focus-visible{outline:2px solid #D2A03F;outline-offset:2px}
+.xh-sound__vol{
+  appearance:none;-webkit-appearance:none;
+  width:52px;height:14px;margin:0 2px;background:transparent;cursor:pointer;
+}
+.xh-sound__vol::-webkit-slider-runnable-track{
+  height:1px;background:color-mix(in srgb,currentColor 42%,transparent);
+}
+.xh-sound__vol::-moz-range-track{
+  height:1px;background:color-mix(in srgb,currentColor 42%,transparent);
+}
+.xh-sound__vol::-webkit-slider-thumb{
+  appearance:none;-webkit-appearance:none;
+  width:8px;height:8px;margin-top:-3.5px;border:0;border-radius:50%;
+  background:currentColor;opacity:.85;
+}
+.xh-sound__vol::-moz-range-thumb{
+  width:8px;height:8px;border:0;border-radius:50%;
+  background:currentColor;opacity:.85;
+}
+.xh-sound__vol:focus-visible{outline:2px solid #D2A03F;outline-offset:3px}
+
+@media (max-width:860px){
+  .xh-sound__vol{display:none}
+  .xh-sound__step{width:26px;height:26px}
+}
+@media (prefers-reduced-motion:reduce){
+  .xh-sound__step{transition:none}
+}
+@media print{.xh-sound-cluster{display:none}}
+.xh-sound-cluster--float{
+  position:fixed;left:18px;bottom:18px;z-index:80;margin:0;
+  padding:6px 8px;background:rgba(242,237,226,.94);color:#141A16;
+  border:1px solid rgba(20,26,22,.35);
+}
