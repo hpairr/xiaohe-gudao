@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0A0E0C">
 <meta name="color-scheme" content="dark">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23B63A33'/%3E%3Cpath d='M14 44c8-2 8-20 16-20s8 16 16 14' fill='none' stroke='%23F2EDE2' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=20261106a">
 <style>
 /* ============================================================
    潇贺古道 · 中转提示页（Interstitial）
@@ -57,9 +57,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .brand{display:flex;align-items:center;gap:11px}
 .brand-mark{
   width:30px;height:30px;display:grid;place-items:center;
-  background:var(--cinnabar);color:var(--paper);
-  font-family:var(--f-serif);font-weight:700;font-size:16px;line-height:1;
 }
+.brand-mark img{display:block;width:100%;height:100%}
 .brand-txt{display:flex;flex-direction:column;line-height:1.2}
 .brand-cn{font-family:var(--f-serif);font-weight:700;font-size:17px;letter-spacing:.1em}
 .brand-en{font:9px/1.4 var(--f-en);letter-spacing:.2em;opacity:.55;margin-top:2px}
@@ -200,7 +199,7 @@ body.is-broken .actions{grid-template-columns:minmax(0,220px)}
 
 <header class="bar">
   <a class="brand" href="index.html" aria-label="返回潇贺古道首页">
-    <span class="brand-mark" aria-hidden="true">潇</span>
+    <span class="brand-mark" aria-hidden="true"><img src="assets/img/logo-mark.png" alt=""></span>
     <span class="brand-txt"><span class="brand-cn">潇贺古道</span><span class="brand-en">XIAOHE ANCIENT ROAD</span></span>
   </a>
   <span class="bar-tag"><b>离站</b>INTERSTITIAL</span>

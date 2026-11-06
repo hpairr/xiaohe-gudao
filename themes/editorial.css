@@ -381,3 +381,40 @@ table.src code{font-size:11px;color:var(--ink-soft)}
 .plate-gallery--static .plate-frame::before,
 .plate-gallery--static .plate-frame::after{display:none}
 
+/* 2026-11-06 站点 logo：顶栏站点名前的小红标 */
+.site{display:inline-flex;align-items:center;gap:9px}
+.site-mark{width:17px;height:17px;display:block;flex:none}
+
+/* --------------------------------------------------------------------------
+   2026-11-07 · 窄屏顶栏导航（01 / 08 这两页没有 experience.js 的「目录」）
+   ≤980px 时 .nav-links 隐藏，这里用原生 <details> 补一个同样度量的菜单。
+   .nav 在 .hero 里、.hero 有 overflow:hidden，所以菜单自身 fixed，
+   展开面板再相对它绝对定位，避免被色块裁掉。
+   -------------------------------------------------------------------------- */
+.nav .nav-more{display:none}
+@media (max-width:980px){
+  /* 给右侧的「目录」让出位置，避免压住站名 */
+  .nav{padding-right:88px}
+  .nav .nav-more{display:block;position:fixed;top:16px;right:var(--pad);z-index:80}
+  .nav .nav-more>summary{
+    display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 11px;
+    list-style:none;cursor:pointer;
+    border:1px solid color-mix(in srgb,var(--on) 42%,transparent);
+    font-family:var(--sans);font-size:10px;line-height:1;letter-spacing:.16em;color:var(--on);
+  }
+  .nav .nav-more>summary::-webkit-details-marker{display:none}
+  .nav .nav-more-list{
+    position:absolute;right:0;top:calc(100% + 10px);min-width:220px;padding:2px 0;
+    background:var(--main);color:var(--on);
+    border:1px solid color-mix(in srgb,var(--on) 22%,transparent);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+  }
+  .nav .nav-more-list a{
+    display:block;padding:13px 18px;
+    border-bottom:1px solid color-mix(in srgb,var(--on) 16%,transparent);
+    font-family:var(--serif);font-size:16px;line-height:1.3;letter-spacing:.04em;
+    color:var(--on);text-transform:none;
+  }
+  .nav .nav-more-list a:last-child{border-bottom:0}
+  .nav .nav-more-list a:hover{background:color-mix(in srgb,var(--on) 8%,transparent)}
+}

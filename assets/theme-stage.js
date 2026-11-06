@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    六章主题舞台
    --------------------------------------------------------------------------
    六章不是一个一个独立 section，而是一个连续 sticky 舞台：
@@ -35,7 +35,6 @@
       accent: '#D2A03F',
       darkText: false,
       motif: '𛆁𛈬𛆓𛆂𛆱𛈅𛈆𛇁𛆊',
-      svg: '<svg viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="2"><path d="M300 42 542 300 300 558 58 300Z"/><path d="M300 142 442 300 300 458 158 300Z"/><path d="M300 42v458M58 300h484"/></svg>',
       lede: '女书笔画纤细、右斜，字形呈长菱形。江永的女性用它写信、记姊妹往来，写在纸扇、手帕和三朝书上。',
       link: 'themes/02-女书.html',
       images: [
@@ -57,7 +56,6 @@
       accent: '#2C5A4E',
       darkText: true,
       motif: '蝴的蝶 蝶的蝶',
-      svg: '<svg viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="2"><path d="M300 300C168 120 38 172 82 332c32 118 166 90 218-32 52 122 186 150 218 32 44-160-86-212-218-32Z"/><path d="M300 218v180"/></svg>',
       lede: '衬词「蝴的蝶」贯穿全曲，两个声部同起同收。富川瑶族在节庆、歌会与劳作时演唱，内容多为爱情与日常。',
       link: 'themes/03-蝴蝶歌.html',
       images: [
@@ -80,7 +78,6 @@
       accent: '#D2A03F',
       darkText: false,
       motif: '咚 咚 咚 咚',
-      svg: '<svg viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="2"><circle cx="300" cy="300" r="206"/><circle cx="300" cy="300" r="146"/><circle cx="300" cy="300" r="84"/><path d="M112 430c90-66 286-66 376 0M186 150c58 96 170 210 230 300"/></svg>',
       lede: '长鼓在手中翻转、腾跃，鼓点与步伐相互呼应。它出现在祭仪、节庆与村落聚会中。',
       link: 'themes/04-长鼓舞.html',
       images: [
@@ -97,12 +94,11 @@
       sub: '国保 2013 · 现存 27 座',
       region: '广西 · 富川',
       heritage: '富川瑶族风雨桥群',
-      color: '#5A6A72',
+      color: '#4C6C8B',
       fg: '#F2EDE2',
       accent: '#B7C3D6',
       darkText: false,
       motif: '桥 · 水 · 廊',
-      svg: '<svg viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="2"><path d="M48 430Q300 92 552 430M118 430Q300 178 482 430M24 430h552M90 468h420"/></svg>',
       lede: '桥廊遮风避雨，桥亭设于桥身中段。风雨桥既是通行设施，也是村落聚会、歇脚的地方。',
       link: 'themes/05-风雨桥.html',
       images: [
@@ -125,7 +121,6 @@
       accent: '#D2A03F',
       darkText: false,
       motif: '盘王 · 大歌',
-      svg: '<svg viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="2"><rect x="118" y="118" width="364" height="364"/><path d="M180 180h240v240H180zM300 96v408M96 300h408"/><circle cx="300" cy="300" r="46"/></svg>',
       lede: '盘王大歌在祭仪中唱述始祖与迁徙，歌声、鼓点与人群构成仪式的时间。',
       link: 'themes/06-盘王大歌.html',
       images: [
@@ -146,7 +141,6 @@
       accent: '#C08A2E',
       darkText: false,
       motif: '织 · 锦',
-      svg: '<svg viewBox="0 0 600 600" fill="none" stroke="currentColor" stroke-width="2"><path d="M84 120h432M84 200h432M84 280h432M84 360h432M84 440h432M120 84v432M200 84v432M280 84v432M360 84v432M440 84v432"/><path d="M160 120l360 320M440 120L80 440"/></svg>',
       lede: '经纬在木织机上交错，万字纹与几何纹逐段织出。织锦用于服饰、被面与头帕。',
       link: 'themes/07-富川织锦.html',
       images: [
@@ -197,14 +191,13 @@
      否则过渡结束后当前层的内容会被默认隐藏的圆形容器一起藏掉。 */
   const makeBg = (layer, withCircle) => {
     layer.innerHTML = withCircle
-      ? '<div class="stage-bg-circle"><div class="stage-bg-inner"><div class="stage-bg-word"></div><div class="stage-bg-svg"></div></div></div>'
-      : '<div class="stage-bg-inner stage-bg-inner--plain"><div class="stage-bg-word"></div><div class="stage-bg-svg"></div></div>';
+      ? '<div class="stage-bg-circle"><div class="stage-bg-inner"><div class="stage-bg-word"></div></div></div>'
+      : '<div class="stage-bg-inner stage-bg-inner--plain"><div class="stage-bg-word"></div></div>';
     return {
       layer,
       circle: layer.querySelector('.stage-bg-circle'),
       inner: layer.querySelector('.stage-bg-inner'),
-      word: layer.querySelector('.stage-bg-word'),
-      svg: layer.querySelector('.stage-bg-svg')
+      word: layer.querySelector('.stage-bg-word')
     };
   };
 
@@ -220,7 +213,6 @@
     bg.layer.style.setProperty('--stage-accent', theme.accent);
     bg.layer.style.color = theme.fg;
     bg.word.textContent = theme.motif;
-    bg.svg.innerHTML = theme.svg;
   };
 
   /* ---------- 六个主题的图片拼成一条连续胶片 ----------

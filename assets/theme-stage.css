@@ -33,12 +33,6 @@
   color:var(--stage-fg,currentColor);opacity:.085;
   pointer-events:none;user-select:none;
 }
-.stage-bg-svg{
-  position:absolute;right:-7vw;bottom:-12vh;width:min(56vw,760px);
-  color:var(--stage-accent,currentColor);opacity:.16;
-  pointer-events:none;
-}
-.stage-bg-svg svg{display:block;width:100%;height:auto}
 
 .stage-images{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none}
 /* 整组图片靠 opacity 交接（visibility 延迟到淡出结束），避免整组硬切 */
@@ -158,7 +152,6 @@
 }
 @media (max-width:860px){
   .stage-bg-word{font-size:clamp(120px,38vw,290px);right:-12vw;top:8vh}
-  .stage-bg-svg{width:82vw;right:-24vw;bottom:-3vh;opacity:.12}
   .stage-title{
     left:clamp(16px,5vw,24px);right:clamp(16px,5vw,24px);
     top:clamp(120px,17vh,170px);

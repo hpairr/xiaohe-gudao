@@ -33,7 +33,7 @@
 <meta property="og:url" content="https://hpairr.github.io/xiaohe-gudao/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0E0C">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23B63A33'/%3E%3Cpath d='M14 44c8-2 8-20 16-20s8 16 16 14' fill='none' stroke='%23F2EDE2' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=20261106a">
 <style>
 /* ============================================================
    潇贺古道 · 古道滚动剧场
@@ -137,10 +137,10 @@ body.skip-loader .loader{display:none}
 .topbar[data-tone="dark"]{--nav-fg:#141A16}
 .brand{display:flex;align-items:center;gap:12px;flex:none}
 .brand-mark{
-  width:34px;height:34px;background:var(--cinnabar);color:var(--paper);
-  display:grid;place-items:center;font-family:var(--f-brush);font-size:22px;line-height:1;
-  transform:rotate(-4deg);box-shadow:0 2px 0 rgba(0,0,0,.18);
+  width:34px;height:34px;display:grid;place-items:center;
+  transform:rotate(-4deg);
 }
+.brand-mark img{display:block;width:100%;height:100%}
 .brand-txt{display:flex;flex-direction:column;line-height:1.15}
 .brand-cn{font-family:var(--f-serif);font-weight:700;font-size:19px;letter-spacing:.12em}
 .brand-en{font:9px/1.4 var(--f-en);letter-spacing:.22em;opacity:.58;margin-top:2px}
@@ -1613,10 +1613,10 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
    ============================================================ */
 .h6{
   --t-size:min(19vw,38svh);      /* 题名定稿字号：四字合起来约 76vw；上限用 svh，宽屏才不至于被压小 */
-  /* 2026-11-03：首屏换上甘棠村航拍（江永 · 谢沐河）。
-     换图只改这一行。来源与授权：docs/首屏影像来源.md */
-  --h6-photo:url("assets/img/hero-shanggantang.jpg");
-  --dim:0;                       /* 照片压暗到墨的进度（题名跟着一起压） */
+  /* 2026-11-07：首屏换成视频抽帧——潇贺古道沿线河谷航拍。
+     来源、裁切与调色见 ui/封面候选/README.md；换图只改这一行。 */
+  --h6-photo:url("assets/img/hero-cover-1600.jpg");
+  --dim:.32;                     /* 起手就压 32%：照片只当暗底，不追清晰度 */
   --veil:0;                      /* 纸从正中心铺开的进度 */
   --tscale:1.7;                  /* 题名缩放（走字号，不用 transform） */
   --t-box:1;                     /* 题名占几行字高（窄屏排 2×2 时是 2） */
@@ -1660,6 +1660,16 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   transform-origin:50% 50%;
   will-change:transform;
   pointer-events:none;
+}
+.h6-grain{
+  position:absolute;inset:0;z-index:4;pointer-events:none;
+  background-image:
+    radial-gradient(ellipse 76% 74% at 50% 46%,
+      transparent 40%, color-mix(in srgb,var(--ink-2) 72%,transparent) 100%),
+    url("assets/patterns/paper.svg");
+  background-size:100% 100%, 200px 200px;
+  background-repeat:no-repeat, repeat;
+  opacity:calc((1 - var(--veil)) * .92);
 }
 .h6-typewrap{
   position:absolute;inset:0;z-index:3;
@@ -1779,7 +1789,7 @@ html.no-js .route .path-water{opacity:.62}
 
 <header class="topbar" id="topbar" data-tone="dark">
   <a class="brand" href="#hero" aria-label="潇贺古道首页">
-    <span class="brand-mark">潇</span>
+    <span class="brand-mark" aria-hidden="true"><img src="assets/img/logo-mark.png" alt=""></span>
     <span class="brand-txt"><span class="brand-cn">潇贺古道</span><span class="brand-en">XIAOHE ANCIENT ROAD</span></span>
   </a>
   <nav class="nav" aria-label="主导航">
@@ -1796,7 +1806,7 @@ html.no-js .route .path-water{opacity:.62}
 
 <div class="menu" id="menu" aria-hidden="true">
   <div class="menu-top">
-    <span class="brand"><span class="brand-mark">潇</span><span class="brand-txt"><span class="brand-cn">潇贺古道</span><span class="brand-en">XIAOHE ANCIENT ROAD</span></span></span>
+    <span class="brand"><span class="brand-mark" aria-hidden="true"><img src="assets/img/logo-mark.png" alt=""></span><span class="brand-txt"><span class="brand-cn">潇贺古道</span><span class="brand-en">XIAOHE ANCIENT ROAD</span></span></span>
     <button class="menu-close" id="menuClose">关闭 / CLOSE</button>
   </div>
   <div class="menu-links">
@@ -1838,11 +1848,12 @@ html.no-js .route .path-water{opacity:.62}
 
 <main>
   <!-- ========== 00 首屏：一整张风景 · 压暗到墨，再化进纸里 ========== -->
-  <section class="h6" id="hero" data-tone="dark" aria-label="潇贺古道">
+  <section class="h6" id="hero" data-tone="light" aria-label="潇贺古道">
     <div class="h6-pin">
       <div class="h6-photo" aria-hidden="true"></div>
       <div class="h6-dim" aria-hidden="true"></div>
       <div class="h6-veil" aria-hidden="true"></div>
+      <div class="h6-grain" aria-hidden="true"></div>
       <div class="h6-typewrap">
         <h1 class="h6-title" data-text="潇贺古道">潇贺古道</h1>
       </div>
@@ -2021,7 +2032,7 @@ html.no-js .route .path-water{opacity:.62}
       <div class="index-appendix">
         <a href="themes/01-潇贺古道.html">总述 · 潇贺古道</a>
         <a href="themes/08-上灯炸龙.html">附 · 上灯炸龙</a>
-        <span class="index-date">资料截至 2026.10</span>
+        <span class="index-date">资料截至 2026.11</span>
       </div>
     </div>
   </section>
@@ -2264,7 +2275,7 @@ html.no-js .route .path-water{opacity:.62}
   function setHero(p) {
     /* 亮度是独立的一条线：跟着滚动一路压到黑（0→1），不另设阶段、不延后。
        纸、缩放、落款都还是原来那套时间。 */
-    const dim = smoothstep(0, 1, p);             /* 照片（与字）的亮度 */
+    const dim = .32 + .68 * smoothstep(0, 1, p);  /* 照片（与字）的亮度：起手 32%，滚到 100% */
     const veil = smoothstep(0.05, 0.62, p);      /* 纸从正中心铺开 */
     const shrink = smoothstep(0.05, 0.82, p);    /* 大字：1.7 → 1，慢慢拉到定稿 */
     /* 倍数上限：宽屏放得开，四个字被切掉两边也读得出"比屏幕大"；
@@ -2384,6 +2395,7 @@ html.no-js .route .path-water{opacity:.62}
     if (!reduced) {
       if (heroPin !== null) setHero(heroPin);
       else if (curY < heroEnd) setHero(clamp((curY - heroTop) / heroRange, 0, 1));
+      else setNum(document.documentElement, '--nav-op', 1, 'hero-navop');
       if (writeStarted && !writeDone) {
         const wt = clamp((performance.now() - writeStart) / 1150, 0, 1);
         setWriting(wt);
@@ -2777,7 +2789,7 @@ html.no-js .route .path-water{opacity:.62}
 
 <script src="assets/scroll-inertia.js?v=20261029a" defer></script>
 <script src="assets/theme-stage.js?v=20261031a" defer></script>
-<script src="assets/audio-player.js?v=20261102a" defer></script>
+<script src="assets/audio-player.js?v=20261106a" defer></script>
 <script src="assets/soft-nav.js?v=20261102a" defer></script>
 <script>
 (function(){

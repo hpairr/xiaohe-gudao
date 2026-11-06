@@ -21,7 +21,11 @@
   const FADE_OUT = 1.05;
   const FADE_IN = 0.9;
   const SWITCH_LAG = 0.38;
-  /* 双击本地文件打开时浏览器禁止 fetch，Web Audio 解码走不通，改走 <audio> */
+  /* 双击本地文件打开（file://）：浏览器禁止 fetch 读本地文件、也不让
+     createMediaElementSource/captureStream 拿到本地音频（CORS 会把信号吃掉），
+     所以改从 assets/audio/data/{key}.js 取同一段 mp3 的 base64 —— <script> 加载
+     本地脚本不受这条限制。解码后仍然走 Web Audio 分析，波形是真实频谱。
+     数据脚本缺席（被人删了/只拷贝了部分文件）时才退回 <audio>：声音在，波形静止。 */
   const FILE_MODE = window.location.protocol === 'file:';
   /* 声音总开关的本地记忆：off = 用户主动关掉，不再自动出声 */
   const SOUND_KEY = 'xiaohe-sound';
@@ -45,37 +49,37 @@
   const META = {
     nushu: {
       title: '金坨女',
-      sub: '女书歌曲 · 35 秒选段',
+      sub: '女书歌曲 · 12 秒选段',
       credit: 'B站 · BV1QTrTY2EAF',
       href: 'https://www.bilibili.com/video/BV1QTrTY2EAF/'
     },
     butterfly: {
       title: '流水欢歌迎客来',
-      sub: '蝴蝶歌现场 · 35 秒选段',
+      sub: '蝴蝶歌现场 · 12 秒选段',
       credit: 'B站 · BV1B8411S74T',
       href: 'https://www.bilibili.com/video/BV1B8411S74T/'
     },
     drum: {
       title: '汪嘟',
-      sub: '瑶族长鼓舞 · 35 秒选段',
+      sub: '瑶族长鼓舞 · 12 秒选段',
       credit: 'B站 · BV1pZKszGEtK',
       href: 'https://www.bilibili.com/video/BV1pZKszGEtK/'
     },
     bridge: {
       title: '风雨桥边',
-      sub: '富川推广曲 · 35 秒选段',
+      sub: '富川推广曲 · 12 秒选段',
       credit: 'B站 · BV14b4y1U7su',
       href: 'https://www.bilibili.com/video/BV14b4y1U7su/'
     },
     panwang: {
       title: '万段曲',
-      sub: '盘王大歌 · 35 秒选段',
+      sub: '盘王大歌 · 12 秒选段',
       credit: 'B站 · BV1JUyABpEbb',
       href: 'https://www.bilibili.com/video/BV1JUyABpEbb/'
     },
     brocade: {
       title: '瑶族织锦现场声',
-      sub: '织机与讲述 · 30 秒选段',
+      sub: '织机与讲述 · 12 秒选段',
       credit: 'B站 · BV1K34y1e7wh',
       href: 'https://www.bilibili.com/video/BV1K34y1e7wh/'
     }
@@ -114,7 +118,24 @@
     return audioContext;
   };
 
-  /* 音源只有 MP3 一种格式：交给浏览器原生媒体加载，不再维护 base64 副本。 */
+  /* 音源只保留 MP3 一种格式。
+     线上 / 本地服务器：fetch mp3 → decodeAudioData。
+     file://：fetch 被禁，改由数据脚本 assets/audio/data/{key}.js 交出同一段 mp3 的 base64。 */
+  const loadDataScript = key => new Promise((resolve, reject) => {
+    const ready = window.XiaoheAudioData && window.XiaoheAudioData[key];
+    if (ready) return resolve(ready);
+    const el = document.createElement('script');
+    el.src = audioBase + 'data/' + key + '.js';
+    el.async = true;
+    el.onload = () => {
+      const data = window.XiaoheAudioData && window.XiaoheAudioData[key];
+      if (data) resolve(data);
+      else reject(new Error('audio data missing: ' + key));
+    };
+    el.onerror = () => reject(new Error('audio data script failed: ' + key));
+    document.head.appendChild(el);
+  });
+
   const loadData = key => {
     if (dataCache[key]) return dataCache[key];
 
@@ -136,12 +157,15 @@
         }
       };
 
+      if (FILE_MODE) return loadDataScript(key);
       try {
         return await attempt(audioBase + key + '.mp3', 4000);
       } catch (err) {
         return await attempt(audioBase + key + '.mp3?r=' + Date.now(), 6000);
       }
     })();
+    /* 失败不留在缓存里：本地数据脚本被删掉时会一路退回 <audio>，下次还能再试 */
+    dataCache[key].catch(() => { delete dataCache[key]; });
     return dataCache[key];
   };
 
@@ -265,7 +289,12 @@
         const pos = i / Math.max(1, player.bars.length - 1);
         const bin = Math.min(bins - 1, Math.round(1 + Math.pow(pos, 1.5) * bins * 0.72));
         const target = player.data[bin] / 255;
-        player.levels[i] = target > player.levels[i] ? target : player.levels[i] * 0.82;
+        /* 上一帧的值可能是 undefined/NaN（见 adoptLive 处说明）：一旦是 NaN，
+           scaleY(NaN) 会被浏览器当成非法值直接忽略，这根条就永远停在上一帧。
+           所以先兜底成 0.06 再淡出，宁可短暂归零，也不要整根冻住。 */
+        const prev = player.levels[i];
+        const base = Number.isFinite(prev) ? prev : 0.06;
+        player.levels[i] = target > base ? target : base * 0.82;
         const level = 0.06 + player.levels[i] * 0.94;
         player.bars[i].style.transform = 'scaleY(' + level.toFixed(3) + ')';
       }
@@ -281,9 +310,10 @@
       setBarsIdle();
     };
 
-    /* ---------- 本地直接打开（file://）的兜底 ----------
-       浏览器不允许 fetch 读本地文件，Web Audio 解码这条路走不通。
-       改用 <audio> 元素直接播：声音照常，波形退化为静止条。 */
+    /* ---------- 本地直接打开（file://）的最后兜底 ----------
+       正常情况下 file:// 也走 Web Audio：音源从 assets/audio/data/{key}.js 取
+       （见 loadData）。只有那份数据脚本读不到时才落到这里——
+       用 <audio> 元素直接播：声音照常，波形退化为静止条。 */
     const fadeElement = (audio, to, lag, dur) => {
       const from = audio.volume;
       const startAt = performance.now() + (lag || 0) * 1000;
@@ -371,7 +401,9 @@
         el.classList.add('is-ready');
         toggle.disabled = false;
         setPlayingUI(true);
-        setStatus('播放中');
+        /* 这一路只有 <audio>，没有 AnalyserNode：波形是静止的，状态里说清楚，
+           免得又出现「明明写着播放中，波形却冻着」的误判 */
+        setStatus('播放中 · 波形不可用');
         audio.volume = 0;
         fadeElement(
           audio,
@@ -479,7 +511,6 @@
     const play = async ({ auto = false } = {}) => {
       if (auto && !AUTOPLAY) return false;
       if (auto && !soundEnabled) return false;
-      if (FILE_MODE) return playFile({ auto });
       if (player.loading) return false;
       if (player.playing) return true;
 
@@ -582,6 +613,13 @@
         el.classList.remove('is-loading', 'is-playing');
         toggle.disabled = false;
         setPlayingUI(false);
+        /* file:// 下预存数据没接上（文件被删/只拷了部分）：退回 <audio>。
+           有声音、没有波形，但比「点了没反应」好，也比假装在放频谱诚实。
+           注意只接管“取不到数据/解不开”这类错误——没手势的 NotAllowedError
+           换 <audio> 也一样放不出来，别把提示词换成更含糊的那一条。 */
+        if (FILE_MODE && err.name !== 'NotAllowedError' && err.name !== 'InvalidStateError') {
+          return playFile({ auto });
+        }
         if (err.name === 'NotAllowedError' || err.name === 'InvalidStateError') {
           el.classList.add('needs-gesture');
           setStatus('加载失败，请重试');
@@ -703,7 +741,17 @@
     target.analyser = live.analyser;
     target.gain = live.gain;
     target.data = live.data;
-    target.levels = live.levels;
+    /* 首页每章 46 根条，专题页 88 根：不能把旧数组整个交过去。
+       多出来的下标是 undefined，draw() 会算出 NaN，scaleY(NaN) 被浏览器忽略，
+       后半段波形就永远冻在待机高度（从首页点进专题正是这个毛病）。
+       这里按比例重采样成新播放器的条数。 */
+    target.levels = target.bars.map((bar, i) => {
+      const from = live.levels;
+      if (!from || !from.length) return 0.15;
+      const j = Math.round(i * (from.length - 1) / Math.max(1, target.bars.length - 1));
+      const value = from[Math.min(from.length - 1, Math.max(0, j))];
+      return Number.isFinite(value) ? value : 0.15;
+    });
     target.startedAt = live.startedAt;
     target.offset = live.offset;
     target.playing = live.playing;
@@ -906,7 +954,9 @@
   const unlockFromGesture = event => {
     if (!soundEnabled) return;
     if (event.target && event.target.closest &&
-        event.target.closest('[data-audio-player], .xh-sound')) return;
+        /* 导航控件不参与解锁：解锁会改「声音」簇的宽度，顶栏随之重排，
+           pointerup 就落不到原来的按钮上——第一次点「目录 / 菜单」会失效。 */
+        event.target.closest('[data-audio-player], .xh-sound, .nav-menu-btn, .nav-more')) return;
     tryUnlock();
   };
 
@@ -946,6 +996,10 @@
     /* 自测用：控制台敲 XiaoheAudioPlayer.debug() 就能看到真实状态 */
     debug() {
       return {
+        /* file = 双击打开的本地文件（音源走 assets/audio/data 的数据脚本，波形照常）；
+           webaudio = http/https 打开。两种情况都该有实时频谱，
+           若这里是 file 而波形不动，先查 data 脚本有没有跟着拷贝。 */
+        mode: FILE_MODE ? 'file' : 'webaudio',
         key: live ? live.key : null,
         playing: !!(live && (live.playing || live.fading)),
         context: audioContext ? audioContext.state : 'none',

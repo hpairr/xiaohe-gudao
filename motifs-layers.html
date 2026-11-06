@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>图案分层解释 · 潇贺古道有声文化数据库</title>
+<meta name="description" content="六主题图案的分层解释：每一幅按图层分开画，逐层列出名字与位置。">
+<meta name="theme-color" content="#1D2652">
+<script>
+/* 首帧底色（2026-11-07）
+   ------------------------------------------------------------------
+   这一页是「专题页 → 详情页」过场的落点：专题页最后铺满整屏的圆盘用的是
+   该页的 --main，所以详情页第一次绘制就必须是同一個色。原来 body 写死
+   #1D2652，除女书外五个主题都会闪一帧错色（本机 1~4 帧，慢网下几十毫秒）。
+   这里在 <body> 之前就把色值设好，再由 fill() 接管。
+   BOOT 的色值必须与脚本里的 THEMES 一致，selftest 会反查（bootMatchesThemes）。 */
+(function () {
+  var BOOT = {
+    nushu:     { bg: '#1D2652', fg: '#F2EDE2' },
+    butterfly: { bg: '#B8862F', fg: '#141A16' },
+    drum:      { bg: '#A9362E', fg: '#FFFFFF' },
+    bridge:    { bg: '#4C6C8B', fg: '#FFFFFF' },
+    panwang:   { bg: '#15120F', fg: '#F2EDE2' },
+    brocade:   { bg: '#5E3F55', fg: '#F2EDE2' }
+  };
+  window.__MO_BOOT = BOOT;
+  var KEYS = ['nushu', 'butterfly', 'drum', 'bridge', 'panwang', 'brocade'];
+  var q = new URLSearchParams(location.search);
+  var key = q.get('theme');
+  if (KEYS.indexOf(key) < 0) {
+    var n = parseInt(q.get('open'), 10);
+    key = (!isNaN(n) && n >= 0 && n < 6) ? KEYS[n] : 'nushu';
+  }
+  var t = BOOT[key];
+  var root = document.documentElement;
+  root.style.setProperty('--boot-bg', t.bg);
+  root.style.setProperty('--boot-fg', t.fg);
+  var mt = document.querySelector('meta[name="theme-color"]');
+  if (mt) mt.setAttribute('content', t.bg);
+  /* 图案整图（≈250~340KB）提前开始下载，别等 fill() 才发请求 */
+  var pre = document.createElement('link');
+  pre.rel = 'preload';
+  pre.as = 'image';
+  pre.href = 'assets/img/motifs/m' + (KEYS.indexOf(key) + 1) + '-' + key + '.webp';
+  document.head.appendChild(pre);
+})();
+</script>
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=20261106a">
+<style id="mo-style">
+/* ── 字体：只用站内已有的 WOFF2 子集 ─────────────────────────── */
+@font-face{font-family:'Noto Serif SC';src:url('assets/fonts/site/NotoSerifSC-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Noto Serif SC';src:url('assets/fonts/site/NotoSerifSC-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Noto Sans SC';src:url('assets/fonts/site/NotoSansSC-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Noto Sans SC';src:url('assets/fonts/site/NotoSansSC-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+
+:root{
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',STSong,'SimSun',serif;
+  --sans:'Noto Sans SC','Source Han Sans SC','Microsoft YaHei','PingFang SC',sans-serif;
+  --pad:clamp(20px,4.4vw,64px);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+html{scrollbar-gutter:stable;background:var(--boot-bg,#1D2652)}
+body{
+  margin:0;overflow:hidden;background:var(--boot-bg,#1D2652);color:var(--boot-fg,#F2EDE2);
+  font:400 15px/1.8 var(--sans);-webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+
+/* 整页就是这幅图案的解释：底色 = 专题页的底色，字色 = 专题页的字色 */
+.mo-detail{
+  --bg:var(--boot-bg,#1D2652);--fg:var(--boot-fg,#F2EDE2);
+  --soft:#C9C6D8;--line:rgba(242,237,226,.18);--line-soft:rgba(242,237,226,.1);
+  --ac:var(--boot-fg,#F2EDE2);
+  position:fixed;inset:0;background:var(--bg);color:var(--fg);overflow:hidden;
+}
+
+/* ── 图案：正中 ─────────────────────────────────────────────── */
+.mo-plate{
+  position:absolute;left:0;top:0;background:var(--bg);
+}
+/* 整图压在各层之上：整图没到时先由「各层叠起来」顶住画面，
+   两层其实是同一幅画，整图到了再交叉淡入换成清晰版。 */
+.mo-plate .base{
+  display:block;position:absolute;inset:0;z-index:2;
+  width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .18s linear;
+}
+.mo-stack{position:absolute;inset:0;z-index:1}
+.mo-stack img{
+  position:absolute;inset:0;width:100%;height:100%;
+  transition:opacity .12s linear;
+}
+
+/* ── 左：编号与名字 ─────────────────────────────────────────── */
+.mo-meta{
+  position:absolute;left:var(--pad);top:50%;
+  width:clamp(140px,13vw,180px);text-align:right;
+  opacity:0;transform:translateY(calc(-50% + 12px));
+  transition:opacity .5s var(--ease),transform .6s var(--ease);
+}
+.mo-detail.is-in .mo-meta{opacity:1;transform:translateY(-50%)}
+.mo-meta .no{font:700 clamp(40px,4.6vw,64px)/1 var(--serif);color:var(--ac)}
+.mo-meta .cn{margin-top:16px;font:500 clamp(22px,2.3vw,30px)/1.25 var(--serif)}
+.mo-meta .en{margin-top:8px;font:400 9.5px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
+.mo-meta .vrule{margin:20px 0 0 auto;width:1px;height:clamp(40px,7vh,72px);background:var(--line)}
+.mo-meta .back{margin-top:14px;font:400 11px/1.6 var(--sans);letter-spacing:.06em;color:var(--soft);text-decoration:none;display:inline-block}
+.mo-meta .back:hover{color:var(--fg)}
+
+/* ── 右：分层解释 ──────────────────────────────────────────── */
+.mo-panel{
+  position:absolute;right:var(--pad);top:clamp(84px,11vh,120px);bottom:clamp(84px,11vh,120px);
+  width:clamp(250px,22vw,310px);
+  padding-left:clamp(14px,1.4vw,22px);border-left:1px solid var(--line);
+  overflow-y:auto;overscroll-behavior:contain;
+}
+.mo-panel::-webkit-scrollbar{width:3px}
+.mo-panel::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.mo-panel .phead{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding-bottom:10px;border-bottom:1px solid var(--fg);
+  opacity:0;transform:translateY(8px);
+  transition:opacity .5s var(--ease),transform .55s var(--ease);
+}
+.mo-detail.is-in .mo-panel .phead{opacity:1;transform:none}
+.mo-panel .phead b{font:500 13px/1 var(--serif);letter-spacing:.05em}
+.mo-panel .phead span{font:400 10px/1 var(--sans);letter-spacing:.14em;color:var(--soft)}
+.mo-layer{
+  display:grid;grid-template-columns:26px 1fr;gap:8px 10px;width:100%;
+  padding:11px 6px 12px 4px;border:0;border-bottom:1px solid var(--line-soft);background:none;
+  text-align:left;color:inherit;font:inherit;cursor:pointer;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .45s var(--ease),transform .5s var(--ease),background-color .22s;
+}
+.mo-detail.is-in .mo-layer{opacity:1;transform:none}
+@media (hover:hover){.mo-layer:hover{background:color-mix(in srgb,var(--fg) 8%,transparent)}}
+.mo-layer:focus-visible{outline:1px solid currentColor;outline-offset:-2px}
+.mo-layer .lno{font:400 10px/1.7 var(--sans);letter-spacing:.06em;color:var(--soft);font-variant-numeric:tabular-nums}
+.mo-layer .lname{font:500 15px/1.5 var(--serif)}
+.mo-layer .lbody{grid-column:2;font:400 12.5px/1.8 var(--sans);color:var(--soft)}
+.mo-layer[aria-pressed="true"]{background:color-mix(in srgb,var(--fg) 12%,transparent)}
+.mo-layer[aria-pressed="true"] .lname{color:var(--ac)}
+
+/* ── 窄屏标题 / 关闭 ──────────────────────────────────────── */
+.mo-mtitle{
+  display:none;position:absolute;left:var(--pad);top:14px;right:64px;z-index:2;
+  align-items:baseline;gap:10px;
+  font:500 15px/1.2 var(--serif);opacity:0;transition:opacity .5s var(--ease);
+}
+.mo-detail.is-in .mo-mtitle{opacity:1}
+.mo-mtitle b{font:700 20px/1 var(--serif);color:var(--ac)}
+.mo-close{
+  position:absolute;right:var(--pad);top:16px;z-index:2;
+  display:grid;place-items:center;width:38px;height:38px;
+  border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--fg);
+  cursor:pointer;opacity:0;
+  transition:opacity .5s var(--ease),background-color .25s,color .25s,border-color .25s;
+}
+.mo-detail.is-in .mo-close{opacity:1}
+.mo-close:hover{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.mo-close:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.mo-close svg{width:14px;height:14px}
+
+/* ── 窄屏：图案在上，说明在下 ────────────────────────────────── */
+@media (max-width:999px){
+  .mo-meta{display:none}
+  .mo-mtitle{display:flex}
+  .mo-panel{
+    left:0;right:0;top:auto;bottom:0;width:auto;
+    max-height:42vh;padding:16px var(--pad) 20px;
+    border-left:0;border-top:1px solid var(--line);
+    background:var(--bg);
+  }
+}
+
+/* ── 减少动态 ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="mo-detail" id="detail" role="dialog" aria-modal="true" aria-label="图案分层解释">
+  <div class="mo-plate" id="plate">
+    <img class="base" id="plateBase" alt="" width="1600" height="1600">
+    <div class="mo-stack" id="stack"></div>
+  </div>
+
+  <div class="mo-meta">
+    <div class="no" id="metaNo">壹</div>
+    <div class="cn" id="metaCn">女书</div>
+    <div class="en" id="metaEn">NÜSHU</div>
+    <i class="vrule"></i>
+    <a class="back" id="backLink" href="themes/02-女书.html">← 回到女书</a>
+    <a class="back" id="newLink" href="motifs.html" style="margin-left:12px">看分类详情 →</a>
+  </div>
+
+  <div class="mo-mtitle" id="mTitle" aria-hidden="true"></div>
+
+  <div class="mo-panel" id="panel">
+    <div class="phead"><b>分层解释</b><span id="layerCount">7 层</span></div>
+    <div id="layerList"></div>
+  </div>
+
+  <button class="mo-close" id="closeBtn" type="button" aria-label="返回到专题页（Esc）">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+  </button>
+</div>
+
+<noscript><p style="padding:40px;font:14px/1.8 sans-serif">这个页面需要 JavaScript 才能展开图层。</p></noscript>
+
+<pre id="selftest" hidden style="position:fixed;left:0;bottom:0;z-index:99;margin:0;padding:8px;font-size:10px;background:#fff;color:#000;max-height:40vh;overflow:auto"></pre>
+
+<!-- 图层清单：由 assets/theme-pattern/layers/manifest.json 生成，勿手改；
+     改动请在 manifest.json 改，再重跑 tools/gen-motif-layers.py -->
+<script type="application/json" id="layer-data">{"nushu":[{"order":1,"name":"底色","file":"nushu-layer-01.png"},{"order":2,"name":"八角花","file":"nushu-layer-02.png"},{"order":3,"name":"最外框回型装订","file":"nushu-layer-03.png"},{"order":4,"name":"最外框角落花","file":"nushu-layer-04.png"},{"order":5,"name":"中间女书","file":"nushu-layer-05.png"},{"order":6,"name":"外框女书","file":"nushu-layer-06.png"},{"order":7,"name":"中心","file":"nushu-layer-07.png"}],"butterfly":[{"order":1,"name":"底色","file":"butterfly-layer-01.png"},{"order":2,"name":"最外框","file":"butterfly-layer-02.png"},{"order":3,"name":"外框红花","file":"butterfly-layer-03.png"},{"order":4,"name":"大波型","file":"butterfly-layer-04.png"},{"order":5,"name":"小波型","file":"butterfly-layer-05.png"},{"order":6,"name":"蝴蝶","file":"butterfly-layer-06.png"},{"order":7,"name":"内框","file":"butterfly-layer-07.png"}],"drum":[{"order":1,"name":"底色","file":"drum-layer-01.png"},{"order":2,"name":"角落半圆","file":"drum-layer-02.png"},{"order":3,"name":"外框方块","file":"drum-layer-03.png"},{"order":4,"name":"小鼓身","file":"drum-layer-04.png"},{"order":5,"name":"内框图形","file":"drum-layer-05.png"},{"order":6,"name":"三框","file":"drum-layer-06.png"},{"order":7,"name":"内框花纹","file":"drum-layer-07.png"},{"order":8,"name":"鼓花","file":"drum-layer-08.png"},{"order":9,"name":"鼓身","file":"drum-layer-09.png"}],"bridge":[{"order":1,"name":"底色","file":"bridge-layer-01.png"},{"order":2,"name":"中心","file":"bridge-layer-02.png"},{"order":3,"name":"外框花纹","file":"bridge-layer-03.png"},{"order":4,"name":"内框花纹","file":"bridge-layer-04.png"},{"order":5,"name":"最外框花纹","file":"bridge-layer-05.png"},{"order":6,"name":"内框房檐","file":"bridge-layer-06.png"},{"order":7,"name":"角落内框花纹","file":"bridge-layer-07.png"}],"panwang":[{"order":1,"name":"底色","file":"panwang-layer-01.png"},{"order":2,"name":"内框花纹","file":"panwang-layer-02.png"},{"order":3,"name":"外框角落花纹","file":"panwang-layer-03.png"},{"order":4,"name":"外框花纹","file":"panwang-layer-04.png"},{"order":5,"name":"内框花","file":"panwang-layer-05.png"},{"order":6,"name":"中心","file":"panwang-layer-06.png"}],"brocade":[{"order":1,"name":"底色","file":"brocade-layer-01.png"},{"order":2,"name":"内框花纹","file":"brocade-layer-02.png"},{"order":3,"name":"内框中间花纹","file":"brocade-layer-03.png"},{"order":4,"name":"中心","file":"brocade-layer-04.png"},{"order":5,"name":"内框左右花纹","file":"brocade-layer-05.png"},{"order":6,"name":"外框上下花纹","file":"brocade-layer-06.png"},{"order":7,"name":"最外框左右花纹","file":"brocade-layer-07.png"},{"order":8,"name":"内框角落花纹","file":"brocade-layer-08.png"}]}</script>
+
+<script>
+(function(){
+'use strict';
+
+/* ── 六幅图案：底色与字色直接取各自专题页的 --main / --on ───── */
+var THEMES=[
+  {k:'nushu',    no:'壹',cn:'女书',    en:'NÜSHU',           page:'02-女书.html',
+   bg:'#1D2652',fg:'#F2EDE2',soft:.72,ac:'#D2A03F'},
+  {k:'butterfly',no:'贰',cn:'蝴蝶歌',  en:'BUTTERFLY SONG',  page:'03-蝴蝶歌.html',
+   bg:'#B8862F',fg:'#141A16',soft:.86,ac:'#2C5A4E'},
+  {k:'drum',     no:'叁',cn:'长鼓舞',  en:'LONG DRUM DANCE', page:'04-长鼓舞.html',
+   bg:'#A9362E',fg:'#FFFFFF',soft:.86,ac:'#D2A03F'},
+  {k:'bridge',   no:'肆',cn:'富川风雨桥',en:'WIND-RAIN BRIDGE',page:'05-风雨桥.html',
+   bg:'#4C6C8B',fg:'#FFFFFF',soft:.88,ac:'#B7C3D6'},
+  {k:'panwang',  no:'伍',cn:'盘王大歌',en:'PANWANG DA GE',    page:'06-盘王大歌.html',
+   bg:'#15120F',fg:'#F2EDE2',soft:.72,ac:'#D2A03F'},
+  {k:'brocade',  no:'陆',cn:'瑶族织锦',en:'YAO BROCADE',     page:'07-富川织锦.html',
+   bg:'#5E3F55',fg:'#F2EDE2',soft:.72,ac:'#C08A2E'}
+];
+var KEYS=THEMES.map(function(t){return t.k;});
+var LAYER_DIR='assets/theme-pattern/layers/';
+
+var $=function(s,r){return (r||document).querySelector(s);};
+var detail=$('#detail'),plate=$('#plate'),stack=$('#stack'),baseImg=$('#plateBase');
+var layerList=$('#layerList'),layerCountEl=$('#layerCount'),panel=$('#panel');
+var metaNo=$('#metaNo'),metaCn=$('#metaCn'),metaEn=$('#metaEn'),mTitle=$('#mTitle');
+var backLink=$('#backLink'),newLink=$('#newLink'),closeBtn=$('#closeBtn'),selftestEl=$('#selftest');
+
+var FINE=matchMedia('(hover: hover) and (pointer: fine)');
+
+/* 整图是否已就位：没就位时用各层叠出同一幅画顶着（见 .mo-plate .base 注释） */
+var baseReady=false, baseToken=0, curHint=-1;
+
+/* ── 图层清单：从内嵌表读（manifest.json 生成，file:// 也能用）── */
+var LAYERS={},manifestOK=false,manifestCheck=null;
+try{
+  LAYERS=JSON.parse($('#layer-data').textContent);
+  manifestOK=true;
+}catch(e){console.warn('[motifs] 内嵌图层表解析失败：',e);}
+if(/^https?:$/.test(location.protocol)){
+  fetch(LAYER_DIR+'manifest.json',{cache:'no-cache'})
+    .then(function(r){return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status));})
+    .then(function(j){
+      manifestCheck=(JSON.stringify(j)===JSON.stringify(LAYERS));
+      if(!manifestCheck)console.warn('[motifs] 内嵌图层表与 manifest.json 不一致，请重跑 tools/gen-motif-layers.py');
+    })
+    .catch(function(){});
+}
+
+/* ── 当前是哪一幅：?theme=nushu（也接受 ?open=0）────────────── */
+function pickIndex(){
+  var q=new URLSearchParams(location.search);
+  var key=q.get('theme');
+  if(key){var i=KEYS.indexOf(key);if(i>=0)return i;}
+  var n=parseInt(q.get('open'),10);
+  if(!isNaN(n)&&n>=0&&n<6)return n;
+  return 0;
+}
+var cur=pickIndex();
+
+/* ── 颜色工具 ──────────────────────────────────────────────── */
+function hex2rgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function lum(rgb){
+  var a=rgb.map(function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});
+  return .2126*a[0]+.7152*a[1]+.0722*a[2];
+}
+function contrast(a,b){var l1=lum(hex2rgb(a)),l2=lum(hex2rgb(b));return (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);}
+function mixHex(fg,bg,a){
+  var f=hex2rgb(fg),b=hex2rgb(bg);
+  return '#'+f.map(function(v,i){return ('0'+Math.round(v*a+b[i]*(1-a)).toString(16)).slice(-2);}).join('');
+}
+
+function fill(i){
+  var t=THEMES[i],ls=LAYERS[t.k]||[];
+  cur=i;
+  var d=detail.style;
+  d.setProperty('--bg',t.bg);
+  d.setProperty('--fg',t.fg);
+  d.setProperty('--soft',mixHex(t.fg,t.bg,t.soft));
+  d.setProperty('--line','color-mix(in srgb,'+t.fg+' 22%,'+t.bg+')');
+  d.setProperty('--line-soft','color-mix(in srgb,'+t.fg+' 12%,'+t.bg+')');
+  d.setProperty('--ac',contrast(t.ac,t.bg)>=3?t.ac:t.fg);
+  document.body.style.background=t.bg;
+  var mt=document.querySelector('meta[name="theme-color"]');
+  if(mt)mt.setAttribute('content',t.bg);
+
+  metaNo.textContent=t.no;metaCn.textContent=t.cn;metaEn.textContent=t.en;
+  mTitle.innerHTML='<b></b><span></span>';
+  mTitle.firstChild.textContent=t.no;
+  mTitle.lastChild.textContent=t.cn;
+  backLink.href='themes/'+t.page;
+  backLink.textContent='← 回到'+t.cn;
+  if(newLink) newLink.href='motifs.html?theme='+t.k;
+  document.title=t.cn+' · 图案分层解释';
+
+  baseImg.src='assets/img/motifs/m'+(i+1)+'-'+t.k+'.webp';
+  baseImg.alt=t.cn+'图案';
+
+  /* 整图没解码之前，先让各层叠出同一幅画（层次序比整图低一层） */
+  baseReady=false;
+  baseImg.style.opacity='0';
+  var token=++baseToken;
+  var mark=function(){ if(token===baseToken&&!baseReady){ baseReady=true; isolate(curHint); } };
+  if(baseImg.decode) baseImg.decode().then(mark,mark);
+  else if(baseImg.complete) mark();
+  else baseImg.addEventListener('load',mark,{once:true});
+
+  stack.textContent='';
+  ls.forEach(function(L,n){
+    var im=document.createElement('img');
+    im.src=LAYER_DIR+L.file;im.alt='';im.decoding='async';im.loading='eager';
+    im.dataset.i=String(n);
+    im.style.opacity='0';
+    stack.appendChild(im);
+  });
+
+  layerCountEl.textContent=ls.length+' 层';
+  layerList.textContent='';
+  panel.scrollTop=0;
+  if(!ls.length){
+    var p=document.createElement('p');
+    p.style.cssText='margin:14px 0;font-size:12.5px';
+    p.textContent='图层清单未加载。';
+    layerList.appendChild(p);
+  }
+  ls.forEach(function(L,n){
+    var b=document.createElement('button');
+    b.type='button';b.className='mo-layer';b.dataset.i=String(n);
+    b.style.transitionDelay=(160+n*45)+'ms';
+    b.setAttribute('aria-pressed','false');
+    b.innerHTML='<span class="lno">'+('0'+(n+1)).slice(-2)+'</span><span class="lname"></span>';
+    b.querySelector('.lname').textContent=L.name;
+    var body=document.createElement('span');
+    body.className='lbody';
+    body.textContent='第 '+(n+1)+' 层';
+    b.appendChild(body);
+    b.addEventListener('click',function(){isolate(n);});
+    b.addEventListener('pointerenter',function(){if(FINE.matches)isolate(n);});
+    b.addEventListener('pointerleave',function(){if(FINE.matches)isolate(-1);});
+    b.addEventListener('focus',function(){isolate(n);});
+    layerList.appendChild(b);
+  });
+  isolate(-1);
+}
+
+function isolate(n){
+  curHint=n;
+  var imgs=stack.children;
+  var showLayers=!baseReady||n>=0;
+  for(var k=0;k<imgs.length;k++){
+    var on=(n<0)||(+imgs[k].dataset.i===n)||(+imgs[k].dataset.i===0&&imgs.length>1);
+    imgs[k].style.opacity=(n<0)?(showLayers?'1':'0'):(on?'1':'0');
+  }
+  baseImg.style.opacity=(n<0&&baseReady)?'1':'0';
+  var rows=layerList.children;
+  for(var j=0;j<rows.length;j++) rows[j].setAttribute('aria-pressed',(+rows[j].dataset.i===n)?'true':'false');
+}
+
+/* 内容浮入：等图案版式这一帧算完再起跑（两帧 rAF），不会在版式未定时先浮字 */
+function revealNow(){
+  requestAnimationFrame(function(){requestAnimationFrame(function(){detail.classList.add('is-in');});});
+}
+
+/* ── 版式：图案居中，左侧名字，右侧解释 ────────────────────── */
+function layout(){
+  var vw=innerWidth,vh=innerHeight,wide=vw>=1000;
+  var padPx=parseFloat(getComputedStyle(panel).right)||20;   /* --pad 是 clamp() 字面量，直接 parseFloat 会得到 20，要从算出来的样式取 */
+  var size;
+  if(wide){
+    var metaW=$('.mo-meta').getBoundingClientRect().width||180;
+    var panelW=panel.getBoundingClientRect().width||310;
+    var side=padPx+Math.max(metaW,panelW)+20;
+    size=Math.round(Math.min(vh*.80, vw-2*side));
+  }else{
+    size=Math.round(Math.min(vh*.46, vw*.94));
+  }
+  var cx=vw/2, cy=wide?vh*.5:vh*.28;
+  plate.style.width=size+'px';plate.style.height=size+'px';
+  plate.style.transform='translate3d('+(cx-size/2)+'px,'+(cy-size/2)+'px,0)';
+  return {size:size,cx:cx,cy:cy,wide:wide};
+}
+var G=layout();
+addEventListener('resize',function(){G=layout();});
+
+/* 图案先就位（与专题页过场的落点同一套公式），再让内容浮上来。
+   整图（≈250~340KB）晚到也不空盘：没解码出来之前，先由已经缓存住的那几层
+   188×188 透明 PNG 叠出同一幅画（专题页上的就是它们，所以落点这一帧和过场
+   最后一帧是同一张图），整图到了再交叉淡入换成清晰版。 */
+fill(cur);
+revealNow();
+
+/* ── 返回：直接回对应的专题页 ──────────────────────────────── */
+function back(){ location.href='themes/'+THEMES[cur].page; }
+closeBtn.addEventListener('click',back);
+backLink.addEventListener('click',function(e){e.preventDefault();back();});
+detail.addEventListener('click',function(e){
+  if(e.target===detail||e.target===plate||e.target.classList.contains('base'))back();
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){e.preventDefault();back();}
+});
+
+/* ── 自检 ──────────────────────────────────────────────────── */
+function whenLoaded(list,ms){
+  return new Promise(function(res){
+    var t0=performance.now();
+    (function poll(){
+      if(list.every(function(i){return i.complete;})||performance.now()-t0>ms)return res();
+      setTimeout(poll,40);
+    })();
+  });
+}
+
+async function runSelfTest(){
+  var out={ok:true,fails:[],detail:{}};
+  function chk(n,c,v){out.detail[n]=v;if(!c){out.ok=false;out.fails.push(n);}}
+
+  var t=THEMES[cur];
+  chk('themePicked',cur===pickIndex(),cur);
+  chk('manifest',manifestOK,Object.keys(LAYERS).length);
+  /* 首帧底色表与 THEMES 必须一致：两处色值漂移会让换页闪一帧错色 */
+  var BOOT=window.__MO_BOOT||{};
+  chk('bootMatchesThemes',KEYS.every(function(k){
+    var x=THEMES[KEYS.indexOf(k)];
+    return BOOT[k]&&BOOT[k].bg===x.bg&&BOOT[k].fg===x.fg;
+  }),KEYS.map(function(k){return k+':'+(BOOT[k]&&BOOT[k].bg);}).join(' '));
+  var tw=Date.now();
+  while(manifestCheck===null&&Date.now()-tw<1600){await new Promise(function(r){setTimeout(r,80);});}
+  chk('layerDataMatchesManifest',manifestCheck===null||manifestCheck===true,manifestCheck);
+
+  var cs=getComputedStyle(detail);
+  chk('bgApplied',cs.getPropertyValue('--bg').trim()===t.bg,cs.getPropertyValue('--bg').trim());
+  chk('fgApplied',cs.getPropertyValue('--fg').trim()===t.fg,cs.getPropertyValue('--fg').trim());
+
+  var imgs=[].slice.call(stack.querySelectorAll('img'));
+  await whenLoaded(imgs,5000);
+  /* 整图就位后各层才让位；没就位时是「各层叠出整幅」的状态 */
+  var twb=Date.now();
+  while(!baseReady&&Date.now()-twb<3000){await new Promise(function(r){setTimeout(r,40);});}
+  chk('baseReady',baseReady,true);
+  chk('stackLoaded',imgs.length>0&&imgs.every(function(i){return i.complete&&i.naturalWidth>0;}),
+      imgs.map(function(i){return i.naturalWidth;}));
+  chk('rows',layerList.children.length===imgs.length,layerList.children.length);
+  chk('rowsHaveNames',Array.prototype.every.call(layerList.querySelectorAll('.lname'),function(n){return n.textContent.trim().length>0;}),true);
+  chk('noInstructionText',!/点击|查看|点开/.test(detail.textContent),true);
+
+  var pr=plate.getBoundingClientRect();
+  chk('plateCentered',Math.abs(pr.left+pr.width/2-G.cx)<=2&&Math.abs(pr.top+pr.height/2-G.cy)<=2,
+      [Math.round(pr.left+pr.width/2),Math.round(pr.top+pr.height/2)]);
+  chk('plateSize',Math.abs(pr.width-G.size)<=1,Math.round(pr.width));
+
+  isolate(1);
+  var st=imgs.map(function(i){return i.style.opacity;});
+  chk('isolateSelected',st[1]==='1',st.join(','));
+  chk('isolateOthers',st.every(function(v,k){return k===0||k===1||v==='0';}),st.join(','));
+  chk('isolateBaseHidden',baseImg.style.opacity==='0',baseImg.style.opacity);
+  isolate(-1);
+  chk('isolateRestore',imgs.every(function(i){return i.style.opacity==='0';})&&baseImg.style.opacity==='1',
+      imgs.map(function(i){return i.style.opacity;}).join(',')+' base '+baseImg.style.opacity);
+  /* 整图没就位时必须是「各层全显、整图隐藏」，否则落点会空盘 */
+  var savedReady=baseReady;
+  baseReady=false;isolate(-1);
+  chk('fallbackLayersVisible',imgs.every(function(i){return i.style.opacity==='1';})&&baseImg.style.opacity==='0',
+      imgs.map(function(i){return i.style.opacity;}).join(',')+' base '+baseImg.style.opacity);
+  baseReady=savedReady;isolate(-1);
+
+  var cr={};
+  var soft=mixHex(t.fg,t.bg,t.soft);
+  cr['fg/bg']=+contrast(t.fg,t.bg).toFixed(2);
+  cr['soft/bg']=+contrast(soft,t.bg).toFixed(2);
+  chk('contrast:fg',cr['fg/bg']>=4.5,cr['fg/bg']);
+  chk('contrast:soft',cr['soft/bg']>=4.5,cr['soft/bg']);
+  var acRGB=cs.getPropertyValue('--ac').trim();
+  chk('contrast:accent',contrast(acRGB,t.bg)>=3,+contrast(acRGB,t.bg).toFixed(2));
+  THEMES.forEach(function(x){
+    cr['theme:'+x.k]='fg '+contrast(x.fg,x.bg).toFixed(2)+' / soft '+contrast(mixHex(x.fg,x.bg,x.soft),x.bg).toFixed(2);
+  });
+  out.detail.contrast=cr;
+
+  chk('backHref',backLink.getAttribute('href')==='themes/'+t.page,backLink.getAttribute('href'));
+  chk('reducedMotionCSS',$('#mo-style').textContent.indexOf('prefers-reduced-motion')>-1,true);
+  /* is-in 现在等整图 decode 才加（见 reveal），自检要等它，不能同步断言 */
+  var tw3=Date.now();
+  while(!detail.classList.contains('is-in')&&Date.now()-tw3<1500){await new Promise(function(r){setTimeout(r,40);});}
+  chk('reachedIn',detail.classList.contains('is-in'),true);
+  out.detail.viewport=[innerWidth,innerHeight];
+  out.detail.plate=Math.round(pr.width);
+
+  selftestEl.hidden=false;
+  selftestEl.textContent='SELFTEST '+JSON.stringify(out,null,1);
+  document.title=(out.ok?'SELFTEST-OK ':'SELFTEST-FAIL ')+document.title;
+  if(!out.ok)console.warn('[motifs] selftest fails:',out.fails);
+}
+
+if(new URLSearchParams(location.search).get('selftest')==='1') runSelfTest();
+})();
+</script>
+</body>
+</html>

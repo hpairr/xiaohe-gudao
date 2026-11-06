@@ -264,6 +264,42 @@
     else runArrival();
   }
 
+  /* ---------- ≤1100px：栏目收进「目录」 ---------- */
+  const navLinks = nav && nav.querySelector('.nav-links');
+  if (nav && navLinks && !nav.querySelector('.nav-menu-btn')) {
+    const btn = document.createElement('button');
+    btn.className = 'nav-menu-btn';
+    btn.type = 'button';
+    btn.textContent = '目录';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', 'themeMenu');
+    const panel = document.createElement('nav');
+    panel.className = 'nav-menu';
+    panel.id = 'themeMenu';
+    panel.hidden = true;
+    panel.setAttribute('aria-label', '栏目');
+    panel.innerHTML = navLinks.innerHTML;
+    const sound = nav.querySelector('.xh-sound-cluster');
+    if (sound) nav.insertBefore(btn, sound); else nav.appendChild(btn);
+    nav.parentNode.insertBefore(panel, nav.nextSibling);
+    const close = () => { panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+    btn.addEventListener('click', () => {
+      const open = panel.hidden;
+      panel.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    panel.addEventListener('click', event => { if (event.target.closest('a')) close(); });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !panel.hidden) { close(); btn.focus(); }
+    });
+    document.addEventListener('click', event => {
+      if (panel.hidden) return;
+      if (!panel.contains(event.target) && !btn.contains(event.target)) close();
+    });
+    const wide = window.matchMedia('(min-width:1101px)');
+    if (wide.addEventListener) wide.addEventListener('change', event => { if (event.matches) close(); });
+  }
+
   /* ---------- 键盘可达性：焦点进入首屏时顶栏保持可读 ---------- */
   document.addEventListener('focusin', event => {
     if (!nav || !event.target.closest) return;

@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>潇贺古道有声文化数据库 · 文化档案 / 声音 / 图志</title>
-<meta name="description" content="潇贺古道有声文化数据库：33 条文化档案、26 条声音与影像记录、古道图志与七语界面。古道北起湖南道县潇水，南抵广西贺州贺江。">
+<meta name="description" content="潇贺古道有声文化数据库：26 条文化档案、37 条声音与影像记录（26 条视频 + 11 段音频）、古道图志与七语界面。古道北起湖南道县潇水，南抵广西贺州贺江。">
 <meta name="keywords" content="潇贺古道,有声文化数据库,文化档案,声音档案,古道图志,女书,蝴蝶歌,长鼓舞,富川风雨桥,风雨桥,瑶族织锦,富川瑶族织锦,盘王大歌,上灯炸龙,瑶族,非遗">
 <meta name="author" content="潇贺古道有声文化数据库">
 <link rel="canonical" href="https://hpairr.github.io/xiaohe-gudao/database.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="潇贺古道有声文化数据库">
 <meta property="og:title" content="潇贺古道有声文化数据库 · 文化档案 / 声音 / 图志">
-<meta property="og:description" content="33 条文化档案、26 条声音与影像记录、古道图志与七语界面；以声音与影像为线索的潇贺古道文化数据库。">
+<meta property="og:description" content="26 条文化档案、37 条声音与影像记录（26 条视频 + 11 段音频）、古道图志与七语界面；以声音与影像为线索的潇贺古道文化数据库。">
 <meta property="og:image" content="https://hpairr.github.io/xiaohe-gudao/assets/img/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,7 +20,7 @@
 <meta property="og:url" content="https://hpairr.github.io/xiaohe-gudao/database.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#F2EDE2">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23F7F4EC'/%3E%3Cpath d='M3 12c1.5 0 1.5-4.5 3-4.5s1.5 9 3 9 1.5-13.5 3-13.5 1.5 9 3 9 1.5-4.5 3-4.5' fill='none' stroke='%23C3272B' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=20261106a">
 <script>
   /* 主页顶栏点击数据库入口后，整屏主色和标题从导航字的位置接力过来 */
   if (new URLSearchParams(location.search).has('arrive')) document.documentElement.classList.add('is-arriving');
@@ -98,12 +98,20 @@
   .topbar{display:flex;align-items:center;gap:24px;height:64px}
   .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:1px;color:var(--ink)}
   .logo:hover{text-decoration:none}
-  .logo-mark{width:34px;height:34px;border:2px solid var(--cinnabar);border-radius:6px;display:flex;align-items:center;justify-content:center;transform:rotate(-3deg)}
-  .logo-mark svg{width:22px;height:22px;transform:rotate(3deg)}
+  .logo-mark{width:34px;height:34px;display:block;flex:none;background:#B63A33;-webkit-mask:url("assets/img/logo-mark.png") center/contain no-repeat;mask:url("assets/img/logo-mark.png") center/contain no-repeat}
+.logo-mark img{display:none}
+/* logo 平时是主页红；栏目条颜色与它相近（archive 就是同一个红）时改黑，免得分不开 */
+/* 刷情景里 --ink 会被反转成纸色，所以这里写死墨色 */
+body[data-sect="archive"] .logo-mark{background:#1F2D3D}
+  .logo-mark img{display:block;width:100%;height:100%}
   .logo .cn{font-size:16px}
   .logo .en{font-size:9.5px;color:var(--ink-soft);letter-spacing:.5px;display:block}
   nav.main{display:flex;gap:20px;margin-inline-start:auto}
-  nav.main a{color:var(--ink);font-size:15px;padding:6px 2px;border-bottom:2px solid transparent}
+  nav.main a{color:var(--ink);font-size:15px;padding:6px 2px;border-bottom:2px solid transparent;white-space:nowrap}
+  /* 英文界面：栏目名更长，压缩字距与间距，避免折成两行 */
+  html[lang="en"] .logo .cn{font-size:15px;letter-spacing:.03em;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  html[lang="en"] nav.main{gap:15px}
+  html[lang="en"] nav.main a{font-size:13.5px;letter-spacing:0}
   nav.main a.nav-index{margin-left:4px;padding-left:16px;border-left:1px solid color-mix(in srgb,currentColor 30%,transparent)}
   nav.main a:hover{color:var(--qun);text-decoration:none;border-bottom-color:var(--tianshui)}
   nav.main a.active{color:var(--qun);border-bottom-color:var(--qun)}
@@ -564,6 +572,15 @@
   .ed-filter .chip{border:0;border-bottom:1px solid transparent;border-radius:0;background:none;padding:8px 0 7px;font-size:12.5px;letter-spacing:.02em;color:var(--ink-soft)}
   .ed-filter .chip:hover{color:var(--ink);border-bottom-color:var(--ink)}
   .ed-filter .chip.on{background:none;color:var(--cinnabar);border-bottom-color:var(--cinnabar)}
+  /* 检索框：藏掉浏览器原生的清除按钮（Windows 上是蓝色叉，跟纸墨朱砂不是一套），
+     换成文字「清除」；输入框右侧留出位置，长关键词不会钻到按钮底下。 */
+  .ed-filter input[type=search]::-webkit-search-cancel-button,
+  .ed-filter input[type=search]::-webkit-search-decoration{-webkit-appearance:none;appearance:none}
+  .ed-field-kw{position:relative}
+  .ed-filter .ed-field-kw input[type=search]{padding-right:52px}
+  .ed-clear{position:absolute;right:0;bottom:8px;border:0;background:none;color:inherit;opacity:.5;font-family:var(--sans);font-size:11px;letter-spacing:.08em;padding:4px 0 4px 12px;cursor:pointer;line-height:1}
+  .ed-clear:hover,.ed-clear:focus-visible{opacity:1}
+  .ed-clear[hidden]{display:none}
   .ed-result{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:14px 0 16px;border-bottom:1px solid var(--ink);font-size:11.5px;letter-spacing:.08em;color:var(--ink-soft)}
   .ed-result b{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--cinnabar);letter-spacing:0;margin-right:6px}
   .ed-result .sort{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
@@ -587,7 +604,9 @@
   .ed-card.is-lead .ed-card-media{aspect-ratio:16/9}
   .ed-card-media img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.82) contrast(1.03);transition:transform .8s cubic-bezier(.2,.8,.3,1),filter .5s ease}
   .ed-card:hover .ed-card-media img{transform:scale(1.035);filter:saturate(1) contrast(1.03)}
-  .ed-card-media .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:clamp(54px,7vw,96px);letter-spacing:.04em;color:rgba(255,255,255,.9);background:var(--qun)}
+  .ed-card-media .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-family:var(--serif);color:var(--ink);background:linear-gradient(180deg,#F4EEE2,#E7DFD0);border:1px solid rgba(20,26,22,.14)}
+  .ed-card-media .ph b{font-size:clamp(30px,3.4vw,44px);line-height:1;letter-spacing:.18em;font-weight:700;color:var(--qun)}
+  .ed-card-media .ph em{font:400 9px/1 var(--sans);letter-spacing:.24em;color:var(--ink-soft);font-style:normal}
   .ed-card-title{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:14px;font-family:var(--serif);font-size:clamp(20px,1.75vw,27px);font-weight:700;line-height:1.34;letter-spacing:.005em;text-wrap:balance}
   .ed-card-title .arrow{flex:none;margin-top:4px;font-family:var(--sans);font-size:15px;font-weight:400;color:var(--ink-soft);transition:transform .4s ease,color .3s ease}
   .ed-card:hover .ed-card-title .arrow{transform:translate(3px,-3px);color:var(--cinnabar)}
@@ -610,7 +629,9 @@
   .ed-detail-grid{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(260px,.52fr);gap:clamp(26px,4vw,58px);align-items:start;padding-top:28px}
   .ed-detail-figure{margin:0;min-width:0}
   .ed-detail-figure img{width:100%;max-height:600px;object-fit:cover;display:block;filter:saturate(.9) contrast(1.02);background:var(--moon)}
-  .ed-detail-figure .ph{display:flex;align-items:center;justify-content:center;min-height:300px;background:var(--moon);font-family:var(--serif);font-size:64px;color:var(--qun)}
+  .ed-detail-figure .ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:300px;background:linear-gradient(180deg,#F4EEE2,#E7DFD0);border:1px solid rgba(20,26,22,.14);font-family:var(--serif);color:var(--qun)}
+  .ed-detail-figure .ph b{font-size:64px;line-height:1;font-weight:700;letter-spacing:.18em}
+  .ed-detail-figure .ph em{font:400 10px/1 var(--sans);letter-spacing:.24em;color:var(--ink-soft);font-style:normal}
   .ed-detail-figure figcaption{display:flex;justify-content:space-between;gap:16px;padding-top:8px;border-top:1px solid var(--line);margin-top:8px;font-size:10.5px;letter-spacing:.08em;color:var(--ink-soft);line-height:1.6}
   .ed-detail-rail{border-top:1px solid var(--ink);padding-top:8px;position:sticky;top:84px}
   .ed-rail-row{display:grid;grid-template-columns:82px minmax(0,1fr);gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.7}
@@ -663,6 +684,10 @@
   .ed-snd-play:hover{color:var(--ink);border-bottom-color:var(--ink)}
   .ed-snd-ext{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;border-bottom:1px solid transparent;padding:5px 0}
   .ed-snd-ext:hover{color:var(--qun);border-bottom-color:var(--qun);text-decoration:none}
+  /* 「听选段」是 <button>，得自己把 UA 的底色和边框清掉，才和旁边的链接同一条基线 */
+  .ed-snd-clip{border:0;border-radius:0;background:none;cursor:pointer;color:var(--ink-soft);font-family:var(--sans);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;border-bottom:1px solid transparent;padding:5px 0}
+  .ed-snd-clip:hover{color:var(--qun);border-bottom-color:var(--qun)}
+  .ed-snd-clip svg{margin-right:3px;vertical-align:-1px}
   .ed-snd-row .snd-stage{grid-column:2 / -1;width:100%;margin-top:8px}
   .ed-snd-row .snd-stage iframe,.ed-snd-row .snd-stage video{width:100%;max-width:860px;display:block;background:#000}
   /* 封面：点开先看到画面，点画面才加载原片 */
@@ -742,6 +767,28 @@
   .ed-src-list li::before{content:counter(src,decimal-leading-zero);font-family:var(--serif);color:var(--cinnabar);font-size:10px}
   .ed-src-list a{color:var(--ink)}
   .ed-src-list a:hover{color:var(--cinnabar)}
+  .ed-src-list .src-legend{margin:0 0 10px;font-size:10.5px;line-height:1.75;color:var(--ink-soft);text-wrap:pretty}
+  .ed-src-list .src-legend b{font-weight:500;color:var(--ink)}
+  .ed-src-list .src-item{display:flex;gap:6px;align-items:baseline}
+  .ed-src-list .src-tag{flex:none;font-style:normal;font-size:9px;line-height:1.6;letter-spacing:.06em;padding:0 4px;border:1px solid var(--line);border-radius:2px;color:var(--ink-soft)}
+  .ed-erratum{margin:16px 0 6px;padding:12px 15px 6px;border-left:2px solid var(--cinnabar);background:rgba(20,26,22,.045)}
+  .ed-erratum h3{margin:0 0 8px;font-family:var(--serif);font-size:15px;letter-spacing:.04em;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .ed-erratum h3 .muted{font-family:var(--sans);font-size:10px;letter-spacing:.08em}
+  .ed-erratum ul{margin:0;padding:0 0 8px;list-style:none}
+  .ed-erratum li{font-size:12px;line-height:1.85;padding-left:12px;position:relative;margin-bottom:4px;text-wrap:pretty}
+  .ed-erratum li::before{content:"";position:absolute;left:0;top:.85em;width:4px;height:1px;background:var(--ink-soft)}
+  .ed-erratum b{font-weight:500;color:var(--ink)}
+  .ed-img-note{margin:10px 0 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .ed-img-note>summary{list-style:none;cursor:pointer;padding:10px 0;font-size:11.5px;letter-spacing:.06em;color:var(--ink-soft)}
+  .ed-img-note>summary::-webkit-details-marker{display:none}
+  .ed-img-note>summary::after{content:"＋";float:right;color:var(--cinnabar);font-size:13px;line-height:1.2}
+  .ed-img-note[open]>summary::after{content:"－"}
+  .ed-img-note ul{margin:2px 0 12px;padding:0;list-style:none}
+  .ed-img-note li{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:11.5px;line-height:1.8}
+  .ed-img-note li b{font-weight:500;color:var(--ink)}
+  .ed-img-note li span{color:var(--ink-soft)}
+  .ed-prose .scope-note{margin:10px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius);font-size:12.5px;line-height:1.85;color:var(--ink-soft);background:rgba(20,26,22,.03)}
+  .ed-prose .scope-note b{font-weight:500;color:var(--ink)}
   .ed-toast{position:fixed;left:50%;bottom:32px;z-index:300;transform:translate(-50%,12px);opacity:0;pointer-events:none;background:var(--ink);color:var(--paper);padding:11px 18px;font-size:12px;letter-spacing:.06em;transition:opacity .25s ease,transform .25s ease}
   .ed-toast.show{opacity:1;transform:translate(-50%,0)}
   .ed-sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-top:1px solid var(--ink);padding-top:10px;margin:36px 0 4px}
@@ -856,11 +903,8 @@
   .logo .cn{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:.12em}
   .logo .en{font-family:var(--sans);font-size:9px;letter-spacing:.2em;opacity:.55}
   .logo-mark{
-    width:34px;height:34px;border:0;border-radius:0;background:var(--cinnabar);color:var(--paper);
-    display:grid;place-items:center;transform:rotate(-4deg);
-    font-family:var(--serif);font-size:21px;font-weight:700;line-height:1;
+    width:34px;height:34px;transform:rotate(-4deg);
   }
-  .logo-mark svg{display:none}
   nav.main a{
     font-size:13px;letter-spacing:.08em;color:var(--ink);
     padding:8px 0;border-bottom:1px solid transparent;
@@ -967,17 +1011,12 @@
   }
   .logo .cn{color:var(--on);transition:color .62s}
   .logo .en{color:var(--on);opacity:.55;transition:color .62s}
-  .logo-mark{background:var(--cinnabar-base);color:var(--paper);transition:background-color .62s,color .62s}
   nav.main a{color:var(--on);transition:color .3s ease,border-color .3s ease}
   nav.main a:hover{color:var(--accent);border-bottom-color:var(--line)}
   nav.main a.active{color:var(--accent);border-bottom-color:var(--accent)}
   .lang-select{color:var(--on);border-bottom-color:var(--line)}
   .lang-select option{background:var(--paper);color:var(--ink-base)}
   .burger{background:transparent;border-color:var(--line);color:var(--on)}
-  body[data-sect="archive"] .logo-mark,
-  body[data-sect="sounds"] .logo-mark,
-  body[data-sect="atlas"] .logo-mark,
-  body[data-sect="about"] .logo-mark{background:var(--on);color:var(--main)}
 
   /* 栏目开篇：整幅特征色，标题反白；页身继续用特征色 */
   .ed-head{
@@ -1079,6 +1118,8 @@
   @media (prefers-reduced-motion:reduce){
     body,header.top{transition:none}
   }
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 </head>
 <body class="no-sect-transition">
@@ -1088,7 +1129,7 @@
 <header class="top">
   <div class="container topbar">
     <a class="logo" href="index.html" data-i18n-ignore>
-      <span class="logo-mark">潇</span>
+      <span class="logo-mark" aria-hidden="true"></span>
       <span><span class="cn" data-i18n="logo_cn">潇贺古道有声文化数据库</span>
       <span class="en" data-i18n="logo_en">XIAOHE AUDIO HERITAGE</span></span>
     </a>
@@ -1135,6 +1176,7 @@
   </div>
 </div>
 
+<div id="routeStatus" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 <main id="app"></main>
 
 <footer>
@@ -1174,12 +1216,8 @@ const PASSAGES = [
     batch:'秦汉', note:'',
     desc:'又名世睦关、莫邪关,位于富川朝东镇小水村一带(与湖南江永县桃川镇交界的大鹏岭古关隘),西连龙虎关、东接宝剑寨。存土夯关墙城垣遗址约5公里,及清同治十三年(1874年)、民国十九年(1930年)修路碑。',
     facts:['位置:富川朝东镇小水村附近,西北与江永桃川镇交界','遗存:土夯关墙遗址约5公里(小水峡至牛塘峡)','碑刻:清同治十三年、民国十九年修路碑','别名:世睦关、莫邪关(《宋史》记「莫邪关」)','战事:唐李靖血战谢沐关、宋岳飞「入莫邪关」'],
-    src:'公开资料整理（谢沐关）;华声在线《寻迹南岭》(2023-08-27)' },
-  { id:'p3', name:'桂岭古道', cat:'通道', city:'贺州', region:'贺州八步区开山镇—桂岭镇',
-    batch:'秦汉', note:'',
-    desc:'潇贺古道贺州段石砌古道,自开山镇豪界村至桂岭镇七里山,路宽约1.5米,全长约18公里,今残存约8公里。1931年1月红七军由湖南江华沿古道入桂,在桂岭整编,途经开山镇白鹤岩、开宁寺。',
-    facts:['路段:开山镇豪界村至桂岭镇七里山','形制:石砌路面,宽约1.5米,全长约18公里(残存约8公里)','红色史迹:1931年红七军经此整编'],
-    src:'公开资料整理（桂岭古道）' },
+    src:'华声在线《寻迹南岭》(2023-08-27)；关址细节待考' },
+
 ];
 
 /* 沿线遗迹(带保护等级) */
@@ -1188,17 +1226,13 @@ const SITES = [
     batch:'第五批国保(2001)', note:'',
     desc:'始建于西汉元鼎六年(前111年),被贺江分为河东河西,是潇贺古道南端最重要的古城遗存,时代汉至清。',
     facts:['始建:西汉元鼎六年(前111年)','保护:第五批全国重点文物保护单位(2001年6月25日)','区位:贺江东西两岸,贺街镇'],
-    src:'广西文旅厅全国重点文物保护单位名录(2023-08-28);公开资料整理（临贺故城）' },
+    src:'广西文旅厅全国重点文物保护单位名录(2023-08-28)' },
   { id:'s2', name:'富川瑶族风雨桥群(27座)', cat:'遗迹', city:'富川', region:'富川瑶族自治县',
     batch:'第七批国保(2013)', note:'',
     desc:'富川瑶族风雨桥群(国保正式名称),现存27座(富川县政府口径;另有口径称境内风雨桥共75座),多建于明清。代表:回澜风雨桥(朝东镇油沐村,始建明万历三十年)、青龙风雨桥(油草村,与回澜桥合称「阴阳桥」)、阳寿风雨桥(城北镇两源村,清嘉庆二十二年始建)。',
     facts:['正式名称:富川瑶族风雨桥群,第七批全国重点文物保护单位(国发〔2013〕13号,2013年3月5日)','规模:现存27座(富川县政府口径),多建于明清','回澜桥:朝东镇油沐村,始建明万历三十年,明崇祯十四年重修','青龙桥:油草村,与回澜桥合称「阴阳桥」','阳寿桥:城北镇两源村,清嘉庆二十二年(1817年)'],
     src:'富川县政府网(2024-03-19);中工网(2023-06-06);搜狗百科《回澜风雨桥》;老百晓集桥' },
-  { id:'s3', name:'秀水状元村', cat:'遗迹', city:'富川', region:'朝东镇',
-    batch:'中国历史文化名村(2008)', note:'',
-    desc:'始建于唐、1300余年历史的古村,科举人才辈出,为潇贺古道上的千年古村。',
-    facts:['始建:唐代,1300余年历史','荣誉:中国历史文化名村(2008年)、中国传统村落','区位:富川朝东镇,距县城30公里'],
-    src:'公开资料整理（秀水村）' },
+
   { id:'s4', name:'福溪村', cat:'遗迹', city:'富川', region:'朝东镇',
     batch:'中国历史文化名村', note:'',
     desc:'始建于宋代,有「七朝古寨」之说,遗存「一溪、二庙、三桥、四祠、十三门楼、十五街巷、二十四戏台」。',
@@ -1214,19 +1248,15 @@ const SITES = [
     desc:'汉元鼎六年(前111年)设谢沐县,县治即在今上甘棠村一带,为七百年县治所在地;唐文宗太和二年(828年)周氏先祖徙居于此。存200余幢古民居与步瀛桥(「石落官出」传说),为潇贺古道江永境内最重要村落。',
     facts:['建制:汉元鼎六年(前111年)谢沐县治,七百年县治所在地','荣誉:全国重点文物保护单位、中国历史文化名村','遗存:200余幢古民居、步瀛桥、谢沐河','迁居:唐文宗太和二年(828年)周氏徙居'],
     src:'今日头条《在潇贺古道上—湖南江永县》(2019-09-21)' },
-  { id:'s8', name:'麦岭府遗址', cat:'遗迹', city:'富川', region:'麦岭镇',
-    batch:'清雍正八年(1730)', note:'',
-    desc:'清雍正八年(1730年),云贵广西总督鄂尔泰上疏获准在麦岭建平乐府同知署衙、麦岭营守备署衙、千总署衙,成古道军事要塞(「麦岭府」为地方俗称,清官方建制为麦岭营/巡检司);1949年11月解放军沿古道解放富川。',
-    facts:['建制:清雍正八年(1730年)麦岭营(俗称麦岭府)','衙署:平乐府同知署衙、守备署衙、千总署衙','沿革:前身为麦岭街,设营后升格为军事要塞','近代:1949年11月解放军四野四十军一一九师经此解放富川'],
-    src:'公开资料整理（麦岭）' },
+
   { id:'s9', name:'富川古明城', cat:'遗迹', city:'富川', region:'富川县城',
     batch:'潇贺古道沿线古城', note:'',
     desc:'潇贺古道沿线古城遗存,今富川县城内,与临贺故城并列为古道沿线古城。',
     facts:['区位:富川县城','地位:潇贺古道沿线古城遗存'],
     src:'澎湃新闻《潇贺古道:千年古道见证民族交融》(2023-05-12)' },
-  { id:'s10', name:'黄姚古镇', cat:'遗迹', city:'昭平', region:'贺州市昭平县',
-    batch:'中国历史文化名镇(2007)/国家5A(2022)', note:'',
-    desc:'千年明清古镇,8条青石板街、300余座明清宅院。2007年入选第三批中国历史文化名镇,2022年评为国家5A级旅游景区;古镇整体保护身份为历史文化名镇,古建筑群属自治区级文物保护层面(注:网络流传「古建筑群为全国重点文物保护单位」与广西国保名录不符)。',
+  { id:'s10', name:'黄姚古镇', cat:'遗迹', city:'昭平', region:'贺州周边 · 昭平县',
+    batch:'中国历史文化名镇(2007)/国家5A(2022)', note:'贺州周边古镇',
+    desc:'贺州周边的千年明清古镇,8条青石板街、300余座明清宅院。它位于贺江下游支流,不在西线陆路节点上;但县政府的《潇贺古道线概况》与文化和旅游部「广西·潇贺古道 千年乡愁」线路都把黄姚纳入,故本库按「线路参照」收录。2007年入选第三批中国历史文化名镇,2022年评为国家5A级旅游景区;古镇整体保护身份为历史文化名镇,古建筑群属自治区级文物保护层面(注:网络流传「古建筑群为全国重点文物保护单位」与广西国保名录不符)。',
     facts:['规模:8条青石板街、300余座明清宅院','荣誉:第三批中国历史文化名镇(2007年)','荣誉:国家5A级旅游景区(2022年)','备注:古建筑群非全国重点文保,网传说法与名录不符'],
     src:'搜狐旅游(2025-05-19);澎湃新闻(2023-05-12)' },
   { id:'s11', name:'江永女书生态博物馆', cat:'遗迹', city:'江永', region:'上江圩镇浦尾村',
@@ -1246,8 +1276,8 @@ const SITES = [
     src:'贺州学院南岭民族走廊研究院(2024-01-02);人民政协网(2024-11-06)' },
   { id:'s14', name:'惠风亭(潇贺古道江华段)', cat:'遗迹', city:'江华', region:'江华瑶族自治县大路铺镇牛角湾村',
     batch:'第七批国保(2013)', note:'',
-    desc:'潇贺古道江华段上的古道凉亭,位于大路铺镇牛角湾村一带,是全国重点文物保护单位「潇贺古道(湘桂古道)江华段」的组成部分(官方表述为「潇贺古道 江华惠风亭段」);江华段现存古道凉亭12座。',
-    facts:['保护级别:第七批全国重点文物保护单位(2013年),「潇贺古道(湘桂古道)江华段」组成部分','区位:江华瑶族自治县大路铺镇牛角湾村','规模:江华段现存古道凉亭12座(含惠风亭)','现状:沿线村庄建立联席会议制度,已出台「潇贺古道保护硬三条」'],
+    desc:'潇贺古道江华段上的古道凉亭,位于大路铺镇牛角湾村一带,是第七批全国重点文物保护单位「湘桂古道永州段」的组成部分;该段地跨道县、江华、江永,由 30 处文物点组成,江华段现存古道凉亭 12 座。',
+    facts:['保护级别:第七批全国重点文物保护单位(2013年)「湘桂古道永州段」组成部分(7-1228-3-526)','区位:江华瑶族自治县大路铺镇牛角湾村','规模:江华段现存古道凉亭12座(含惠风亭)','现状:沿线村庄建立联席会议制度,已出台「潇贺古道保护硬三条」'],
     src:'人民网湖南频道(2026-01-19);湖南日报·新湖南(2025-01-24)' },
   { id:'s15', name:'阳华岩摩崖石刻', cat:'遗迹', city:'江华', region:'江华瑶族自治县沱江镇竹元寨村',
     batch:'第六批国保(2006)', note:'',
@@ -1261,7 +1291,7 @@ const ICH = [
   { id:'i1', name:'女书习俗', cat:'非遗', city:'江永', region:'永州市江永县上江圩镇',
     batch:'第一批国家级(2006)', note:'',
     desc:'流传于江永上江圩镇一带的独特女性文字及其习俗,2006年列入第一批国家级非物质文化遗产名录;国家级代表性传承人何静华(2012年授予)。',
-    facts:['批次:第一批国家级非遗(2006年)','范围:江永上江圩镇蒲尾村一带','传承人:何静华(2012年授予国家级代表性传承人)','伴生:坐歌堂、斗牛节等习俗'],
+    facts:['批次:第一批国家级非遗(2006年;序号517,编号Ⅹ-69,民俗类)','范围:江永上江圩镇蒲尾村一带','传承人:何静华(2012年授予国家级代表性传承人)','伴生:坐歌堂、斗牛节等习俗'],
     src:'永州市政府网(2022-04-27);网易(2023-07-20)' },
   { id:'i2', name:'多声部民歌(瑶族蝴蝶歌)', cat:'非遗', city:'富川', region:'富川瑶族自治县',
     batch:'第二批国家级(2008)', note:'',
@@ -1271,27 +1301,27 @@ const ICH = [
   { id:'i3', name:'瑶族长鼓舞', cat:'非遗', city:'贺州', region:'贺州市(富川为申报地区之一)',
     batch:'第二批国家级(2008)', note:'',
     desc:'瑶族传统舞蹈,流传于湖南江华、广东连南、广西富川等地,2008年入选第二批国家级非物质文化遗产;国家级传承人黄道胜;富川分支有「高台长鼓舞」。',
-    facts:['级别:第二批国家级非遗(2008年)','流传:湖南江华、广东连南、广西富川等','传承人:黄道胜(国家级)','分支:富川高台长鼓舞'],
+    facts:['级别:第二批国家级非遗(2008年;序号 657,编号 Ⅲ-60)','流传:湖南江华、广东连南、广西富川等','传承人:黄道胜(国家级)','分支:富川高台长鼓舞'],
     src:'腾讯新闻·贺州非遗云展厅(2024-06-21);富川县政府网(2023-04-14)' },
   { id:'i4', name:'瑶族服饰', cat:'非遗', city:'贺州', region:'贺州市(与南丹县联合申报)',
     batch:'第一批国家级(2006)', note:'',
-    desc:'2006年列入第一批国家级非物质文化遗产名录,申报地区为广西南丹县、贺州市;贺州瑶族头饰分尖头、平头、包帕三类,以「尖头瑶」服饰最具代表性;国家级代表性传承人李素芳,其瑶绣作品2015年入选联合国开发计划署礼品。',
-    facts:['批次:第一批国家级非遗(2006年,国发〔2006〕18号,编号Ⅸ-67)','申报地区:广西南丹县、贺州市','特色:贺州尖头瑶服饰(头饰分尖头/平头/包帕三类)','传承人:李素芳(国家级,瑶绣入选联合国开发计划署礼品)'],
+    desc:'2006年列入第一批国家级非物质文化遗产名录,申报地区为广西南丹县、贺州市;贺州瑶族头饰分尖头、平头、包帕三类,以「尖头瑶」服饰最具代表性;国家级代表性传承人李素芳。其《瑶绣·瑶族盘王印章》《瑶绣·年年有鱼》2016年被联合国开发计划署征集,用于联合国商务笔记本封面装饰。',
+    facts:['批次:第一批国家级非遗(2006年,国发〔2006〕18号;序号515,编号Ⅹ-67,民俗类)','申报地区:广西南丹县、贺州市','特色:贺州尖头瑶服饰(头饰分尖头/平头/包帕三类)','传承人:李素芳(国家级;瑶绣作品2016年被联合国开发计划署征集)'],
     src:'国家民委(2023-11-07);中国网(2017-12-06)' },
   { id:'i5', name:'富川上灯炸龙节', cat:'非遗', city:'富川', region:'富川瑶族自治县',
     batch:'广西自治区级(2014)', note:'',
     desc:'起源于明代万历年间的瑶乡节庆,2014年12月列入广西壮族自治区级非物质文化遗产代表性项目名录(注:网络个别自媒体称其为国家级,系误传,以自治区级为准)。',
     facts:['起源:明代万历年间,400余年历史','级别:广西自治区级非遗(2014年12月列入)','备注:网上「国家级」说法系误传'],
-    src:'富川县政府网;360搜索非遗条目' },
+    src:'富川县政府网;广西壮族自治区级非物质文化遗产代表性项目名录(第五批,2014)' },
   { id:'i6', name:'瑶族盘王节', cat:'非遗', city:'贺州', region:'贺州市',
     batch:'第一批国家级(2006)', note:'',
     desc:'瑶族纪念始祖盘王(盘瓠)的传统节日,又称「跳盘王」「还盘王愿」,2006年列入第一批国家级非物质文化遗产名录;节庆以跳长鼓舞、唱盘王大歌、祭盘王为核心,是潇贺古道沿线瑶族最重要的节庆之一。',
-    facts:['批次:第一批国家级非遗(2006年)','地区:广西贺州、富川及湘桂粤瑶族地区','内涵:跳盘王/还盘王愿,长鼓舞与盘王大歌'],
+    facts:['批次:第一批国家级非遗(2006年;序号 462,编号 Ⅹ-14)','地区:广西贺州、富川及湘桂粤瑶族地区','内涵:跳盘王/还盘王愿,长鼓舞与盘王大歌'],
     src:'中国非物质文化遗产网(ihchina.cn);贺州市政府网' },
   { id:'i7', name:'盘王大歌', cat:'非遗', city:'江华', region:'永州市江华瑶族自治县',
     batch:'第四批国家级(2014)', note:'',
-    desc:'瑶族史诗,又称《盘王大歌书》《还愿歌》《鼠干歌》《流乐书下卷》,现存歌本约八千行,现存最早抄本为清乾隆年间;有三十六段、二十四段、十二段三种版本。盘王节「还盘王愿」时由师公与歌娘吟唱,用瑶语传统唱腔男女对唱,歌有歌名、曲有七支曲牌(七任曲)。2014年7月列入第四批国家级非物质文化遗产名录(民间文学类);此前2008年已列入湖南省第二批省级非遗,保护主体为江华瑶族自治县文化馆。',
-    facts:['批次:第四批国家级非遗(2014年7月,民间文学类)','前身:2008年湖南省第二批省级非遗(江华瑶族自治县文化馆为保护主体)','规模:现存歌本约八千行;三十六/二十四/十二段三种版本','形制:三十六歌+七任曲(梅花曲、南花子、飞江南、相逢贤曲、万段曲、亚六曲、荷叶杯)','场合:盘王节「还盘王愿」时吟唱,男女对唱'],
+    desc:'瑶族史诗,又称《盘王大歌书》《还愿歌》《鼠干歌》《流乐书下卷》,现存歌本约八千行,现存最早抄本为清乾隆年间;有三十六段、二十四段、十二段三种版本。盘王节「还盘王愿」时由师公与歌娘吟唱,用瑶语传统唱腔男女对唱,歌有歌名、曲有七支曲牌(七任曲)。2014年7月公示、11月11日经国务院公布(国发〔2014〕59号),列入第四批国家级非物质文化遗产代表性项目名录(民间文学类);此前2008年已列入湖南省第二批省级非遗,保护主体为江华瑶族自治县文化馆。',
+    facts:['批次:第四批国家级非遗(2014年11月11日公布,民间文学类;序号 1245,编号 Ⅰ-151)','前身:2008年湖南省第二批省级非遗(江华瑶族自治县文化馆为保护主体)','规模:现存歌本约八千行;三十六/二十四/十二段三种版本','形制:三十六歌+七任曲(梅花曲、南花子、飞江南、相逢贤曲、万段曲、亚六曲、荷叶杯)','场合:盘王节「还盘王愿」时吟唱,男女对唱'],
     src:'江华瑶族自治县人民政府《盘王大歌》(2022-06-30,来源文旅云);湖南省文化和旅游厅(2019-09);华声在线(2014-07-18)' },
   { id:'i8', name:'富川瑶族织锦', cat:'非遗', city:'富川', region:'富川瑶族自治县',
     batch:'广西自治区级(2018)', note:'',
@@ -1302,73 +1332,75 @@ const ICH = [
 
 /* 人物与事件 */
 const FIGURES = [
-  { id:'f1', name:'尉屠睢', cat:'人物', city:'道县', region:'秦·督修古道',
-    batch:'秦始皇时期', note:'',
-    desc:'秦始皇二十八年(前219年)率50万大军五路征岭南,督修道州—封阳—广信段水陆古道(即潇贺古道雏形),动用湘桂粤戍民40余万,前213年完成。',
-    facts:['年代:秦始皇二十八年(前219年)起','事迹:督修道州—封阳—广信段古道','背景:秦统一岭南之战'],
-    src:'公开资料整理（潇贺古道）' },
+
   { id:'f2', name:'赵佗(南越国)', cat:'人物', city:'贺州', region:'秦末·南越',
     batch:'秦末', note:'',
-    desc:'秦末任南海郡尉,据南越称制;顾祖禹《读史方舆纪要》载赵佗曾于桂岭一带拒防。',
-    facts:['身份:南越国主','事迹:据南越称制,曾于桂岭一带拒防','文献:顾祖禹《读史方舆纪要》'],
-    src:'华声在线《寻迹南岭》(2023-08-27)' },
-  { id:'f3', name:'田甲', cat:'人物', city:'富川', region:'西汉·归义侯',
-    batch:'汉元鼎五年(前112年)', note:'',
-    desc:'汉元鼎五年(前112年),归义侯田甲率军由富川取古道南下苍梧,一部战于谢沐关。',
-    facts:['年代:汉元鼎五年(前112年)','路线:经古道南下苍梧','战事:一部战于谢沐关'],
-    src:'公开资料整理（谢沐关）' },
+    desc:'秦末任南海郡尉;秦亡后「绝道聚兵自守」,据岭南建南越国,与长沙国以五岭为界,桂岭—萌渚岭一线即其北界通道。',
+    facts:['身份:南越国主','事迹:秦亡后绝道自守、据岭南建国','文献:《史记·南越列传》'],
+    src:'《史记·南越列传》;华声在线《寻迹南岭》(2023-08-27)' },
+
   { id:'f4', name:'李靖', cat:'人物', city:'富川', region:'唐·卫国公',
     batch:'唐武德四年(621年)', note:'',
     desc:'唐武德四年(621年)平萧铣,「由夷陵抵富川度至桂州,驻师黄沙岭」,血战谢沐关。',
     facts:['年代:唐武德四年(621年)','事迹:驻师黄沙岭、血战谢沐关','文献:乾隆《富川县志》'],
-    src:'公开资料整理（谢沐关）' },
+    src:'乾隆《富川县志》' },
   { id:'f5', name:'潘美', cat:'人物', city:'富川', region:'宋·伐南汉统帅',
     batch:'宋开宝三年(970年)', note:'',
     desc:'宋开宝三年(970年)伐南汉,「自道州进,次白象」「进克富川」,沿潇贺古道南下。',
     facts:['年代:宋开宝三年(970年)','路线:自道州沿古道进克富川','文献:道光《永明县志》'],
-    src:'公开资料整理（谢沐关）' },
+    src:'道光《永明县志》' },
   { id:'f6', name:'岳飞', cat:'人物', city:'富川', region:'宋·追剿曹成',
     batch:'宋绍兴二年(1132年)', note:'',
-    desc:'宋绍兴二年(1132年)追剿曹成,「破曹成,入莫邪关」(谢沐关),经古道用兵。',
-    facts:['年代:宋绍兴二年(1132年)','事迹:破曹成、入莫邪关','文献:《宋史》'],
-    src:'公开资料整理（谢沐关）' },
-  { id:'f7', name:'鄂尔泰', cat:'人物', city:'富川', region:'清·云贵广西总督',
-    batch:'清雍正八年(1730年)', note:'',
-    desc:'清雍正八年(1730年)奏请于麦岭设同知、建麦岭营,强化古道军事管制。',
-    facts:['年代:清雍正八年(1730年)','举措:奏设麦岭营(麦岭府)','背景:古道军事要塞'],
-    src:'公开资料整理（潇贺古道）' },
-  { id:'f8', name:'红七军(张云逸、邓小平、李明瑞)', cat:'人物', city:'贺州', region:'1931年·桂岭整编',
-    batch:'土地革命时期', note:'',
-    desc:'1931年1月11日从湖南江华沿潇贺古道入桂,14日抵贺县桂岭整编,途经开山镇白鹤岩、开宁寺。',
-    facts:['时间:1931年1月11日—14日','路线:江华沿古道入桂,桂岭整编','史迹:开山镇白鹤岩、开宁寺'],
-    src:'公开资料整理（潇贺古道）' },
+    desc:'宋绍兴二年(1132年)追剿曹成,据《宋史·杨再兴传》「岳飞破成,入莫邪关」;莫邪关一般认为即今富川谢沐关,古道由此成为南宋用兵通道。',
+    facts:['年代:宋绍兴二年(1132年)','事迹:破曹成、入莫邪关(一说即谢沐关)','文献:《宋史·杨再兴传》'],
+    src:'《宋史·杨再兴传》' },
+
 ];
 
 /* 真实统计 */
 const STATS = [
-  { num:'前219年', label:'古道始建', sub:'秦始皇二十八年,秦建「新道」', src:'人民网理论频道/公开资料整理' },
+  { num:'前219年', label:'古道始建', sub:'秦始皇二十八年,秦建「新道」', src:'人民网理论频道' },
   { num:'170', label:'陆路里程(公里)', sub:'《富川瑶族自治县志》记至富川古县城段', src:'《富川瑶族自治县志》(转引)/富川县政府网' },
   { num:'27座', label:'富川瑶族风雨桥群(官方口径)', sub:'第七批全国重点文物保护单位(2013)', src:'富川县政府网/广西国保名录' },
   { num:'2006年', label:'女书习俗列首批国家级非遗', sub:'另有蝴蝶歌、长鼓舞、瑶族服饰等', src:'永州市政府网/中国非遗网' },
 ];
 
-/* 来源清单 */
+/* 来源清单：按可信级别分组。
+   官方 = 政府、文物与非遗主管部门的公布文件或官网
+   学术 = 期刊、学位论文、正史与地方志
+   媒体 = 通讯社、报纸及其网站
+   线索 = 商业百科、聚合平台、自媒体；只用于发现线索，事实以官方与学术来源为准 */
 const SOURCES = [
-  { name:'人民网理论频道/光明网:周大鸣《交融古今,通达天下:潇贺古道的历史与人文价值》(2022-04-20)', url:'https://news.gmw.cn' },
-  { name:'公开资料整理（潇贺古道、谢沐关、临贺故城、秀水村）', url:'' },
-  { name:'广西壮族自治区文化和旅游厅《广西全国重点文物保护单位名录》(临贺故城,2001年第五批)', url:'https://wlt.gxzf.gov.cn' },
-  { name:'富川瑶族自治县人民政府(风雨桥群、潇贺古道富川历史文化馆、长鼓舞)', url:'https://www.gxfc.gov.cn' },
-  { name:'华声在线《寻迹南岭》(2023-08-27)', url:'https://hunan.voc.com.cn' },
-  { name:'澎湃新闻《潇贺古道:千年古道见证民族交融》(2023-05-12)', url:'https://www.thepaper.cn' },
-  { name:'广西壮族自治区民族宗教事务委员会《贺州市巧用潇贺古道文化讲好铸牢中华民族共同体故事》(2024-09-11)', url:'https://mzw.gxzf.gov.cn' },
-  { name:'贺州学院南岭民族走廊研究院《贺州民族文化博物馆简介》', url:'https://nlyj.hzxy.edu.cn' },
-  { name:'永州市政府网《国家级非遗项目〈女书习俗〉代表性传承人何静华事迹》(2022-04-27)', url:'https://www.yzcity.gov.cn' },
-  { name:'中国非物质文化遗产网·中国非物质文化遗产数字博物馆(瑶族蝴蝶歌、瑶族服饰)', url:'https://www.ihchina.cn' },
-  { name:'国家民委《贺州瑶绣何以成为联合国的名片?》(李素芳访谈,2023-11-07)', url:'https://www.neac.gov.cn' },
-  { name:'新华网广西频道《富川:潇贺古道文脉激发古村文旅新活力》(2026-07-14)', url:'https://www.gx.xinhua.org' },
-  { name:'湖南人民网《湖南江华:保护潇贺古道 我们在行动》(2026-01-19)', url:'https://hn.people.com.cn' },
-  { name:'永州新闻网(江华人大潇贺古道保护专项视察,2026-06-26)', url:'https://news.yongzhou.gov.cn' },
-  { name:'优酷/腾讯视频《长寿贺州大型匠心纪录片〈潇贺古道〉》(2017)', url:'https://v.youku.com' },
+  { tier:'官方', name:'人民网理论频道 / 光明网：周大鸣《交融古今，通达天下：潇贺古道的历史与人文价值》（2022-04-20）', url:'https://news.gmw.cn' },
+  { tier:'官方', name:'国务院《关于公布第一批国家级非物质文化遗产名录的通知》（国发〔2006〕18 号）、《关于公布第四批国家级非物质文化遗产代表性项目名录的通知》（国发〔2014〕59 号）', url:'https://www.ihchina.cn/zhengce_details/11546' },
+  { tier:'官方', name:'中国非物质文化遗产网·中国非物质文化遗产数字博物馆（女书习俗、多声部民歌·瑶族蝴蝶歌、瑶族服饰、瑶族盘王节、瑶族长鼓舞）', url:'https://www.ihchina.cn' },
+  { tier:'官方', name:'广西壮族自治区文化和旅游厅《广西全国重点文物保护单位名录》（临贺故城，2001 年第五批；富川瑶族风雨桥群，2013 年第七批）', url:'https://wlt.gxzf.gov.cn' },
+  { tier:'官方', name:'广西第一批至第八批自治区级非物质文化遗产代表性项目名录表（2014 年第五批含富川上灯炸龙节；2018 年含瑶族织锦技艺）', url:'http://guangxi.china.com.cn/2022-06/30/content_42018053.html' },
+  { tier:'官方', name:'富川瑶族自治县人民政府（风雨桥群、潇贺古道富川历史文化馆、长鼓舞、上灯炸龙）', url:'http://www.gxfc.gov.cn' },
+  { tier:'官方', name:'湖南省文化和旅游厅《永州江华〈盘王大歌〉——国家级非物质文化遗产》（2019-09）', url:'http://whhlyt.hunan.gov.cn/news/tpxw/201909/t20190910_5482779.html' },
+  { tier:'官方', name:'江华瑶族自治县人民政府《盘王大歌》（2022-06-30，来源文旅云）', url:'http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml' },
+  { tier:'官方', name:'永州市人民政府网《国家级非遗项目〈女书习俗〉代表性传承人何静华事迹》（2022-04-27）', url:'https://www.yzcity.gov.cn' },
+  { tier:'官方', name:'广西壮族自治区民族宗教事务委员会《贺州市巧用潇贺古道文化讲好铸牢中华民族共同体故事》（2024-09-11）', url:'https://mzw.gxzf.gov.cn' },
+  { tier:'官方', name:'国家民族事务委员会《贺州瑶绣何以成为联合国的名片？》（李素芳访谈，2023-11-07）', url:'https://www.neac.gov.cn' },
+  { tier:'官方', name:'新华网广西频道《富川：潇贺古道文脉激发古村文旅新活力》（2026-07-14）', url:'https://www.gx.xinhua.org' },
+  { tier:'官方', name:'人民网湖南频道《湖南江华：保护潇贺古道 我们在行动》（2026-01-19）', url:'https://hn.people.com.cn' },
+  { tier:'官方', name:'永州新闻网（江华人大潇贺古道保护专项视察，2026-06-26）', url:'https://news.yongzhou.gov.cn' },
+  { tier:'官方', name:'福建省文物局转载国家文物局信息：富川 27 座风雨桥本体平面图、立面图、剖面图及保护矢量图（2024-10）', url:'http://wwj.wlt.fujian.gov.cn/xwzx/wbyw/202410/t20241021_6550891.htm' },
+  { tier:'官方', name:'贺州学院南岭民族走廊研究院《贺州民族文化博物馆简介》', url:'https://nlyj.hzxy.edu.cn' },
+  { tier:'学术', name:'袁兴《广西贺州瑶族服饰文化传承中的形态及设计转化》（2023）', url:'https://www.ihchina.cn/Article/Index/detail?id=27194' },
+  { tier:'学术', name:'《黄河之声》2022 年第 8 期（多声部民歌和声特征）、第 14 期（〈蝴蝶歌〉音乐本体研究）', url:'' },
+  { tier:'学术', name:'《民族艺术》2013 年第 3 期《女书「三朝书」探析》；《艺术探索》2009 年第 1 期《女书与「八角花」图案》', url:'' },
+  { tier:'学术', name:'乾隆《富川县志》、道光《永明县志》（李靖、潘美条目的转引出处）', url:'' },
+  { tier:'学术', name:'《史记·南越列传》（赵佗）、干宝《搜神记》卷十四与刘禹锡《蛮子歌》（盘瓠）、韩愈《进学解》（回澜桥名）、周去非《岭外代答》（入岭五途）', url:'https://zh.wikisource.org' },
+  { tier:'媒体', name:'华声在线《寻迹南岭》（2023-08-27）；澎湃新闻《潇贺古道：千年古道见证民族交融》（2023-05-12）', url:'https://hunan.voc.com.cn' },
+  { tier:'媒体', name:'《消费日报》2022-03-09《千年瑶族织锦技艺“染”出时代风采》；中国网 2017-12-06（瑶族服饰）', url:'' },
+  { tier:'媒体', name:'广西新闻网 2019-02-15、2025-02-10（上灯炸龙起源与仪式）；广西纪检监察网 2021-12（蝴蝶歌）', url:'https://www.gxnews.com.cn' },
+  { tier:'媒体', name:'腾讯新闻·贺州非遗云展厅（2024-06-21、2025-02-06/07）；腾讯新闻 2021-10（风雨桥修缮）；人民网广西 2023-06', url:'' },
+  { tier:'媒体', name:'优酷 / 腾讯视频《长寿贺州·大型匠心纪录片〈潇贺古道〉》（2017）', url:'https://v.youku.com' },
+  { tier:'线索', name:'搜狐、今日头条、网易、携程攻略：福溪村、上甘棠村、黄姚古镇、女书生态博物馆等村落与景点条目', url:'' },
+  { tier:'线索', name:'搜狗百科、百度百科、360 百科、维基百科：桥名、形制与村落条目的交叉核对；与官方档案冲突时以官方为准', url:'' },
+  { tier:'线索', name:'抖音「龙女爱分享」《第一部分 长鼓舞基础》（2023-10-09）：21 个动作名与时间码，仅取该教学片的命名，不作统一标准', url:'https://www.douyin.com/video/7287820631314337080' },
+  { tier:'线索', name:'哔哩哔哩：37 条声音与影像记录的原平台，逐条标注出处与清晰度，下架后以本地副本提供', url:'https://www.bilibili.com' },
 ];
 
 /* ================================================================
@@ -1376,22 +1408,22 @@ const SOURCES = [
    ================================================================ */
 const SOUNDS = [
   /* 蝴蝶歌(6) */
-  { id:'so1', name:'CCTV青歌赛·蝴蝶歌组合《迎客歌》', platform:'哔哩哔哩', bvid:'BV1Qf421B7Wk', url:'https://www.bilibili.com/video/BV1Qf421B7Wk/', note:'央视青歌赛原生态唱法比赛实况,权威舞台版' },
+  { id:'so1', name:'CCTV青歌赛·蝴蝶歌组合《迎客歌》', platform:'哔哩哔哩', bvid:'BV1Qf421B7Wk', url:'https://www.bilibili.com/video/BV1Qf421B7Wk/', note:'央视青歌赛原生态唱法比赛实况,权威舞台版', clip:'assets/audio/butterfly2.mp3' },
   { id:'so4', name:'贺州蝴蝶歌', platform:'哔哩哔哩', bvid:'BV17C4y1v7hZ', url:'https://www.bilibili.com/video/BV17C4y1v7hZ/', note:'贺州本地蝴蝶歌音视频' },
   { id:'so5', name:'来富川总要听听蝴蝶歌吧《流水欢歌迎客来》', platform:'哔哩哔哩(富川县民族艺术团)', bvid:'BV1B8411S74T', url:'https://www.bilibili.com/video/BV1B8411S74T/', note:'富川本地官方艺术团现场版', clip:'assets/audio/butterfly.mp3' },
   { id:'so6', name:'八桂錱艺·最美瑶族蝴蝶歌', platform:'哔哩哔哩', bvid:'BV1vL411j7jS', url:'https://www.bilibili.com/video/BV1vL411j7jS/', note:'广西非遗展演' },
-  { id:'so7', name:'瑶族蝴蝶歌《幸福泡在酒碗里》', platform:'哔哩哔哩', bvid:'BV1aF411H7yP', url:'https://www.bilibili.com/video/BV1aF411H7yP/', note:'编创新作,播放4万+' },
-  { id:'so8', name:'与辉同行阅山河·瑶族蝴蝶歌《流水欢歌迎客来》', platform:'哔哩哔哩', bvid:'BV1Wt6wBVExq', url:'https://www.bilibili.com/video/BV1Wt6wBVExq/', note:'文旅走读类实拍' },
+  { id:'so7', name:'瑶族蝴蝶歌《幸福泡在酒碗里》', platform:'哔哩哔哩', bvid:'BV1aF411H7yP', url:'https://www.bilibili.com/video/BV1aF411H7yP/', note:'编创新作,播放4万+', clip:'assets/audio/butterfly3.mp3' },
+  { id:'so8', name:'与辉同行阅山河·瑶族蝴蝶歌《流水欢歌迎客来》', platform:'哔哩哔哩', bvid:'BV1Wt6wBVExq', url:'https://www.bilibili.com/video/BV1Wt6wBVExq/', note:'文旅走读类实拍', clip:'assets/audio/butterfly4.mp3' },
   /* 长鼓舞(4) */
-  { id:'so9', name:'原创瑶族长鼓舞·女子群舞《打着长鼓过山坳》', platform:'哔哩哔哩(富川县民族艺术团官方)', bvid:'BV1js4y1g7Md', url:'https://www.bilibili.com/video/BV1js4y1g7Md/', note:'富川官方艺术团原创群舞' },
+  { id:'so9', name:'原创瑶族长鼓舞·女子群舞《打着长鼓过山坳》', platform:'哔哩哔哩(富川县民族艺术团官方)', bvid:'BV1js4y1g7Md', url:'https://www.bilibili.com/video/BV1js4y1g7Md/', note:'富川官方艺术团原创群舞', clip:'assets/audio/drum2.mp3' },
   { id:'so10', name:'《汪嘟》非遗项目:瑶族长鼓舞(国家级)', platform:'哔哩哔哩', bvid:'BV1pZKszGEtK', url:'https://www.bilibili.com/video/BV1pZKszGEtK/', note:'国家级非遗项目纪录', clip:'assets/audio/drum.mp3' },
-  { id:'so11', name:'完整版瑶族长鼓舞 独舞分享', platform:'哔哩哔哩', bvid:'BV1ioFpzkESu', url:'https://www.bilibili.com/video/BV1ioFpzkESu/', note:'独舞完整版' },
-  { id:'so13', name:'瑶族《长鼓舞》', platform:'哔哩哔哩', bvid:'BV1Tx4y1d7ej', url:'https://www.bilibili.com/video/BV1Tx4y1d7ej/', note:'舞台表演版' },
+  { id:'so11', name:'完整版瑶族长鼓舞 独舞分享', platform:'哔哩哔哩', bvid:'BV1ioFpzkESu', url:'https://www.bilibili.com/video/BV1ioFpzkESu/', note:'独舞完整版', clip:'assets/audio/drum3.mp3' },
+  { id:'so13', name:'瑶族《长鼓舞》', platform:'哔哩哔哩', bvid:'BV1Tx4y1d7ej', url:'https://www.bilibili.com/video/BV1Tx4y1d7ej/', note:'舞台表演版', clip:'assets/audio/drum4.mp3' },
   /* 女书(8) */
-  { id:'so14', name:'9分钟视频,复原一场女书婚礼', platform:'哔哩哔哩(新华社官方)', bvid:'BV1Lx4y1o7pQ', url:'https://www.bilibili.com/video/BV1Lx4y1o7pQ/', note:'新华社出品,含歌堂吟唱声,播放37.9万' },
-  { id:'so15a', name:'李雨儿《女书组歌》·P1《姐妹书》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=1', note:'女书题材创作组歌,专业演唱' },
+  { id:'so14', name:'9分钟视频,复原一场女书婚礼', platform:'哔哩哔哩(新华社官方)', bvid:'BV1Lx4y1o7pQ', url:'https://www.bilibili.com/video/BV1Lx4y1o7pQ/', note:'新华社出品,含歌堂吟唱声,播放37.9万', clip:'assets/audio/nushu2.mp3' },
+  { id:'so15a', name:'李雨儿《女书组歌》·P1《姐妹书》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=1', note:'女书题材创作组歌,专业演唱', clip:'assets/audio/nushu3.mp3' },
   { id:'so15b', name:'李雨儿《女书组歌》·P2《训女词》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=2', note:'女书题材创作组歌,专业演唱' },
-  { id:'so15c', name:'李雨儿《女书组歌》·P3《女书魂》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=3', note:'女书题材创作组歌,专业演唱' },
+  { id:'so15c', name:'李雨儿《女书组歌》·P3《女书魂》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=3', note:'女书题材创作组歌,专业演唱', clip:'assets/audio/nushu4.mp3' },
   { id:'so16', name:'女书歌曲《金坨女》分享', platform:'哔哩哔哩(关联江永文旅)', bvid:'BV1QTrTY2EAF', url:'https://www.bilibili.com/video/BV1QTrTY2EAF/', note:'女书歌曲实唱', clip:'assets/audio/nushu.mp3' },
   { id:'so17', name:'女书习俗·何静华·综述片(湖南省非遗保护中心)', platform:'哔哩哔哩', bvid:'BV1ko4y1S74E', url:'https://www.bilibili.com/video/BV1ko4y1S74E/', note:'何静华为国家级代表性传承人' },
   { id:'so18', name:'纪录短片《江永女书》', platform:'哔哩哔哩', bvid:'BV1qNNBzwEUZ', url:'https://www.bilibili.com/video/BV1qNNBzwEUZ/', note:'独立纪录短片' },
@@ -1411,8 +1443,23 @@ const SOUNDS = [
   /* 六章其余三个主题:风雨桥 / 盘王大歌 / 瑶族织锦 */
   { id:'so22', name:'《风雨桥边》富川瑶族自治县推广曲 MV', platform:'哔哩哔哩', bvid:'BV14b4y1U7su', url:'https://www.bilibili.com/video/BV14b4y1U7su/', note:'杨丽雅、蒿艺源演唱;唱的是富川风雨桥群', clip:'assets/audio/bridge.mp3' },
   { id:'so23', name:'《盘王大歌》(如意官·万段曲)湖南民歌合唱', platform:'哔哩哔哩', bvid:'BV1JUyABpEbb', url:'https://www.bilibili.com/video/BV1JUyABpEbb/', note:'合唱编配:蒋团连;江华瑶族「还盘王愿」所唱', clip:'assets/audio/panwang.mp3' },
-  { id:'so24', name:'瑶族织锦 · 八宝被传人陈春秀(织机与讲述)', platform:'哔哩哔哩', bvid:'BV1K34y1e7wh', url:'https://www.bilibili.com/video/BV1K34y1e7wh/', note:'江华瑶族自治县织锦现场声;织机声与口述,非富川本地录音', clip:'assets/audio/brocade.mp3' }
+  { id:'so24', name:'瑶族织锦 · 八宝被传人陈春秀(织机与讲述)', platform:'哔哩哔哩', bvid:'BV1K34y1e7wh', url:'https://www.bilibili.com/video/BV1K34y1e7wh/', note:'江华瑶族自治县织锦现场声;织机声与口述,非富川本地录音', clip:'assets/audio/brocade.mp3' },
+  /* 六章声音扩充:风雨桥 / 盘王大歌 / 织锦 各补足到 3-4 段选段 */
+  { id:'so31', name:'【他山】走过这些风雨桥，风风雨雨都逍遥！', platform:'哔哩哔哩', bvid:'BV1kfMUz1EVZ', url:'https://www.bilibili.com/video/BV1kfMUz1EVZ/', note:'24 分钟实地走访富川风雨桥群;选段取桥下水流与木构段的现场声', clip:'assets/audio/bridge2.mp3' },
+  { id:'so32', name:'百年风雨桥——以新时代科技，守望文明薪火', platform:'哔哩哔哩(中国国家地理频道)', bvid:'BV1kL4y1873f', url:'https://www.bilibili.com/video/BV1kL4y1873f/', note:'桥梁保护纪实,6 分钟;廊桥与河道的现场声', clip:'assets/audio/bridge3.mp3' },
+  { id:'so33', name:'大型瑶族舞蹈史诗《盘王大歌》(富川县民族艺术团)', platform:'哔哩哔哩(广西富川县民族艺术团)', bvid:'BV1G5411p7nX', url:'https://www.bilibili.com/video/BV1G5411p7nX/', note:'县团自演全本,71 分钟;选段为合唱与鼓乐段落', clip:'assets/audio/panwang2.mp3' },
+  { id:'so34', name:'纪录短片《还盘王愿》', platform:'哔哩哔哩', bvid:'BV13e411F7jY', url:'https://www.bilibili.com/video/BV13e411F7jY/', note:'还盘王愿仪式现场,18 分钟;选段为仪式吟唱', clip:'assets/audio/panwang3.mp3' },
+  { id:'so35', name:'CCTV青歌赛合唱半决赛《盘王歌》(乳源瑶族合唱团)', platform:'哔哩哔哩', bvid:'BV1Dx4y1b7Cx', url:'https://www.bilibili.com/video/BV1Dx4y1b7Cx/', note:'2010 青歌赛合唱半决赛 88.67 分,4 分 43 秒', clip:'assets/audio/panwang4.mp3' },
+  { id:'so36', name:'《瑶族织锦》非遗纪录片(创作版)', platform:'哔哩哔哩', bvid:'BV1Bh4y197qC', url:'https://www.bilibili.com/video/BV1Bh4y197qC/', note:'织机与织造过程,约 5 分钟', clip:'assets/audio/brocade2.mp3' },
+  { id:'so37', name:'瑶族织锦(短片)', platform:'哔哩哔哩', bvid:'BV1dA411g71Y', url:'https://www.bilibili.com/video/BV1dA411g71Y/', note:'40 秒短片,纹样与织物特写;选段取其中 12 秒', clip:'assets/audio/brocade3.mp3' },
+  { id:'so38', name:'【纹样里的瑶族记忆】散落世界的瑶族同胞心里都有一个千家峒', platform:'哔哩哔哩(纹藏)', bvid:'BV1u3411p7pj', url:'https://www.bilibili.com/video/BV1u3411p7pj/', note:'瑶族纹样解读,5 分 47 秒;可作织锦纹样参照', clip:'assets/audio/brocade4.mp3' }
 ];
+
+/* 声音条目的唯一计数来源：有视频封面/外链的算视频，只有本地选段的算音频 */
+function soundStats(){
+  const audioOnly = SOUNDS.filter(s => s.clip && !VIDEO_COVERS[s.id]).length;
+  return { total: SOUNDS.length, audioOnly, videos: SOUNDS.length - audioOnly };
+}
 
 /* ===== 视频外链配置(要换视频只改这一张表) ==========================
    填 B 站视频页 → 内嵌官方播放器;填 .mp4 直链 → 原生播放器;
@@ -1455,11 +1502,13 @@ function attr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot
 
 function playSound(id, stage, b){
   const s = SOUNDS.find(x=>x.id===id) || {};
-  /* 六章各有本地 MP3 选段：先放选段，原片链接留在右侧 */
+  /* 声音库的播放顺序：有本地影像的先放影像（声画都在），
+     只有选段的放选段，最后才把平台外链交给第三方播放器。
+     带选段又有影像的条目，行里会多一个「听选段」按钮。 */
+  if(coverOf(id)){ renderCover(id, s, stage, b); return; }
   if(s.clip){ playClip(s, stage, b); return; }
   const mine = (VIDEO_URLS[id]||'').trim();
   if(mine){ renderMedia(mine, stage, b); return; }
-  if(coverOf(id)){ renderCover(id, s, stage, b); return; }
   playLocal(id, s, stage, b, '');
 }
 
@@ -1490,8 +1539,8 @@ function playLocal(id, s, stage, b, cover){
     + (cover ? ' poster="'+cover+'"' : '')
     + ' style="width:100%;border-radius:6px;background:#000" src="'+local+'"></video>';
   const v = stage.querySelector('video');
-  /* 线上未随仓库上传原片时:自动改走来源平台,而不是留一块黑屏 */
-  v.addEventListener('error', ()=>{ renderMedia(s.url||'', stage, b); }, {once:true});
+  /* 线上未随仓库上传原片时:先退到本地选段,再退到来源平台,而不是留一块黑屏 */
+  v.addEventListener('error', ()=>{ if(s.clip){ playClip(s, stage, b); } else { renderMedia(s.url||'', stage, b); } }, {once:true});
   v.addEventListener('ended', ()=>{ stage.innerHTML=''; b.innerHTML = iconPlay()+' '+L.snd_play; });
 }
 function renderMedia(url, stage, b){
@@ -1511,11 +1560,11 @@ function renderMedia(url, stage, b){
 }
 const SOUND_GROUPS = [
   { name:'女书 · 国家级非遗(2006第一批)', sub:'湖南江永,潇贺古道北段', items:['so14','so15a','so15b','so15c','so16','so17','so18','so19'] },
-  { name:'瑶族蝴蝶歌 · 国家级非遗(2008第二批)', sub:'富川瑶族多声部民歌,以"梧州话"演唱,衬词"蝴的蝶"得名', items:['so1','so2','so4','so5','so6','so7','so8'] },
+  { name:'瑶族蝴蝶歌 · 国家级非遗(2008第二批)', sub:'富川瑶族多声部民歌,以「梧州话」演唱,衬词「蝴的蝶」得名', items:['so1','so2','so4','so5','so6','so7','so8'] },
   { name:'瑶族长鼓舞 · 国家级非遗(2008第二批)', sub:'贺州/富川,富川有高台长鼓舞', items:['so9','so10','so11','so12','so13'] },
-  { name:'富川风雨桥 · 全国重点文保(2013)', sub:'27 座风雨桥,明万历至清光绪年间陆续建成', items:['so22'] },
-  { name:'盘王大歌 · 国家级非遗(2014)', sub:'湖南江华,瑶族「还盘王愿」所唱的长篇史诗', items:['so23'] },
-  { name:'瑶族织锦 · 自治区级非遗(2018)', sub:'富川与江华一带的织锦工艺,织机与口述现场', items:['so24'] },
+  { name:'富川风雨桥 · 全国重点文保(2013)', sub:'27 座风雨桥,明万历至清光绪年间陆续建成', items:['so22','so31','so32'] },
+  { name:'盘王大歌 · 国家级非遗(2014)', sub:'湖南江华,瑶族「还盘王愿」所唱的长篇史诗', items:['so23','so33','so34','so35'] },
+  { name:'瑶族织锦 · 自治区级非遗(2018)', sub:'富川与江华一带的织锦工艺,织机与口述现场', items:['so24','so36','so37','so38'] },
   { name:'民俗节庆 · 富川上灯炸龙节', sub:'广西自治区级(2014)', items:['so21'] },
   { name:'潇贺古道 · 纪录片(5集)', sub:'《广西贺州 潇贺古道》,每集约30分钟', items:['so30a','so30b','so30c','so30d','so30e'] }
 ];
@@ -1526,7 +1575,7 @@ const SOUND_REFS = [
   { name:'富川瑶族自治县人民政府门户', url:'http://www.gxfc.gov.cn/', note:'官方信息入口' },
   { name:'江永县人民政府门户', url:'https://www.jiangyong.gov.cn/jiangyong/index.shtml', note:'女书所在地官方入口' },
   { name:'江华瑶族自治县人民政府《盘王大歌》(2022-06-30,来源文旅云)', url:'http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml', note:'县级官方专文:歌本约八千行、清乾隆抄本、三十六/二十四/十二段三种版本、七任曲、保护主体为江华县文化馆' },
-  { name:'湖南省文化和旅游厅《永州江华〈盘王大歌〉——国家级非物质文化遗产》', url:'http://whhlyt.hunan.gov.cn/news/tpxw/201909/t20190910_5482779.html', note:'省级官方:2014年7月列入第四批国家级非遗;含江华湘江乡清代手抄本图像(音视频入口待补)' }
+  { name:'湖南省文化和旅游厅《永州江华〈盘王大歌〉——国家级非物质文化遗产》', url:'http://whhlyt.hunan.gov.cn/news/tpxw/201909/t20190910_5482779.html', note:'省级官方:2014年7月公示、11月公布第四批国家级非遗;含江华湘江乡清代手抄本图像(音视频入口待补)' }
 ];
 const SOUND_LINKS = {
   'p1': ['so30a','so30b','so30c','so30d','so30e'],
@@ -1545,49 +1594,48 @@ const SOUND_LINKS = {
    ================================================================ */
 const NAME_EN = {
   /* 通道 */
-  p1:'Xiaohe Ancient Road【译写】', p2:'Xiemu Pass【译写】', p3:'Guiling Ancient Road【译写】',
+  p1:'Xiaohe Ancient Road【译写】', p2:'Xiemu Pass【译写】',
   /* 遗迹 */
-  s1:'Linhe Ancient City Site【官方】', s2:'Fuchuan Yao Covered Bridge Group (27)【译写】', s3:'Xiushui Village【官方】', s4:'Fuxi Village【官方】', s5:'Chashan Village【拼写】', s6:'Shenpo Village【拼写】', s7:'Shanggantang Village【拼写】', s8:'Mailing Fort Site【译写】', s9:'Fuchuan Ancient City【译写】', s10:'Huangyao Ancient Town【官方】', s11:'Jiangyong Nüshu Eco-Museum【译写】', s12:'Fuchuan Xiaohe Ancient Road Culture Hall【译写】', s13:'Hezhou Ethnic Culture Museum【译写】', s14:'Huifeng Pavilion (Jianghua section)【译写】', s15:'Yanghua Rock Cliff Inscriptions【译写】',
+  s1:'Linhe Ancient City Site【官方】', s2:'Fuchuan Yao Wind-Rain Bridge Group (27)【译写】',
+  s4:'Fuxi Village【官方】', s5:'Chashan Village【拼写】', s7:'Shanggantang Village【拼写】',
+  s9:'Fuchuan Ancient City【译写】', s10:'Huangyao Ancient Town【官方】',
+  s11:'Jiangyong Nüshu Eco-Museum【译写】', s12:'Fuchuan Xiaohe Ancient Road Culture Hall【译写】',
+  s13:'Hezhou Ethnic Culture Museum【译写】', s14:'Huifeng Pavilion (Jianghua Section)【译写】',
+  s15:'Yanghua Rock Cliff Inscriptions【译写】',
   /* 非遗 */
-  i1:'Nüshu (Customs)【拼写】', i2:'Yao Butterfly Song【译写】', i3:'Yao Long Drum Dance【译写】', i4:'Traditional Yao Clothing【译写】', i5:'Shangdeng Dragon Lantern Festival【译写】', i6:'Yao Panwang Festival【译写】', i7:'"Panwang Da Ge" Yao epic【译写】', i8:'Fuchuan Yao Brocade【译写】',
+  i1:'Nüshu Customs【拼写】', i2:'Yao Butterfly Song【译写】', i3:'Yao Long Drum Dance【译写】',
+  i4:'Yao Clothing【译写】', i5:'Shangdeng Dragon Lantern Festival【译写】',
+  i6:'Yao Panwang Festival【译写】', i7:'Panwang Da Ge (Yao Epic)【译写】', i8:'Fuchuan Yao Brocade【译写】',
   /* 人物 */
-  f1:'Wei Tushui【拼写】', f2:'Zhao Tuo【拼写】', f3:'Tian Jia【拼写】', f4:'Li Jing【拼写】', f5:'Pan Mei【拼写】', f6:'Yue Fei【拼写】', f7:'Ortai【拼写】', f8:'Seventh Red Army (1931)【译写】'
+  f2:'Zhao Tuo【拼写】', f4:'Li Jing【拼写】', f5:'Pan Mei【拼写】', f6:'Yue Fei【拼写】'
 };
 const DESC_EN = {
-  p1:'Built as the Qin "New Road" from 219 BC (official/popular dating, scholarly debate exists), it ran from Daoxian on the Xiao River to Hezhou on the He River — about 170 km by land through 30+ villages. Note: the 170 km figure is the stone-road length given in the Fuchuan County Gazetteer for the "Daoxian Shuangwu Pavilion – old Fuchuan county town" section; the route continued downstream by water past Fengyang and Fengkai to the West River (not counted as land mileage). Listed in the Song-dynasty Lingwai Daida as one of the five routes into Lingnan, it linked the Yangtze and Pearl river systems as a key land route of the Qin-Han Silk Road. [Translated by this site from Chinese sources]',
-  p2:'Ancient pass at the Dapeng Ridge between Fuchuan and Jiangyong, with c.5 km of rammed-earth wall remains and stone tablets of 1874 and 1930. Battles of Li Jing (Tang) and Yue Fei (Song) are recorded here. [Translated by this site]',
-  p3:'Paved stone section of the Xiaohe Ancient Road in Babu District, Hezhou: about 18 km long (c.8 km remains), 1.5 m wide. The 7th Red Army marched through and regrouped at Guiling in January 1931. [Translated by this site]',
-  s1:'Founded in 111 BC (Western Han), this walled town beside the He River is the most important ancient city remains at the southern end of the Xiaohe Ancient Road. National Heritage Site (5th batch, 2001). [Official name from en.gxzf.gov.cn]',
-  s2:'A group of 27 covered (wind-rain) bridges in Fuchuan, mostly built from Ming Wanli to Qing Guangxu. National Heritage Site (7th batch, 2013). Representative bridges: Huilan (1602), Qinglong, Yangshou (1817). [Translated by this site]',
-  s3:'A 1,300-year-old village founded in the Tang dynasty, famed for its many degree holders; National Historic Village (2008). [Official name from en.gxzf.gov.cn]',
-  s4:'Founded in the Song dynasty, an ancient village with "one stream, two temples, three bridges, four ancestral halls, thirteen gate towers, fifteen lanes, twenty-four stages". National Historic Village. [Official name from en.gxzf.gov.cn]',
-  s5:'Called "the first village of the Xiaohe Ancient Road entering Guangxi", founded in the early Ming dynasty, with Ming city wall, stage and covered bridges. [Translated by this site]',
-  s6:'Ancient village on the Xiaohe Ancient Road in Gepo Town, Fuchuan. Protection grade unverified. [Translated by this site]',
-  s7:'Seat of Xie Mu county from 111 BC for about 700 years; the Zhou clan settled in 828 AD. National Heritage Site and National Historic Village, with 200+ old houses and Buying Bridge. [Translated by this site]',
-  s8:'Fort established in 1730 (Qing Yongzheng 8) on the memorial of Ortai, with offices of the Pingle prefecture, garrison and qianzong. "Mailing Fu" is a local colloquial name; the official Qing establishment was Mailing Camp. The PLA entered Fuchuan along the road in November 1949. [Translated by this site]',
-  s9:'Ancient walled town in Fuchuan county seat along the Xiaohe Ancient Road. [Translated by this site]',
-  s10:'A thousand-year-old Ming-Qing town with 8 bluestone streets and 300+ courtyards. National Historic Town (3rd batch, 2007) and national 5A scenic area (2022). Note: the online claim of a national heritage "building group" does not match the Guangxi national-heritage list. [Official name from en.gxzf.gov.cn]',
-  s11:'Eco-museum at Puwei village (the "Puwai island" on the Xiao River), the core village where Nüshu women\'s script is transmitted, 15 km from Jiangyong county seat. [Translated by this site]',
-  s12:'Exhibition hall in Fuchuan dedicated to the formation and development of the Xiaohe Ancient Road. [Translated by this site]',
-  s13:'State-registered museum run by Hezhou University; field surveys of 100 traditional villages along the Xiaohe Ancient Road. [Translated by this site]',
-  s14:'Rest pavilion on the Jianghua section of the road, at Niujiaowan village, Dalupu Town; part of the national heritage site "Xiaohe Ancient Road (Xianggui Ancient Road), Jianghua section" — officially cited as the "Huifeng Pavilion section". 12 such pavilions survive in Jianghua. [Translated by this site]',
-  s15:'Cliff inscriptions at the foot of Hui mountain, Zhuyuanzhai village, Tuojiang Town, Jianghua; carvings from the Tang to the Qing. The "Yanghua Rock Inscription" written by Yuan Jie and calligraphed by Qu Lingwen in 766 is the best-known. [Translated by this site]',
-  i1:'A unique women\'s script and its customs transmitted around Shangjiangxu, Jiangyong county. Listed in the first batch of national ICH (2006); national representative inheritor He Jinghua (2012). The spelling "Nüshu" is the international romanization; an authoritative English source could not be verified online in this environment. [Chinese name from gov.cn; English transliteration]',
-  i2:'A hallmark multipart folk song of the Fuchuan Pingdi Yao, sung in "Wuzhou speech" with the refrain "hu de die". Listed as national ICH in the 2nd batch (2008). [Translated by this site; batch from gov.cn]',
-  i3:'Traditional Yao dance in Hezhou and Fuchuan (Gaotai variant), transmitted across Jianghua (Hunan), Liannan (Guangdong) and Fuchuan (Guangxi). National ICH, 2nd batch (2008). [Translated by this site; batch from gov.cn]',
-  i4:'Yao clothing, represented by the Hezhou "pointed-head" Yao; jointly declared by Nandan county and Hezhou city. First batch national ICH (2006). Inheritor Li Sufang\'s Yao embroidery was selected as a UNDP gift in 2015. [Translated by this site; batch from gov.cn]',
-  i5:'Festival originating in the Wanli era of the Ming dynasty (400+ years), said to have entered Fuchuan along the Xiaohe Ancient Road. Provincial-level ICH of Guangxi (2014); "national-level" claims online are wrong. [Translated by this site]',
-  i6:'Yao festival honouring the ancestor Panwang (also "Tiaopangwang" / "returning the Panwang vow"), listed in the first batch of national ICH (2006). Celebrated in Hezhou and Fuchuan, centred on the long drum dance and Panwang chants. [Translated by this site]',
-  i7:'Yao epic, also known as the "Panwang Da Ge Shu" / "Huanyuan Ge". The surviving songbook runs to about 8,000 lines; the earliest extant manuscript dates from the Qianlong era of the Qing. It has 36-section, 24-section and 12-section versions, and is chanted by priests and song-mistresses during the Panwang Festival vow-returning rite, in antiphonal male-female singing. Listed as national ICH in the 4th batch (July 2014, folk literature); previously provincial-level in Hunan (2nd batch, 2008). Protected by the Jianghua County Cultural Centre. [Translated by this site]',
-  i8:'A traditional brocade craft of the Pingdi Yao in Fuchuan, Guangxi: plant-dyed warp and weft threads are woven into geometric patterns and used for bedcovers, pillows, sashes, headscarves and clothing. Listed as Guangxi Zhuang Autonomous Region-level ICH in 2018. [Translated by this site]',
-  f1:'In 219 BC (Qin Shihuang 28th year) led 500,000 troops south on five routes and supervised the building of the Daoxian–Fengyang–Guangxin road (the Xiaohe Ancient Road in embryo), completed in 213 BC. [Translated by this site]',
-  f2:'Qin-era commandant who ruled Nanyue; per Gu Zuyu\'s Dushi Fangyu Jiyao he once defended the Guiling area. [Translated by this site]',
-  f3:'Marquis Guiyi of the Han dynasty; in 112 BC led troops along the road south to Cangwu, with fighting at Xiemu Pass. [Translated by this site]',
-  f4:'Tang general; in 621 (Wude 4) campaigned through Fuchuan to Guizhou, camping at Huangsha Ridge and fighting at Xiemu Pass. [Translated by this site]',
-  f5:'Song general; in 970 (Kaibao 3) marched from Daozhou, took Fuchuan along the ancient road. [Translated by this site]',
-  f6:'Song general; in 1132 (Shaoxing 2) defeated Cao Cheng and entered "Mo Xie Pass" (Xiemu Pass). [Translated by this site]',
-  f7:'Qing governor-general; in 1730 (Yongzheng 8) memorialized the establishment of Mailing Camp on the road. [Translated by this site]',
-  f8:'Led by Zhang Yunyi, Deng Xiaoping and Li Mingrui, the 7th Red Army entered Guangxi from Jianghua along the road in January 1931 and regrouped at Guiling. [Translated by this site]'
+  p1:'A Qin-era road known as the “New Road”, cut from 219 BC and finished in 213 BC — the accepted dating, though the start date is debated. It runs from Daoxian on the Xiao River to Hezhou on the He River, about 170 km overland, and links the Yangtze and Pearl river systems. The Song geographer Zhou Qufei listed it among the five routes into Lingnan.',
+  p2:'A Qin–Han pass on the Fuchuan–Jiangyong border, where about 5 km of rammed-earth wall survive together with road-repair steles of 1874 and 1930. Li Jing fought here in 621; Yue Fei’s troops entered the pass in 1132.',
+  s1:'A walled town on the He River founded in 111 BC, the most important city site at the southern end of the road. National Key Cultural Relics Protection Unit (5th batch, 2001).',
+  s2:'Twenty-seven covered “wind-rain” bridges in Fuchuan, most built between the Ming Wanli and Qing Guangxu reigns. The group is a National Key Cultural Relics Protection Unit (7th batch, 2013). Huilan Bridge, first built in 1602, and Qinglong Bridge are known locally as the “yin-yang pair”.',
+  s4:'A Song-dynasty village, locally called the “seven-dynasty stockade”, with one stream, two temples, three bridges, four ancestral halls, thirteen gate towers, fifteen lanes and twenty-four stages. A Famous Historical and Cultural Village of China.',
+  s5:'Known as the first village on the road after entering Guangxi. Founded in the early Ming, it retains a Ming city wall, a stage and covered bridges.',
+  s7:'The seat of Xie Mu county from 111 BC for some seven centuries; the Zhou clan settled here in 828. More than 200 old houses and the Buying Bridge survive. It is both a National Key Cultural Relics Protection Unit and a Famous Historical and Cultural Village.',
+  s9:'The old walled town within the present Fuchuan county seat, one of the two city sites on the road, the other being Linhe.',
+  s10:'A Ming–Qing town near Hezhou, off the western land route but regularly folded into road itineraries (the county\'s road survey and the Ministry of Culture and Tourism\'s “Xiaohe Ancient Road” route both include it): eight bluestone streets and more than 300 courtyards. A Famous Historical and Cultural Town of China (2007) and a national 5A scenic area (2022). Its old buildings are not a national heritage site, despite a common online claim.',
+  s11:'An eco-museum at Puwei village on the Xiao River, 15 km from the Jiangyong county seat, in the core village of Nüshu transmission.',
+  s12:'An exhibition hall in Fuchuan on how the road took shape and developed in the county.',
+  s13:'A state-registered museum run by Hezhou University, with field surveys of 100 traditional villages along the road.',
+  s14:'A roadside rest pavilion at Niujiaowan, Dalupu Town, part of the 7th-batch national heritage site “Xianggui Ancient Road, Yongzhou Section”, which spans Daoxian, Jianghua and Jiangyong in 30 component sites. Twelve such pavilions survive in Jianghua.',
+  s15:'Cliff inscriptions at the foot of Hui Mountain, Zhuyuanzhai village, Tuojiang Town, carved from the Tang to the Qing. The best known is the Yanghua Rock Inscription of 766, composed by Yuan Jie and written by Qu Lingwen.',
+  i1:'A women’s script and its customs from the Shangjiangxu area of Jiangyong. First batch of national ICH (2006; serial 517, code X-69); the national representative inheritor is He Jinghua (2012).',
+  i2:'The signature polyphonic song of the Pingdi Yao in Fuchuan, sung in local Wuzhou speech with the refrain “hu de die”. National ICH, 2nd batch (2008), item 61, code II-30, as an extended item.',
+  i3:'A Yao dance named for the long drum, transmitted in Jianghua (Hunan), Liannan (Guangdong) and Fuchuan (Guangxi). National ICH, 2nd batch (2008); the Fuchuan variant is the “high-platform” long drum dance.',
+  i4:'Yao clothing, represented by the “pointed-head” Yao of Hezhou. Declared jointly by Nandan county and Hezhou city; national ICH, first batch (2006; serial 515, code X-67). The national inheritor Li Sufang had two Yao embroidery pieces taken up by the UNDP in 2016 for the covers of its business notebooks.',
+  i5:'A New Year festival said to date from the Ming Wanli era, and by local account to have arrived along the road. Regional-level ICH of Guangxi (2014); claims that it is national-level are wrong.',
+  i6:'A Yao festival honouring the ancestor Panwang, also called “dancing for Panwang” or “returning the Panwang vow”. National ICH, first batch (2006); the Hezhou and Fuchuan celebrations centre on the long drum dance and Panwang chants.',
+  i7:'A Yao epic of creation and migration. The surviving songbook runs to about 8,000 lines, the earliest extant manuscript from the Qianlong era, in 36-, 24- and 12-section versions. It is chanted by priests and song-mistresses at the Panwang vow-returning rite. National ICH, 4th batch (published 11 November 2014, folk literature); Hunan provincial ICH since 2008.',
+  i8:'A brocade craft of the Pingdi Yao in Fuchuan: plant-dyed warp and weft woven into geometric patterns for bedcovers, pillows, sashes, headscarves and clothing. Regional-level ICH of Guangxi (2018).',
+  f2:'Commandant of Nanhai under the Qin. After the dynasty fell he “blocked the roads and mustered his troops”, founded Nanyue and held the Five Ridges against Changsha, the Guiling–Mengzhu line forming his northern frontier.',
+  f4:'Tang general. In 621 he campaigned through Fuchuan towards Guizhou, camped at Huangsha Ridge and fought at Xiemu Pass.',
+  f5:'Song general. In 970 he marched from Daozhou and took Fuchuan along the road.',
+  f6:'Song general. In 1132 he defeated Cao Cheng and entered Moye Pass, generally identified with Xiemu Pass; the line is recorded in the Song History biography of Yang Zaixing.'
 };
 /* 声音条目 EN 名称与说明(本站译写) */
 const SOUND_EN = {
@@ -1634,8 +1682,8 @@ const ATLAS_EN = {
     '谢沐县治上甘棠村、女书流传地。':'Shanggantang village (Xiemu county seat) and the Nüshu script area.',
     '古道中段与东路萌渚岭道所经;国保惠风亭段、阳华岩摩崖石刻与瑶族史诗《盘王大歌》所在。':'Middle section of the road and the eastern Mengzhu Ridge route; the national-heritage Huifeng Pavilion section, the Yanghua Rock cliff inscriptions and the Yao epic "Panwang Da Ge".',
     '富川朝东镇小水村一带,与江永桃川镇交界;土夯关墙遗址约5公里。':'Near Xiaoshui village, Chaodong town, on the border with Taochuan, Jiangyong; c.5 km of rammed-earth wall remains.',
-    '麦岭府、富川瑶族风雨桥群、秀水/福溪/岔山古村，以及瑶族非遗。':'Mailing fort, the Fuchuan Yao covered bridge group, ancient villages (Xiushui/Fuxi/Chashan) and Yao ICH.',
-    '开山镇豪界村至桂岭镇七里山,石砌古道残存约8公里;红七军桂岭整编。':'From Haojie village, Kaishan town to Qili mountain, Guiling town; c.8 km of stone road remains; the 7th Red Army regrouped at Guiling.',
+    '富川瑶族风雨桥群、福溪/岔山古村，以及瑶族非遗。':'The Fuchuan Yao covered bridge group, the ancient villages of Fuxi and Chashan, and Yao ICH.',
+    '支线；暂无单独档案。':'Branch route; no separate record yet.',
     '贺江之畔,西汉元鼎六年始建的临贺故城。':'By the He River; Linhe Ancient City founded in 111 BC.'
   },
   cities: {
@@ -1645,7 +1693,7 @@ const ATLAS_EN = {
     '道县':'Daoxian (Hunan) · northern start of the Xiaohe Ancient Road, by the Xiao River',
     '江永':'Jiangyong (Hunan) · Nüshu script area, Shanggantang village and Xiemu Pass',
     '江华':'Jianghua (Hunan) · middle section of the road and the eastern Mengzhu Ridge route; home of the Yao epic "Panwang Da Ge"',
-    '富川':'Fuchuan (Guangxi) · densest heritage along the road: covered bridges, ancient villages, Mailing fort and Yao ICH',
+    '富川':'Fuchuan (Guangxi) · densest heritage along the road: covered bridges, ancient villages and Yao ICH',
     '贺州':'Hezhou (Guangxi) · southern end of the road: Linhe Ancient City and Guiling Ancient Road',
     '昭平':'Zhaoping (Guangxi) · home of Huangyao Ancient Town',
     '兴安':'Xing\'an (Guilin) · related: Lingqu Canal (not on the Xiaohe road)',
@@ -1677,7 +1725,8 @@ const BATCH_EN = {
   '第二批国家级(2008)':'National ICH, 2nd batch (2008)',
   '第四批国家级(2014)':'National ICH, 4th batch (2014)',
   '第六批国保(2006)':'National Heritage Site, 6th batch (2006)',
-  '广西自治区级(2014)':'Guangxi provincial-level ICH (2014)',
+  '广西自治区级(2014)':'Guangxi regional-level ICH (2014)',
+  '广西自治区级(2018)':'Guangxi regional-level ICH (2018)',
   '秦始皇时期':'Qin Shihuang era',
   '秦末':'Late Qin',
   '汉元鼎五年(前112年)':'Han Yuanding 5 (112 BC)',
@@ -1718,39 +1767,32 @@ const REGION_EN = {
   '1931年·桂岭整编':'1931 · regrouped at Guiling'
 };
 const FACTS_EN = {
-  p1:['Built: Qin Shihuang 28th year (219 BC) winter — official/popular dating; scholarly debate exists','Completed: Qin Shihuang 34th year (213 BC)','Terminus: Hezhou Babu · Linhe Ancient City (on the He River); the water route continues to Fengkai and the West River','Route: Daoxian (Xiao River) → Jiangyong / Jianghua → Fuchuan → Hezhou Babu (Linhe, He River)','Length: c.170 km by land (gazetteer figure: Daoxian–old Fuchuan county town section), 1–1.5 m wide','Status: one of the five routes into Lingnan (Lingwai Daida)','Aliases: Chuyue Tongqu, Fuchuan post road'],
-  p2:['Location: near Xiaoshui village, Chaodong Town, Fuchuan; borders Taochuan Town, Jiangyong','Remains: c.5 km of rammed-earth wall (Xiaoshui Gorge to Niutang Gorge)','Steles: road-repair tablets of 1874 (Tongzhi 13) and 1930','Aliases: Shimu Pass; Moye Pass (per Song History)','Battles: Li Jing (Tang); Yue Fei "entered Moye Pass" (Song)'],
-  p3:['Section: Haojie village, Kaishan Town → Qili Mountain, Guiling Town','Form: stone-paved, c.1.5 m wide, c.18 km total (c.8 km remains)','Red history: the 7th Red Army marched through and regrouped at Guiling, Jan 1931'],
-  s1:['Founded: Western Han Yuanding 6 (111 BC)','Heritage: National Key Cultural Relics Protection Unit, 5th batch (25 Jun 2001)','Location: both banks of the He River, Hejie Town'],
-  s2:['Official name: Fuchuan Yao Covered Bridge Group — national heritage, 7th batch (Guofa [2013] No.13, 5 Mar 2013)','Scale: 27 extant bridges (Fuchuan government count), mostly Ming–Qing','Huilan Bridge: Youmu village, Chaodong Town, first built 1602 (Wanli 30), rebuilt 1641','Qinglong Bridge: Youcao village, paired with Huilan as the "Yin-Yang bridges"','Yangshou Bridge: Liangyuan village, Chengbei Town, first built 1817 (Jiaqing 22)'],
-  s3:['Founded: Tang dynasty; over 1,300 years of history','Honour: Famous Historical and Cultural Village of China (2008)','Location: Chaodong Town, Fuchuan; 30 km from the county seat'],
-  s4:['Founded: Song dynasty','Remains: "one stream, two temples, three bridges, four ancestral halls, thirteen gate towers, fifteen lanes, twenty-four stages"','Honour: Famous Historical and Cultural Village of China'],
-  s5:['Title: "first village of the Xiaohe Ancient Road entering Guangxi"','Founded: early Ming; flourished mid-Ming','Remains: Ming city wall, stage and covered bridges'],
-  s6:['Location: Gepo Town, Fuchuan','Note: protection grade to be verified'],
-  s7:['Administration: Xie Mu county seat from 111 BC (Western Han), about 700 years','Honour: National Heritage Site / Famous Historical and Cultural Village','Remains: 200+ old houses, Buying Bridge, Xie Mu River','Settlement: the Zhou clan moved here in 828 (Tang Taihe 2)'],
-  s8:['Establishment: Mailing Camp in 1730 (Qing Yongzheng 8); "Mailing Fu" is a local colloquial name','Offices: Pingle prefecture sub-prefect, garrison commander and qianzong','Modern: Nov 1949 — PLA 40th Army 119th Division entered Fuchuan along the road'],
-  s9:['Location: Fuchuan county seat','Status: ancient town remains along the Xiaohe Ancient Road'],
-  s10:['Scale: 8 bluestone streets, 300+ Ming–Qing courtyards','Honour: Famous Historical and Cultural Town of China, 3rd batch (2007)','Honour: national 5A scenic area (2022)','Note: the online "national heritage building group" claim does not match the Guangxi heritage list'],
-  s11:['Location: Puwei village, on the "Puwai island" of the Xiao River, Shangjiangxu Town','Distance: 15 km from Jiangyong county seat','Role: core village of Nüshu transmission'],
-  s12:['Content: the formation and development of the Xiaohe Ancient Road in Fuchuan','Project: "Mingcheng Youyue"'],
-  s13:['Institution: run by Hezhou University (South Lingnan Ethnic Corridor Research Institute)','Survey: field studies of 100 traditional villages along the road','Projects: inscription records ("Lieshi Jishi") and steles-as-history'],
-  s14:['Heritage: National Heritage Site, 7th batch (2013), part of the "Xiaohe Ancient Road (Xianggui Ancient Road), Jianghua section"','Location: Niujiaowan village, Dalupu Town, Jianghua Yao Autonomous County','Scale: 12 ancient rest pavilions survive along the Jianghua section','Status: villages along the route run a joint conference system and have issued the "three hard rules" on road protection'],
-  s15:['Heritage: National Heritage Site, 6th batch (2006)','Location: at the foot of Hui mountain, Zhuyuanzhai village, Tuojiang Town, Jianghua','Date: carvings from the Tang to the Qing dynasty','Highlight: "Yanghua Rock Inscription" of 766, composed by Yuan Jie and written by Qu Lingwen'],
-  i1:['Batch: 1st batch national ICH (2006)','Area: Puwei village area, Shangjiangxu Town, Jiangyong','Inheritor: He Jinghua (national representative inheritor, 2012)','Accompanying customs: Zuogetang singing, bull-fighting festival'],
-  i2:['Category: traditional music (polyphonic folk song), item 61, No. II-30','Batch: 2nd batch national ICH (2008), extended item','Declared region: Fuchuan Yao Autonomous County, Guangxi'],
-  i3:['Level: 2nd batch national ICH (2008)','Transmission: Jianghua (Hunan), Liannan (Guangdong), Fuchuan (Guangxi)','Inheritor: Huang Daosheng (national)','Variant: the Fuchuan "Gaotai" long drum dance'],
-  i4:['Batch: 1st batch national ICH (2006; Guofa [2006] No.18, No. IX-67)','Declared by: Nandan County and Hezhou, Guangxi','Feature: Hezhou "pointed-head" Yao headdress (pointed / flat / wrapped types)','Inheritor: Li Sufang (national; Yao embroidery chosen as a UNDP gift in 2015)'],
-  i5:['Origin: Wanli era, Ming dynasty (400+ years)','Level: Guangxi provincial ICH (listed Dec 2014)','Note: "national-level" claims online are wrong'],
-  i6:['Batch: 1st batch national ICH (2006)','Region: Hezhou, Fuchuan and the Hunan-Guangxi-Guangdong Yao region','Content: Tiaopangwang / returning the Panwang vow; long drum dance and Panwang chants'],
-  i7:['Batch: 4th batch national ICH (July 2014, folk literature)','Earlier: Hunan provincial ICH, 2nd batch (2008); protected by the Jianghua County Cultural Centre','Scale: c.8,000 lines survive; 36-/24-/12-section versions','Form: 36 songs + seven tune-titles ("seven appointed tunes")','Occasion: chanted at the Panwang Festival vow-returning rite, antiphonal male-female singing'],
-  f1:['Era: from 219 BC (Qin Shihuang 28th year)','Deed: supervised the Daoxian–Fengyang–Guangxin road (the embryo of the Xiaohe Ancient Road)','Context: the Qin campaign to unify Lingnan'],
-  f2:['Identity: ruler of Nanyue','Deed: once defended the Guiling area','Source: Gu Zuyu, Dushi Fangyu Jiyao'],
-  f3:['Year: Han Yuanding 5 (112 BC)','Route: along the ancient road south to Cangwu','Fighting: part of his troops fought at Xiemu Pass'],
+  p1:['Built: 219 BC (Qin Shihuang 28), completed 213 BC — accepted dating, scholarly debate on the start','Route: Daoxian (Xiao River) → Jiangyong / Jianghua → Fuchuan → Hezhou (Linhe, He River)','Length: about 170 km by land, 1–1.5 m wide','Status: one of the five routes into Lingnan (Lingwai Daida)','Aliases: Chuyue Tongqu, Fuchuan post road'],
+  p2:['Location: near Xiaoshui village, Chaodong Town, Fuchuan, on the Jiangyong border','Remains: about 5 km of rammed-earth wall, Xiaoshui Gorge to Niutang Gorge','Steles: road-repair tablets of 1874 and 1930','Aliases: Shimu Pass, Moye Pass','Battles: Li Jing (621); Yue Fei’s troops entered in 1132'],
+  s1:['Founded: 111 BC (Western Han Yuanding 6)','Heritage: National Key Cultural Relics Protection Unit, 5th batch (2001)','Location: both banks of the He River, Hejie Town'],
+  s2:['Official name: Fuchuan Yao Wind-Rain Bridge Group — 7th batch national heritage (2013)','Scale: 27 extant bridges, mostly Ming–Qing','Huilan Bridge: Youmu village, first built 1602, rebuilt 1641','Qinglong Bridge: single arch, built 1624, paired with Huilan as the “yin-yang bridges”','Yangshou Bridge: Liangyuan village, first built 1817'],
+  s4:['Founded: Song dynasty','Remains: one stream, two temples, three bridges, four ancestral halls, thirteen gate towers, fifteen lanes, twenty-four stages','Honour: Famous Historical and Cultural Village of China'],
+  s5:['Title: first village on the road after entering Guangxi','Founded: early Ming, flourished mid-Ming','Remains: Ming city wall, stage and covered bridges'],
+  s7:['Administration: Xie Mu county seat from 111 BC, about 700 years','Honours: National Key Cultural Relics Protection Unit; Famous Historical and Cultural Village','Remains: 200+ old houses, Buying Bridge, Xie Mu River','Settlement: the Zhou clan moved here in 828'],
+  s9:['Location: Fuchuan county seat','Status: old walled town on the road'],
+  s10:['Scale: 8 bluestone streets, 300+ Ming–Qing courtyards','Honour: Famous Historical and Cultural Town of China, 3rd batch (2007)','Honour: national 5A scenic area (2022)','Note: the online “national heritage building group” claim does not match the Guangxi heritage list'],
+  s11:['Location: Puwei village, Shangjiangxu Town, on the Xiao River','Distance: 15 km from the Jiangyong county seat','Role: core village of Nüshu transmission'],
+  s12:['Content: how the road took shape and developed in Fuchuan','Project: “Mingcheng Youyue”'],
+  s13:['Institution: run by Hezhou University','Survey: field studies of 100 traditional villages along the road','Projects: inscription records (“Lieshi Jishi”); steles as history'],
+  s14:['Heritage: National Key Cultural Relics Protection Unit, 7th batch (2013), part of the Jianghua section','Location: Niujiaowan village, Dalupu Town, Jianghua','Scale: 12 rest pavilions survive along the Jianghua section'],
+  s15:['Heritage: National Key Cultural Relics Protection Unit, 6th batch (2006)','Location: foot of Hui Mountain, Zhuyuanzhai village, Tuojiang Town','Date: carvings from the Tang to the Qing','Highlight: Yanghua Rock Inscription of 766, composed by Yuan Jie'],
+  i1:['Batch: 1st batch national ICH (2006; serial 517, code X-69, folklore)','Area: Puwei village area, Shangjiangxu Town, Jiangyong','Inheritor: He Jinghua (national representative inheritor, 2012)','Accompanying customs: Zuogetang singing, bull-fighting festival'],
+  i2:['Category: traditional music (polyphonic folk song), item 61, code II-30','Batch: 2nd batch national ICH (2008), extended item','Declared region: Fuchuan Yao Autonomous County, Guangxi'],
+  i3:['Level: 2nd batch national ICH (2008; serial 657, code III-60)','Transmission: Jianghua (Hunan), Liannan (Guangdong), Fuchuan (Guangxi)','Inheritor: Huang Daosheng (national)','Variant: the Fuchuan “high-platform” long drum dance'],
+  i4:['Batch: 1st batch national ICH (2006; serial 515, code X-67, folklore)','Declared by: Nandan County and Hezhou, Guangxi','Feature: Hezhou “pointed-head” Yao headdress (pointed / flat / wrapped)','Inheritor: Li Sufang (national; Yao embroidery taken up by the UNDP in 2016)'],
+  i5:['Origin: Ming Wanli era, by local account','Level: Guangxi regional ICH (listed 2014)','Note: “national-level” claims online are wrong'],
+  i6:['Batch: 1st batch national ICH (2006; serial 462, code X-14)','Region: Hezhou, Fuchuan and the Hunan–Guangxi–Guangdong Yao area','Content: dancing for Panwang and returning the vow; long drum dance and Panwang chants'],
+  i7:['Batch: 4th batch national ICH, published 11 November 2014 (folk literature; serial 1245, code I-151)','Earlier: Hunan provincial ICH, 2nd batch (2008)','Scale: about 8,000 lines; 36-, 24- and 12-section versions','Form: 36 songs and seven tune-titles','Occasion: chanted at the Panwang vow-returning rite, antiphonal male–female singing'],
+  i8:['Status: Guangxi regional ICH (2018)','Branch: Pingdi Yao (Fuyang, Gepo, Chaodong, Mailing)','Technique: plant dyeing, warp/weft pattern weaving','Inheritor: Li Dongmei (regional level; Pingdi Yao weaving and embroidery)'],
+  f2:['Identity: commandant of Nanhai, founder of Nanyue','Deed: blocked the roads after the Qin collapse and held the Five Ridges','Source: Shiji, “Biography of Nanyue”'],
   f4:['Year: Tang Wude 4 (621)','Deed: camped at Huangsha Ridge and fought at Xiemu Pass','Source: Qianlong Fuchuan County Gazetteer'],
-  f5:['Year: Song Kaibao 3 (970)','Route: from Daozhou; took Fuchuan along the road','Source: Daoguang Yongming County Gazetteer'],
-  f6:['Year: Song Shaoxing 2 (1132)','Deed: defeated Cao Cheng and "entered Moye Pass" (Xiemu Pass)','Source: Song History'],
-  f7:['Year: Qing Yongzheng 8 (1730)','Measure: memorialized the establishment of Mailing Camp','Context: the road\'s military stronghold'],
-  f8:['Time: 11–14 January 1931','Route: from Jianghua (Hunan) along the road into Guangxi; regrouped at Guiling','Sites: Baihe Rock and Kaining Temple, Kaishan Town']
+  f5:['Year: Song Kaibao 3 (970)','Route: from Daozhou, took Fuchuan along the road','Source: Daoguang Yongming County Gazetteer'],
+  f6:['Year: Song Shaoxing 2 (1132)','Deed: defeated Cao Cheng and entered Moye Pass, generally identified with Xiemu Pass','Source: Song History, biography of Yang Zaixing']
 };
 const GROUP_EN = {
   '瑶族蝴蝶歌 · 国家级非遗(2008第二批)':'Yao Butterfly Song · National ICH (2nd batch, 2008)',
@@ -1769,7 +1811,7 @@ const SUB_EN = {
   '27 座风雨桥,明万历至清光绪年间陆续建成':'27 covered bridges, built from Ming Wanli to Qing Guangxu',
   '湖南江华,瑶族「还盘王愿」所唱的长篇史诗':'Jianghua (Hunan); the epic sung at the Yao rite of returning the Panwang vow',
   '富川与江华一带的织锦工艺,织机与口述现场':'Brocade craft around Fuchuan and Jianghua; loom and oral account',
-  '广西自治区级(2014)':'Guangxi provincial-level (2014)',
+  '广西自治区级(2014)':'Guangxi regional-level (2014)',
   '《广西贺州 潇贺古道》,每集约30分钟':'"Xiaohe Ancient Road, Hezhou, Guangxi" — about 30 min each'
 };
 const PLATFORM_EN = {
@@ -1800,10 +1842,8 @@ const PH_GRAD = {
 };
 const IMG_MAP = {
   p2:'images/图片/22-谢沐关-百科.jpg',
-  p3:'images/图片/08-潇贺古道纪录片-封面.jpg',
   s1:'images/图片/04-临贺故城-百科.jpg',
   s2:'images/图片/17-富川瑶族风雨桥群-百科.jpg',
-  s3:'images/图片/11-秀水村-纪录片封面.jpg',
   s4:'images/图片/13-福溪村-百科.jpg',
   s5:'images/图片/15-岔山村-腾讯新闻.jpg',
   s9:'images/图片/20-富川明城遗址-百家号.jpg',
@@ -1814,13 +1854,27 @@ const IMG_MAP = {
   i2:'images/图片/24-蝴蝶歌表演-广西新闻网.jpg',
   i3:'images/图片/26-瑶族长鼓舞-百科.jpg',
   i4:'images/图片/31-富川瑶族风俗2-百家号.jpg',
-  i5:'images/图片/27-上灯炸龙节-封面.png',
   i6:'images/图片/30-富川瑶族风俗1-百家号.jpg',
-  i8:'images/图片/30-富川瑶族风俗1-百家号.jpg',
-  f3:'images/图片/22-谢沐关-百科.jpg',
-  f4:'images/图片/22-谢沐关-百科.jpg',
-  f6:'images/图片/22-谢沐关-百科.jpg',
-  f7:'images/图片/20-富川明城遗址-百家号.jpg'
+  i8:'images/图片/30-富川瑶族风俗1-百家号.jpg'
+};
+/* 图片出处与条目出处分开记：详情页图注只认这一张图自己的来源。
+   f3/f4/f6（田甲、李靖、岳飞）原先借用谢沐关的照片，与人物不符，已撤。 */
+const IMG_CREDIT = {
+  p2:'图：百科条目 · 版权归原作者',
+  s1:'图：百科条目 · 版权归原作者',
+  s2:'图：百科条目 · 版权归原作者',
+  s4:'图：百科条目 · 版权归原作者',
+  s5:'图：腾讯新闻 · 版权归原作者',
+  s9:'图：百家号 · 版权归原作者',
+  s10:'图：百科条目 · 版权归原作者',
+  s11:'图：百科条目 · 版权归原作者',
+  s13:'图：百家号 · 版权归原作者',
+  i1:'图：百科条目 · 版权归原作者',
+  i2:'图：广西新闻网 · 版权归原作者',
+  i3:'图：百科条目 · 版权归原作者',
+  i4:'图：百家号 · 版权归原作者',
+  i6:'图：百家号 · 版权归原作者',
+  i8:'图：百家号 · 版权归原作者'
 };
 function imgOf(item){ return IMG_MAP[item.id] || ''; }
 function iconPlay(){ return '<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>'; }
@@ -1843,7 +1897,7 @@ const STATS_EN = {
   '前219年':'219 BC',
   '古道始建':'Road construction began',
   '秦始皇二十八年,秦建「新道」':'Qin Shihuang 28th year, the Qin New Road',
-  '人民网理论频道/公开资料整理':'360 Baike / People Daily Online (theory)',
+  '人民网理论频道':'People Daily Online (theory)',
   '170':'170',
   '陆路里程(公里)':'Land route length (km)',
   '《富川瑶族自治县志》记至富川古县城段':'Fuchuan County Gazetteer: section to the old Fuchuan county town',
@@ -2008,7 +2062,7 @@ function viewArchive(){
   const list = ALL.filter(i=>
     (filterCat==='全部'||i.cat===filterCat) &&
     (filterCity==='全部'||i.city===filterCity) &&
-    (!filterKw || (i.name+i.region+i.desc).includes(filterKw))
+    (!filterKw || (i.name+i.region+i.desc+(i.facts||[]).join('')).toLowerCase().includes(filterKw.toLowerCase()))
   );
   const favCnt = favCount();
   arListLen = list.length;
@@ -2024,15 +2078,15 @@ function viewArchive(){
         <div class="ed-head-grid">
           <div>
             <h1 class="ed-title"><span data-i18n="ar_title">${L.ar_title}</span><span class="ed-en">ARCHIVE / ${ALL.length} RECORDS</span></h1>
-            <p class="ed-lede">${ed('共 33 条档案，按通道、遗迹、非遗、人物四类整理。可按类型、地点与关键词检索。','33 records in four groups: routes, sites, ICH and figures. Browse by type, place and keyword.')}
-              <span class="muted">${ed('每条都标注公开来源。','Every record carries a public source.')}</span>
+            <p class="ed-lede">${ed('共 26 条档案，按通道、遗迹、非遗、人物四类整理。可按类型、地点与关键词检索。','26 records in four groups: routes, sites, ICH and figures. Browse by type, place and keyword.')}
+              <span class="muted">${ed('每条都标注来源；无法核实的标为「待考」。','Every entry cites a source; unverifiable ones are marked "pending".')}</span>
             </p>
           </div>
           <aside class="ed-aside" aria-label="${ed('档案统计','Archive statistics')}">
             <div class="ed-aside-row"><span class="lab">${ed('通道','Routes')}</span><span class="val">${countOf('通道')}</span></div>
             <div class="ed-aside-row"><span class="lab">${ed('遗迹','Sites')}</span><span class="val">${countOf('遗迹')}</span></div>
             <div class="ed-aside-row"><span class="lab">${ed('非遗','ICH')}</span><span class="val">${countOf('非遗')}</span></div>
-            <div class="ed-aside-row"><span class="lab">${ed('人物 / 事件','Figures')}</span><span class="val">${countOf('人物')}</span></div>
+            <div class="ed-aside-row"><span class="lab">${ed('人物','Figures')}</span><span class="val">${countOf('人物')}</span></div>
             <p class="note">${ed('按「通道—遗迹—非遗—人物」四层组织；每一条都可以回到路线与出处。','Organised in four layers: routes, sites, ICH, figures. Every record returns to the road and its source.')}</p>
           </aside>
         </div>
@@ -2048,9 +2102,10 @@ function viewArchive(){
       </div>`:''; })()}
 
       <div class="filter-bar ed-filter">
-        <div class="ed-field">
+        <div class="ed-field ed-field-kw">
           <label for="kw">${ed('检索','Search')}</label>
-          <input type="search" id="kw" placeholder="${L.ar_ph}" value="${esc(filterKw)}">
+          <input type="search" id="kw" placeholder="${L.ar_ph}" value="${esc(filterKw)}" autocomplete="off">
+          <button type="button" class="ed-clear" id="kwClear" ${filterKw?'':'hidden'}>${ed('清除','Clear')}</button>
         </div>
         <div class="ed-field">
           <label for="fCity">${ed('地区','Place')}</label>
@@ -2082,7 +2137,7 @@ function viewArchive(){
               <span class="fav-btn ${favState(i.id)?'on':''}" role="button" tabindex="0" data-fav="${i.id}" title="${L.fav_t}" aria-label="${L.fav_t}" aria-pressed="${favState(i.id)?'true':'false'}">${iconHeart(favState(i.id))}</span>
             </span>
             <span class="ed-card-media">
-              ${imgOf(i)?`<img src="${imgOf(i)}" alt="${nm(i)}" loading="lazy">`:`<span class="ph" style="background:${PH_GRAD[i.cat]||'var(--qun)'}">${catL(i.cat)}</span>`}
+              ${imgOf(i)?`<img src="${imgOf(i)}" alt="${nm(i)}" loading="lazy">`:`<span class="ph"><b>${catL(i.cat)}</b><em>${ed('暂无实景','NO IMAGE')}</em></span>`}
             </span>
             <span class="ed-card-title"><span>${nm(i)}</span><span class="arrow">↗</span></span>
             <span class="ed-card-sub"><span class="place">${regEn(i.region||i.city)}</span><span>${cityEn(i.city)}</span></span>
@@ -2095,10 +2150,33 @@ function viewArchive(){
 }
 function bindArchive(){
   const kw = document.getElementById('kw');
+  /* 重绘会换掉整个 DOM，输入框会一起被换掉：所以重绘后要把焦点和光标还回去，
+     组字（拼音）期间不重绘，否则输入法会被打断、第二个字母打不进去。 */
+  let kwTimer = null, composing = false;
   if(kw){
-    let kwTimer = null;
-    kw.addEventListener('input', ()=>{ clearTimeout(kwTimer); kwTimer = setTimeout(()=>{ filterKw = kw.value.trim(); rerender(); }, 180); });
+    const applyKw = ()=>{
+      const v = kw.value.trim();
+      if(v === filterKw) return;
+      filterKw = v;
+      rerender();
+      const el = document.getElementById('kw');
+      if(el){ el.focus(); try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){} }
+    };
+    kw.addEventListener('compositionstart', ()=>{ composing = true; });
+    kw.addEventListener('compositionend', ()=>{ composing = false; clearTimeout(kwTimer); kwTimer = setTimeout(applyKw, 40); });
+    kw.addEventListener('input', ()=>{
+      if(composing) return;
+      clearTimeout(kwTimer);
+      kwTimer = setTimeout(applyKw, 180);
+    });
   }
+  const kwClear = document.getElementById('kwClear');
+  if(kwClear) kwClear.addEventListener('click', ()=>{
+    clearTimeout(kwTimer);            /* 取消还在等的那次筛选，免得清空后又跳回来 */
+    if(filterKw){ filterKw = ''; rerender(); }
+    const el = document.getElementById('kw');
+    if(el){ el.value = ''; el.focus(); }
+  });
   const fc = document.getElementById('fCity');
   if(fc) fc.addEventListener('change', ()=>{ filterCity = fc.value; rerender(); });
   document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click', ()=>{ filterCat = c.dataset.t; rerender(); }));
@@ -2163,8 +2241,8 @@ function viewDetail(id){
 
       <div class="ed-detail-grid">
         <figure class="ed-detail-figure">
-          ${img?`<img src="${img}" alt="${nm(item)}">`:`<div class="ph">${cat}</div>`}
-          <figcaption><span>${ed('档案图像','ARCHIVE IMAGE')}</span><span>${esc((item.src||'').split(';')[0])}</span></figcaption>
+          ${img?`<img src="${img}" alt="${nm(item)}">`:`<div class="ph"><b>${cat}</b><em>${ed('暂无实景','NO IMAGE')}</em></div>`}
+          <figcaption><span>${ed('档案图像','ARCHIVE IMAGE')}</span><span>${esc(img ? ed('资料图 · 仅作示意','Reference image') : ed('暂无实景','No image'))}</span></figcaption>
         </figure>
 
         <aside class="ed-detail-rail" aria-label="${ed('档案信息','Record metadata')}">
@@ -2172,7 +2250,7 @@ function viewDetail(id){
           ${item.batch?`<div class="ed-rail-row"><span class="lab">${ed('批次','BATCH')}</span><span class="val">${batchEn(item.batch)}</span></div>`:''}
           <div class="ed-rail-row"><span class="lab">${ed('地区','PLACE')}</span><span class="val">${place||'—'}</span></div>
           <div class="ed-rail-row"><span class="lab">${ed('城市','CITY')}</span><span class="val"><a href="#/city/${item.city}">${cityEn(item.city)}</a></span></div>
-          <div class="ed-rail-row"><span class="lab">${ed('在路线上','ON THE ROAD')}</span><span class="val"><a href="#/atlas">${ed('打开古道图志 ↗','Open the atlas ↗')}</a></span></div>
+          <div class="ed-rail-row"><span class="lab">${ed('古道图志','ROAD ATLAS')}</span><span class="val"><a href="#/atlas">${ed('查看图志 ↗','Open the atlas ↗')}</a></span></div>
           <div class="ed-rail-row"><span class="lab">${ed('可听','LISTEN')}</span><span class="val">${sndRelated.length?sndRelated.slice(0,2).map(s=>`<a class="mini" href="${s.url}" target="_blank" rel="noopener">${sndName(s)}</a>`).join(''):`<a href="#/sounds">${ed('声音数据库 ↗','Sound archive ↗')}</a>`}</span></div>
           <p class="ed-rail-foot">${ed('元数据按「对象—地点—来源」组织；图像只作档案示意，不作为文物断代依据。','Metadata follows object—place—source. Images are reference views, not dating evidence.')}</p>
         </aside>
@@ -2268,12 +2346,12 @@ function cityInfo(c){
 }
 function viewAtlas(){
   const stops = [
-    { name:'北起点:道县(湖南永州)', note:'潇水之畔,秦「新道」自道州出发。', ids:['p1','f1'] },
+    { name:'北起点:道县(湖南永州)', note:'潇水之畔,秦「新道」自道州出发。', ids:['p1'] },
     { name:'江永(湖南永州)', note:'谢沐县治上甘棠村、女书流传地。', ids:['s7','i1','s11'] },
     { name:'江华(湖南永州)', note:'古道中段与东路萌渚岭道所经;国保惠风亭段、阳华岩摩崖石刻与瑶族史诗《盘王大歌》所在。', ids:['s14','s15','i7'] },
     { name:'谢沐关', note:'富川朝东镇小水村一带,与江永桃川镇交界;土夯关墙遗址约5公里。', ids:['p2','f4','f6'] },
-    { name:'富川(广西贺州)', note:'麦岭府、富川瑶族风雨桥群、秀水/福溪/岔山古村，以及瑶族非遗。', ids:['s8','s2','s3','s4','s5','i2','i5'] },
-    { name:'桂岭古道(贺州八步区)', note:'开山镇豪界村至桂岭镇七里山,石砌古道残存约8公里;红七军桂岭整编。', ids:['p3','f8'] },
+    { name:'富川(广西贺州)', note:'富川瑶族风雨桥群、福溪/岔山古村，以及瑶族非遗。', ids:['s2','s4','s5','i2','i5'] },
+    { name:'桂岭古道(贺州八步区)', note:'支线；暂无单独档案。', ids:[] },
     { name:'南终点:贺州八步·临贺', note:'贺江之畔,西汉元鼎六年始建的临贺故城。', ids:['s1'] }
   ];
   const nameOf = id => { const it = ALL.find(x=>x.id===id); return it ? it.name : id; };
@@ -2321,7 +2399,7 @@ function viewAtlas(){
             </p>
           </div>
           <aside class="ed-aside" aria-label="${ed('路线统计','Route statistics')}">
-            <div class="ed-aside-row"><span class="lab">${ed('路线','Routes')}</span><span class="val">3</span></div>
+            <div class="ed-aside-row"><span class="lab">${ed('路线（含支线）','Routes (incl. branch)')}</span><span class="val">3</span></div>
             <div class="ed-aside-row"><span class="lab">${ed('西线陆路','West line')}</span><span class="val">170<em>KM</em></span></div>
             <div class="ed-aside-row"><span class="lab">${ed('节点','Stops')}</span><span class="val">${stops.length}</span></div>
             <p class="note">${ed('北起道县潇水，南抵贺州贺江；西线经江永、富川，东线经江华、<span class="nb">白沙</span>。','From the Xiao River at Daoxian to the He River at Hezhou: west via Jiangyong/Fuchuan, east via Jianghua/Baisha.')}</p>
@@ -2426,7 +2504,7 @@ function viewCity(city){
     '道县':'湖南永州 · 潇贺古道北起点,潇水源头之地,秦「新道」自道州出发',
     '江永':'湖南永州 · 女书流传地、上甘棠古村与谢沐关所在',
     '江华':'湖南永州 · 古道中段;国保惠风亭段、阳华岩摩崖石刻与瑶族史诗《盘王大歌》所在',
-    '富川':'广西贺州 · 古道遗产最密集段:风雨桥群、古村群、麦岭府与瑶族非遗',
+    '富川':'广西贺州 · 古道遗产最密集段:风雨桥群、古村群与瑶族非遗',
     '贺州':'广西 · 古道南端终点,临贺故城与桂岭古道所在',
     '昭平':'广西贺州 · 黄姚古镇所在'
   };
@@ -2478,11 +2556,14 @@ function sndCard(s, idx){
       <div class="ed-snd-meta">
         <span>${isEn()?(PLATFORM_EN[s.platform]||s.platform):s.platform}</span>
         <span class="dot"></span>
-        <span>${s.clip ? ed('本地音频','Local audio') : (isRemote(s.id)?L.snd_online:L.snd_local)}</span>
+        <span>${s.clip
+          ? (VIDEO_COVERS[s.id] ? ed('本地视频 · 含音频选段','Local video · audio excerpt') : ed('本地音频','Local audio'))
+          : (isRemote(s.id)?L.snd_online:L.snd_local)}</span>
       </div>
     </div>
     <div class="ed-snd-actions">
       <button class="snd-play ed-snd-play" data-id="${s.id}" aria-expanded="false">${iconPlay()} ${L.snd_play}</button>
+      ${s.clip && VIDEO_COVERS[s.id] ? `<button class="snd-clip ed-snd-clip" data-id="${s.id}" type="button">${iconPlay()} ${L.snd_clip}</button>` : ''}
       <a class="ed-snd-ext" href="${s.url}" target="_blank" rel="noopener">${L.snd_ext} ↗</a>
     </div>
     <div class="snd-stage" data-id="${s.id}"></div>
@@ -2503,6 +2584,7 @@ const SND_SHEETS = [
 const SND_SHEET_PLAIN = ['#EFE9DC','#141A16','#6B6355'];
 function viewSounds(){
   let n = 0;
+  const { videos: videoN, audioOnly: audioN } = soundStats();
   return `
   <section class="ed-page" data-page="sounds">
     <div class="container">
@@ -2514,14 +2596,13 @@ function viewSounds(){
         <div class="ed-head-grid">
           <div>
             <h1 class="ed-title"><span data-i18n="snd_title">${L.snd_title}</span><span class="ed-en">SOUND ARCHIVE / ${SOUNDS.length} RECORDS</span></h1>
-            <p class="ed-lede">${ed(SOUNDS.length+' 条声音与影像记录，按歌种与场景分组。点开播放，一次一条。','Listen first, read second. '+SOUNDS.length+' sound and film records, grouped by genre and occasion; play one at a time.')}
-              <span class="muted">${ed(SOUNDS.length+' 条记录按歌种与场景分组，逐条列出。',SOUNDS.length+' records grouped by genre and setting.')}</span>
+            <p class="ed-lede">${ed(SOUNDS.length+' 条声音与影像记录（'+videoN+' 条视频 + '+audioN+' 段音频），按歌种与场景分组。点开播放，一次一条。','Listen first, read second. '+SOUNDS.length+' sound and film records ('+videoN+' videos + '+audioN+' audio excerpts), grouped by genre and occasion; play one at a time.')}
             </p>
           </div>
           <aside class="ed-aside" aria-label="${ed('声音统计','Sound statistics')}">
             <div class="ed-aside-row"><span class="lab">${ed('记录','Records')}</span><span class="val">${SOUNDS.length}</span></div>
             <div class="ed-aside-row"><span class="lab">${ed('分组','Groups')}</span><span class="val">${SOUND_GROUPS.length}</span></div>
-            <div class="ed-aside-row"><span class="lab">${ed('女书 / 长鼓','Nüshu / Drum')}</span><span class="val">8 / 5</span></div>
+            <div class="ed-aside-row"><span class="lab">${ed('视频 / 音频','Video / Audio')}</span><span class="val">${videoN} / ${audioN}</span></div>
             <p class="note">${ed('每条记录都标注来源平台，可在条目下方前往原平台。','Every record keeps its original platform and local/remote status; takedown risk is noted at the foot of the page.')}</p>
           </aside>
         </div>
@@ -2532,7 +2613,7 @@ function viewSounds(){
         return `
         <div class="ed-snd-group ed-sheet" style="--f-bg:${f[0]};--f-fg:${f[1]};--f-accent:${f[2]}">
           <div class="ed-snd-group-head">
-            <span class="no">${['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ'][gi]||String(gi+1).padStart(2,'0')}</span>
+            <span class="no">${['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ','Ⅷ'][gi]||String(gi+1).padStart(2,'0')}</span>
             <h2>${isEn()?(GROUP_EN[g.name]||g.name):g.name}<span style="font-family:var(--sans);font-size:10px;letter-spacing:.14em;color:var(--ink-soft);margin-left:12px">${g.items.length} ${ed('条','RECORDS')}</span></h2>
             ${g.sub?`<p class="sub">${isEn()?(SUB_EN[g.sub]||g.sub):g.sub}</p>`:''}
           </div>
@@ -2579,10 +2660,36 @@ function bindSounds(){
     /* 按钮文案只反映"展开/收起"两种状态,暂停/继续交给播放器控件,避免状态混淆 */
     playSound(id, stage, b);
   }));
+  /* 影像条目自带的音频选段：单独一个按钮，点它只放声音，不覆盖影像的播放键 */
+  document.querySelectorAll('.snd-clip').forEach(btn=>btn.addEventListener('click', ()=>{
+    const id = btn.dataset.id;
+    const s = SOUNDS.find(x=>x.id===id);
+    const stage = document.querySelector('.snd-stage[data-id="'+id+'"]');
+    if(!s || !s.clip || !stage) return;
+    document.querySelectorAll('.snd-stage').forEach(x=>x.innerHTML='');
+    document.querySelectorAll('.snd-play').forEach(x=>{ x.innerHTML = iconPlay() + ' ' + L.snd_play; x.setAttribute('aria-expanded','false'); });
+    document.querySelectorAll('.ed-snd-row').forEach(r=>r.classList.remove('is-open'));
+    const row = btn.closest('.ed-snd-row');
+    row?.classList.add('is-open');
+    const play = row?.querySelector('.snd-play');
+    if(play){ play.innerHTML = iconClose() + ' ' + L.snd_close; play.setAttribute('aria-expanded','true'); }
+    playClip(s, stage, play || btn);
+  }));
 }
 
 /* ---- 关于与来源 ---- */
 function viewAbout(){
+  /* 图像出处：前端不再逐张标平台，统一收到本页（按平台归类，可展开） */
+  const imgGroups = (()=>{
+    const g = {};
+    Object.keys(IMG_CREDIT).forEach(id=>{
+      const it = ALL.find(x=>x.id===id);
+      if(!it) return;
+      const platform = IMG_CREDIT[id].replace(/^图：/,'').replace(/\s*·\s*版权归原作者$/,'');
+      (g[platform] = g[platform] || []).push(nm(it));
+    });
+    return g;
+  })();
   return `
   <section class="ed-page" data-page="about">
     <div class="container">
@@ -2591,7 +2698,7 @@ function viewAbout(){
         <div class="ed-head-grid">
           <div>
             <h1 class="ed-title"><span data-i18n="ab_title">${L.ab_title}</span><span class="ed-en">METHOD / SOURCES / RIGHTS</span></h1>
-            <p class="ed-lede">${ed('共 33 条档案、26 条声音与影像记录。每条事实都<span class="nb">注明</span>出处；存在争议或无法确认的部分，在页面上说明。','33 records and 26 sound and video items. Each fact carries a public source; disputed or unconfirmed points are marked.')}
+            <p class="ed-lede">${ed('共 26 条档案、37 条声音与影像记录（26 条视频 + 11 段音频）。每条事实都<span class="nb">标注</span>出处；无法核实或存在争议的部分，在页面上标明。','26 records and 37 sound and video items (26 videos + 11 audio excerpts). Each fact cites a source; disputed or unverified points are marked.')}
               <span class="muted">${ed('本页说明收录范围、资料处理方式与全部来源。','This page states scope, method and every source.')}</span>
             </p>
           </div>
@@ -2616,15 +2723,40 @@ function viewAbout(){
             <li data-i18n="ab_l3">${L.ab_l3}</li>
             <li data-i18n="ab_l4">${L.ab_l4}</li>
           </ol>
+          <p class="scope-note">${ed('收录标准分三类，逐条标注：<b>一</b>古道本体与沿线遗存（路线、关隘、桥梁、城址、村落）；<b>二</b>沿线乡镇申报的非遗（女书、蝴蝶歌、长鼓舞、盘王大歌、织锦、上灯炸龙）；<b>三</b>解释古道所必需的参照（周边古镇如黄姚、专题展馆与研究机构），此类条目注明「周边」或「机构」，不计入沿线序列。','Three tiers: the road itself and its surviving works; the ICH declared by townships along it; and reference entries needed to read the road (nearby towns such as Huangyao, museums and research institutes), each marked "nearby" or "institution" and excluded from the route sequence.')}</p>
           <h2 data-i18n="ab_p3t">${L.ab_p3t}</h2>
           <p data-i18n="ab_p3">${L.ab_p3}</p>
+          <div class="ed-erratum">
+            <h3>勘误记录 / ERRATA<span class="muted">2026-11-06</span></h3>
+            <ul>
+              <li><b>韩愈《进学解》</b>　网络与部分词条转引作「会百川而东之，回狂澜之即倒」，原文为「障百川而东之，回狂澜于既倒」；本页从原文，并在风雨桥一章注明差异。</li>
+              <li><b>瑶族服饰名录编号</b>　部分转载（含个别政府网页的转录文本）写作 Ⅸ-67，实为 Ⅹ-67（民俗类，序号 515）；Ⅸ 为传统医药类，与服饰不符。以国务院公布名录与中国非物质文化遗产网为准。</li>
+              <li><b>盘王大歌列入时间</b>　2014 年 7 月为公示，11 月 11 日经国务院公布（国发〔2014〕59 号）；此前「7 月列入」的写法已按公布日期改正。</li>
+              <li><b>岳飞「入莫邪关」</b>　出自《宋史·杨再兴传》，不是《宋史·岳飞传》；莫邪关一般认为即今富川谢沐关，此层推断已写明「一说」。</li>
+              <li><b>《蛮子歌》《搜神记》</b>　刘禹锡原作「时节祠盘瓠」，《搜神记》原作「叩槽而号，以祭盘瓠」；两处引文均已按原文订正。</li>
+              <li><b>声音总数</b>　37 条＝26 条视频＋11 段音频；另有 12 段选段挂在影像条目上（行内「听选段」），全站共 23 段 MP3。26 只是视频条数，不是记录总数。</li>
+              <li><b>盘王大歌的音档</b>　旧版页脚写「站内尚无音档」，与站内已有的 12 秒选段（《万段曲》）矛盾，已改为「只有选段、完整版未取得」。</li>
+              <li><b>惠风亭的国保名称</b>　此前写作「潇贺古道（湘桂古道）江华段」，实为第七批国保「湘桂古道永州段」（7-1228-3-526，跨道县、江华、江永，30 处文物点）；已改正，惠风亭是该段江华部分的文物点之一。</li>
+              <li><b>黄姚的线路归属</b>　此前写「不在潇贺古道主干线节点上」过于绝对：县政府《潇贺古道线概况》与文化和旅游部「广西·潇贺古道 千年乡愁」线路都把黄姚纳入。现表述为「不在西线陆路节点上，按线路参照收录」。</li>
+              <li><b>回澜桥的长度</b>　37.54 米是「全长」（广西壮族自治区图书馆），另有「桥长 30.43 米」一记；本库统一说「全长」。</li>
+            </ul>
+          </div>
           <h2 data-i18n="ab_p5t">${L.ab_p5t}</h2>
           <p data-i18n="multi_note">${L.multi_note}</p>
+          <h2>${ed('图像与影像','Images and film')}</h2>
+          <p>${ed('档案图像与专题图版取自公开网络，不在页内逐张标平台，统一记在这里：版权归原作者及发布机构，仅作非商业性的文化展示；公开上线前逐张替换或取得授权。视频与录音的原平台见「声音数据库」，每条都注明了出处与清晰度。','Archive images and plates come from public sources. Rather than tagging each image in place, the platforms are recorded here: copyright remains with the original authors and publishers, used for non-commercial cultural display only, to be replaced or licensed before public launch. Video and audio platforms are listed in the sound archive.')}</p>
+          <details class="ed-img-note">
+            <summary>${ed(`逐张出处（${Object.values(imgGroups).reduce((a,b)=>a+b.length,0)} 张，按平台）`,`Image sources (${Object.values(imgGroups).reduce((a,b)=>a+b.length,0)}, by platform)`)}</summary>
+            <ul>
+              ${Object.keys(imgGroups).map(k=>`<li><b>${esc(k)}</b><span>${imgGroups[k].map(esc).join('、')}</span></li>`).join('')}
+            </ul>
+          </details>
         </div>
         <aside class="ed-src-list">
           <h2 data-i18n="ab_p4t">${L.ab_p4t}</h2>
+          <p class="src-legend">${ed('按可信级别标注：<b>官方</b>＝政府与文物、非遗主管部门的公布文件或官网；<b>学术</b>＝期刊、学位论文、正史与地方志；<b>媒体</b>＝通讯社与报纸报道；<b>线索</b>＝商业百科、聚合平台与自媒体，只用于发现线索。凡与官方档案冲突，以官方为准。','Tagged by tier: official / academic / media / leads. Leads are used only to find a trail; official and academic sources govern.')}</p>
           <ol>
-            ${SOURCES.map(s=>`<li>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${esc(s.name)}</a>`:`<span>${esc(s.name)}</span>`}</li>`).join('')}
+            ${SOURCES.map(s=>`<li><span class="src-item">${s.tier?`<em class="src-tag">${s.tier}</em>`:''}${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${esc(s.name)}</a>`:`<span>${esc(s.name)}</span>`}</span></li>`).join('')}
           </ol>
         </aside>
       </div>
@@ -2697,6 +2829,22 @@ window.addEventListener('pageshow', event => {
   if(event.persisted && document.documentElement.classList.contains('is-arriving')) finishArrival();
 });
 
+function pageTitle(path, param){
+  const base = L.logo_cn;
+  let name = '';
+  if(path==='archive') name = L.ar_title;
+  else if(path==='sounds') name = L.snd_title;
+  else if(path==='atlas') name = L.at_title;
+  else if(path==='about') name = L.ab_title;
+  else if(path==='city') name = safeDecode(param);
+  else if(path==='detail'){
+    const it = ALL.find(x=>x.id===safeDecode(param));
+    name = it ? (currentLang()==='zh-CN' ? it.name : (NAME_EN[it.id]||it.name).replace(/【[^】]*】/g,'')) : '';
+  }
+  else name = L.notfound;
+  return name ? name+' · '+base : base;
+}
+
 function route(opts){
   opts = opts || {};
   const raw = location.hash.replace(/^#\/?/, '');
@@ -2704,8 +2852,10 @@ function route(opts){
   const path = parts[0] || 'home';
   const param = parts[1] || '';
   const routeKey = location.hash || '#/archive';
+  const routeChanged = routeKey !== routeKeyLast;
   L = I18N[currentLang()];
   document.documentElement.lang = currentLang();
+  document.title = pageTitle(path, param);
   document.querySelectorAll('.lang-select').forEach(s=>{ s.value = currentLang(); });
   const burgerEl = document.getElementById('burgerBtn');
   if(burgerEl) burgerEl.setAttribute('aria-label', L.nav_menu);
@@ -2730,6 +2880,10 @@ function route(opts){
     app.innerHTML = html;
     document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.dataset.i18n; if(L[k]!==undefined) el.textContent=L[k]; });
     document.querySelectorAll('#mainNav a').forEach(a=>a.classList.toggle('active', a.dataset.nav===path));
+    if(routeChanged){
+      const status = document.getElementById('routeStatus');
+      if(status) status.textContent = document.title;
+    }
     if(opts.keepScroll){ window.scrollTo(0, prevY); } else { window.scrollTo(0,0); }
     if(bind) bind();
     observeReveals();
@@ -3243,13 +3397,13 @@ const I18N = {
     hero_cta1:'浏览文化档案', hero_cta2:'查看古道图志',
     home_feat:'精选条目', home_more:'全部条目 →',
     ar_title:'文化档案', ar_note:'数据来源说明 →', ar_ph:'搜索条目名称 / 地区 / 简介…',
-    snd_title:'声音数据库', snd_tip:'本栏目收录 26 条视频，按歌种与场景分组。点击播放后显示画面，同一时间只播放一条。', snd_play:'播放', snd_close:'收起', snd_local:'本地视频', snd_online:'平台外链', snd_ext:'B站原站', snd_refs:'权威参考页', snd_notes:'如实说明', snd_notes_t:'26 条视频来源为 B 站，已逐条标注原始出处。平台链接可能因原视频下架而失效；本地文件不受影响。',
+    snd_title:'声音数据库', snd_tip:'本栏目收录 37 条声音与影像记录（26 条视频 + 11 段音频），按歌种与场景分组。点击播放后展开播放器，同一时间只播放一条。', snd_play:'播放', snd_close:'收起', snd_local:'本地视频', snd_online:'平台外链', snd_ext:'B站原站', snd_clip:'听选段', snd_refs:'权威参考页', snd_notes:'如实说明', snd_notes_t:'26 条视频与 11 段音频均来自 B 站，已逐条标注原始出处。平台链接可能因原视频下架而失效；本地文件不受影响。',
     city_all:'全部地区', ar_count:'共 {n} 条', ar_fav:'已收藏 {n} 条', ar_empty:'没有匹配的条目,换个筛选试试',
     d_intro:'简介', d_info:'档案信息', d_facts:'要点', d_type:'类别', d_batch:'批次/年代', d_region:'地区', d_city:'所在城市', d_src:'数据来源', d_related:'相关条目', d_sounds:'相关声音', fav_t:'收藏',
     at_title:'古道图志', at_tip:'上方为潇贺古道全程路线示意:北起湖南道县,于道州分岔,西线经江永、富川麦岭—葛坡南下,东线经江华、白沙东行,两线于贺州合流;桂岭古道自东线岔出。西线陆路约 170 公里,路宽 1 至 1.5 米,以青石与鹅卵石铺筑。', at_cities:'沿线城市(点击进入城市页)', at_count:'收录 {n} 条', map_ph_t:'古道地图图片占位区', map_ph_s:'点击下方「选择地图图片…」放入你的古道地图;鼠标移入后显示坐标指示(百分比 + 像素),便于后续标注位置', map_pick:'选择地图图片…', map_hint:'坐标显示:相对地图区域的百分比与像素,为后续地图位置标识打基础', map_alt:'古道地图(占位图片)',
     city_sites:'通道与遗迹', city_ich:'非遗与人物', city_none:'暂无收录条目',
-    ab_title:'关于与数据来源', ab_p1t:'项目简介', ab_p1:'「潇贺古道有声文化数据库」收录潇贺古道及其沿线的通道、遗迹、非遗与人物条目。古道北起湖南道县潇水，南抵广西贺州贺江；秦代修筑「新道」后，成为连接长江水系与珠江水系的陆路通道。数据库只收录与古道直接相关的内容，每条标注公开来源。',
-    ab_p2t:'内容范围', ab_l1:'通道 3 条:潇贺古道(秦扩建「新道」,于道州分岔为西线、东线两支,西线陆路约170公里)、谢沐关、桂岭古道;', ab_l2:'遗迹 14 处:临贺故城(2001年第五批国保)、富川瑶族风雨桥群27座(2013年第七批国保,官方口径)、秀水/福溪/岔山等历史文化名村、上甘棠、黄姚古镇、江华惠风亭段与阳华岩摩崖石刻等;', ab_l3:'非遗 8 项:女书习俗(2006年第一批国家级)、瑶族蝴蝶歌、瑶族长鼓舞、瑶族服饰、瑶族盘王节、富川瑶族织锦(2018年自治区级)、盘王大歌(2014年国家级)、上灯炸龙节(2014年自治区级);', ab_l4:'人物与事件 8 组:尉屠睢、赵佗、田甲、李靖、潘美、岳飞、鄂尔泰、红七军桂岭整编。',
+    ab_title:'关于与数据来源', ab_p1t:'项目简介', ab_p1:'「潇贺古道有声文化数据库」收录潇贺古道及其沿线的通道、遗迹、非遗与人物条目。古道北起湖南道县潇水，南抵广西贺州贺江；秦代修筑「新道」后，成为连接长江水系与珠江水系的陆路通道。数据库只收录与古道直接相关的内容，每条标注来源。',
+    ab_p2t:'内容范围', ab_l1:'通道档案 2 条:潇贺古道(秦扩建「新道」,于道州分岔为西线、东线两支,西线陆路约170公里)、谢沐关;', ab_l2:'遗迹 12 处:临贺故城(2001年第五批国保)、富川瑶族风雨桥群27座(2013年第七批国保,官方口径)、福溪/岔山等历史文化名村、上甘棠、黄姚古镇（周边）、江华惠风亭段与阳华岩摩崖石刻等;', ab_l3:'非遗 8 项:女书习俗(2006年第一批国家级)、瑶族蝴蝶歌、瑶族长鼓舞、瑶族服饰、瑶族盘王节、富川瑶族织锦(2018年自治区级)、盘王大歌(2014年国家级)、上灯炸龙节(2014年自治区级);', ab_l4:'人物 4 组:赵佗、李靖、潘美、岳飞。',
     ab_p3t:'口径说明', ab_p3:'以下事项存在口径差异或尚未获得权威来源确认：①「盐运」作为古道主要贸易属性的说法仅见于自媒体；②陆贾两次出使南越经行潇贺古道，需以《史记·南越列传》与地方志互证；③潇贺古道「申遗」尚无官方立项文件；④黄姚古镇按中国历史文化名镇（2007）与国家 5A 级景区（2022）呈现，古建筑群保护级别以广西国保名录为准；⑤古道始建年代（前 219 年）为通行口径，学界有讨论；⑥「麦岭府」为地方俗称，清官方建制为麦岭营；⑦上灯炸龙节为自治区级（2014）。',
     ab_p4t:'全部来源',
     notfound:'未找到该页面',
@@ -3266,14 +3420,14 @@ const I18N = {
     hero_cta1:'Browse the Archive', hero_cta2:'Explore the Atlas',
     home_feat:'Featured Entries', home_more:'View all →',
     ar_title:'Cultural Archive', ar_note:'About the data →', ar_ph:'Search name / region / description…',
-    snd_title:'Sound Archive', snd_tip:'26 videos (7 Butterfly Song / 5 Long Drum Dance / 8 Nüshu / 1 festival / 5 Xiaohe Ancient Road documentary). Click "▶ Play" to show the video (no placeholder when idle); only one plays at a time — starting a new one stops the previous.', snd_play:'Play', snd_close:'Close', snd_local:'Local video', snd_online:'Streamed', snd_ext:'Open on Bilibili', snd_refs:'Authoritative references', snd_notes:'Notes', snd_notes_t:'All 26 videos come from Bilibili and each entry credits its original source: 18 match the original videos of the desktop "毕设音频" folder, 8 were added (Butterfly Song at the March 3rd Gala, Lanshan Long Drum Dance, Dragon Lantern Festival documentary, and the 5-episode "Xiaohe Ancient Road" documentary). The 7 largest files (the 5 documentary episodes and two long features) stream directly from the platform; the other 19 are locally bundled copies (video/ directory, downloaded with BBDown, no login; short clips 480P, long ones 360P). Platform links may break if a source video is taken down; local files do not.',
+    snd_title:'Sound Archive', snd_tip:'37 sound and video records (26 videos + 11 audio excerpts), grouped by song type and setting. Play expands the player; only one plays at a time — starting a new one stops the previous.', snd_play:'Play', snd_close:'Close', snd_local:'Local video', snd_online:'Streamed', snd_ext:'Open on Bilibili', snd_clip:'Excerpt', snd_refs:'Authoritative references', snd_notes:'Notes', snd_notes_t:'All 26 videos and 11 audio excerpts come from Bilibili, and each entry credits its original source. The 7 largest videos stream from the platform; the other 19 videos are bundled locally. Platform links may break if a source is taken down; local copies are unaffected.',
     city_all:'All regions', ar_count:'{n} entries', ar_fav:'{n} favourited', ar_empty:'No matching entries — try other filters',
     d_intro:'Introduction', d_info:'Record', d_facts:'Key facts', d_type:'Category', d_batch:'Batch / Era', d_region:'Region', d_city:'City', d_src:'Data source', d_related:'Related entries', d_sounds:'Related sounds', fav_t:'Favorite',
     at_title:'Road Atlas', at_tip:'Route diagram of the Xiaohe Ancient Road: it starts at Daoxian (Hunan), forks at Daozhou, runs south along the west line via Jiangyong and Fuchuan (Mailing–Gepo) and east along the east line via Jianghua and Baisha, and the two lines rejoin at Hezhou. The Guiling road branches off the east line. The west line is c.170 km of land route, 1–1.5 m wide, paved with limestone and cobbles.', at_cities:'Cities along the road (click to open)', at_count:'{n} entries', map_ph_t:'Ancient-Road Map Placeholder', map_ph_s:'Click "Choose map image…" to load your map; move the mouse over it to see coordinates (percent + pixels) for future point marking', map_pick:'Choose map image…', map_hint:'Coordinates: percent & pixels relative to the map area, groundwork for future point labels', map_alt:'Ancient road map (placeholder image)',
     city_sites:'Routes & Sites', city_ich:'ICH & Figures', city_none:'No entries yet',
-    ab_title:'About & Data Sources', ab_p1t:'What this is', ab_p1:'The Xiaohe Ancient Road Audio Heritage Database collects routes, sites, ICH and figures along the ancient road. The road runs from the Xiao River in Daoxian, Hunan, south to the He River in Hezhou, Guangxi; after the Qin built the "New Road", it linked the Yangtze and Pearl River systems. Only material directly related to the road is included, and every entry cites a public source.',
-    ab_p2t:'Content scope', ab_l1:'3 routes: the Xiaohe Ancient Road (the Qin "New Road", forking at Daozhou into a west line — c.170 km of land route — and an east line), Xiemu Pass, Guiling Ancient Road;', ab_l2:'14 sites: Linhe Ancient City (5th batch national heritage, 2001), the Fuchuan Yao Covered Bridge Group, 27 bridges (7th batch 2013, official count), historic villages Xiushui/Fuxi/Chashan, Shanggantang, Huangyao, the Jianghua Huifeng Pavilion section and Yanghua Rock inscriptions;', ab_l3:'8 ICH items: Nüshu (1st batch national, 2006), Yao Butterfly Song, Yao Long Drum Dance, Yao costume, Yao Panwang Festival, Fuchuan Yao brocade (regional, 2018), "Panwang Da Ge" epic (4th batch national, 2014), Shangdeng Dragon Lantern Festival (regional, 2014);', ab_l4:'8 figures & events: Wei Tushui, Zhao Tuo, Tian Jia, Li Jing, Pan Mei, Yue Fei, Ortai, and the 7th Red Army (1931).',
-    ab_p3t:'Notes', ab_p3:'Items with disputed wording are handled as noted: ① "salt transport" as the road\'s main trade (self-media only); ② Lu Jia\'s two missions to Nanyue via this road need cross-checking with Shiji and local gazetteers; ③ no official heritage-listing application for the road; ④ Huangyao\'s "national heritage building group" claim does not match the Guangxi national-heritage list — presented as National Historic Town (2007) and 5A scenic area (2022); ⑤ the 219 BC founding date is the official/popular dating, with scholarly debate; ⑥ "Mailing Fu" is a local colloquial name, the official Qing establishment was Mailing Camp; ⑦ the Shangdeng Dragon Lantern Festival is provincial-level (2014) — "national-level" claims online are wrong.',
+    ab_title:'About & Data Sources', ab_p1t:'What this is', ab_p1:'The Xiaohe Ancient Road Audio Heritage Database collects routes, sites, ICH and figures along the ancient road. The road runs from the Xiao River in Daoxian, Hunan, south to the He River in Hezhou, Guangxi; after the Qin built the "New Road", it linked the Yangtze and Pearl River systems. Only material directly related to the road is included, and every entry cites a source.',
+    ab_p2t:'Content scope', ab_l1:'2 route records: the Xiaohe Ancient Road (the Qin "New Road", forking at Daozhou into a west line — c.170 km of land route — and an east line), Xiemu Pass;', ab_l2:'12 sites: Linhe Ancient City (5th batch national heritage, 2001), the Fuchuan Yao Covered Bridge Group, 27 bridges (7th batch 2013, official count), historic villages Fuxi/Chashan, Shanggantang, Huangyao (nearby), the Jianghua Huifeng Pavilion section and Yanghua Rock inscriptions;', ab_l3:'8 ICH items: Nüshu (1st batch national, 2006), Yao Butterfly Song, Yao Long Drum Dance, Yao costume, Yao Panwang Festival, Fuchuan Yao brocade (regional, 2018), "Panwang Da Ge" epic (4th batch national, 2014), Shangdeng Dragon Lantern Festival (regional, 2014);', ab_l4:'4 figures: Zhao Tuo, Li Jing, Pan Mei, Yue Fei.',
+    ab_p3t:'Notes', ab_p3:'Items with disputed wording are handled as noted: ① "salt transport" as the road\'s main trade (self-media only); ② Lu Jia\'s two missions to Nanyue via this road need cross-checking with Shiji and local gazetteers; ③ no official heritage-listing application for the road; ④ Huangyao\'s "national heritage building group" claim does not match the Guangxi national-heritage list — presented as National Historic Town (2007) and 5A scenic area (2022); ⑤ the 219 BC founding date is the official/popular dating, with scholarly debate; ⑥ "Mailing Fu" is a local colloquial name, the official Qing establishment was Mailing Camp; ⑦ the Shangdeng Dragon Lantern Festival is regional-level (2014) — "national-level" claims online are wrong.',
     ab_p4t:'All sources',
     notfound:'Page not found',
     foot_about:'About', foot_desc:'The Xiaohe Ancient Road Audio Heritage Database covers the road and its cultural remains along Hezhou, Fuchuan, Daoxian and Jiangyong. Sources are listed under About & Sources.',
@@ -3284,16 +3438,16 @@ const I18N = {
   'ja': {
     logo_cn:'瀟賀古道音声文化データベース', logo_en:'XIAOHE AUDIO HERITAGE',
     nav_home:'ホーム', nav_archive:'文化アーカイブ', nav_sounds:'音声データベース', nav_atlas:'古道地図', nav_chapters:'六章', nav_about:'このサイトについて', nav_design:'ビジュアルデザイン', nav_menu:'メニュー',
-    hero_title:'潇賀古道・秦の新道', hero_sub:'湖南道県の瀟水から広西賀州の賀江へ――千年古道の遺跡・無形文化遺産・人物', hero_note:'潇賀古道と沿線の文化遺産をまとめたデータベースです。資料は政府サイト・無形文化遺産一覧・公開研究によります。', hero_cta1:'文化アーカイブを見る', hero_cta2:'古道地図を見る',
+    hero_title:'瀟賀古道・秦の新道', hero_sub:'湖南道県の瀟水から広西賀州の賀江へ――千年古道の遺跡・無形文化遺産・人物', hero_note:'瀟賀古道と沿線の文化遺産をまとめたデータベースです。資料は政府サイト・無形文化遺産一覧・公開研究によります。', hero_cta1:'文化アーカイブを見る', hero_cta2:'古道地図を見る',
     home_feat:'注目の項目', home_more:'すべて見る →',
     ar_title:'文化アーカイブ', ar_note:'データ出典 →', ar_ph:'名称・地域・説明を検索…', city_all:'すべての地域', ar_count:'全{n}件', ar_fav:'お気に入り {n}件', ar_empty:'該当項目がありません。条件を変えてください',
-    snd_title:'音声データベース', snd_tip:'動画26件(蝴蝶歌7/長鼓舞5/女書8/民俗1/記録映画5)を収録。再生ボタンで動画が表示され、同時に再生されるのは1件だけです。', snd_play:'再生', snd_close:'閉じる', snd_local:'ローカル動画', snd_online:'外部配信', snd_ext:'Bilibiliで開く', snd_refs:'権威ある参考ページ', snd_notes:'説明', snd_notes_t:'動画26件の出所はすべてBilibiliで、各項目に出典を明記しています:18件はデスクトップ「毕设音频」の元動画に対応し、8件を追加しました(三月三の蝴蝶歌、湖南藍山の長鼓舞、上灯炸龍節の記録映画、《广西贺州 潇贺古道》5話)。容量の大きい7件(記録映画5話と長編2件)はプラットフォームの原片を直接再生し、残り19件はローカル版(video/ ディレクトリ、BBDownでログイン不要に取得、短編480P・長編360P)です。Bilibili側で削除されるとリンクが無効になる場合がありますが、ローカルファイルは影響を受けません。',
+    snd_title:'音声データベース', snd_tip:'音声・映像記録37件(動画26件+音声11件)を収録。歌の種類と場面で分類しています。再生するとプレーヤーが開き、同時に再生されるのは1件だけです。', snd_play:'再生', snd_close:'閉じる', snd_local:'ローカル動画', snd_online:'外部配信', snd_ext:'Bilibiliで開く', snd_clip:'抜粋を聴く', snd_refs:'権威ある参考ページ', snd_notes:'説明', snd_notes_t:'動画26件と音声11件の出所はすべてBilibiliで、各項目に出典を明記しています。容量の大きい7件はプラットフォームの原片を直接再生し、残り19件はローカル版です。Bilibili側で削除されるとリンクが無効になる場合がありますが、ローカルファイルは影響を受けません。',
     d_intro:'概要', d_info:'档案情報', d_facts:'要点', d_type:'種別', d_batch:'批次/年代', d_region:'地域', d_city:'所在都市', d_src:'出典', d_related:'関連項目', d_sounds:'関連音声', fav_t:'お気に入り',
-    at_title:'古道地図', at_tip:'上図は潇賀古道の全路線図です。湖南省道県で分岐し、西線は江永・富川(麦嶺—葛坡)を南下、東線は江華・白沙を東進して賀州で合流します。桂嶺古道は東線から分かれます。西線の陸路は約170km、幅1〜1.5m、青石と玉石敷きです。', at_cities:'沿線都市(クリックで都市ページへ)', at_count:'{n}件', map_ph_t:'古道地図画像プレースホルダー', map_ph_s:'「地図画像を選択…」で地図を読み込み、マウスを乗せると座標(パーセント+ピクセル)が表示されます。今後の地点ラベル付けに利用できます', map_pick:'地図画像を選択…', map_hint:'座標:地図領域に対するパーセントとピクセル', map_alt:'古道地図(プレースホルダー画像)',
-    city_sites:'街道と遺跡', city_ich:'無形文化遺産と人物', city_none:'収録項目なし', city_count:'全{n}件',
-    ab_title:'このサイトについてと出典', ab_p1t:'これは何か', ab_p1:'「潇賀古道文化データベース」は、潇賀古道と沿線の街道・関所・遺跡・無形文化遺産・歴史人物を収録しています。古道は湖南道県の瀟水から広西賀州の賀江に至り、秦代の「新道」として長江水系と珠江水系を結びました。各項目に出典を明記しています。', ab_p2t:'収録範囲', ab_l1:'街道3件(潇賀古道は道州で西線・東線に分岐、西線の陸路約170km・謝沐関・桂嶺古道)', ab_l2:'遺跡14件(臨賀故城・富川瑶族風雨橋群27座・秀水/福溪/岔山・上甘棠・黄姚など)', ab_l3:'無形文化遺産8件(女書・蝴蝶歌・長鼓舞・瑶族服飾・瑶族盤王節・富川織錦・盤王大歌・上灯炸龍節)', ab_l4:'人物・事件8組(尉屠睢・趙佗・田甲・李靖・潘美・岳飛・鄂爾泰・紅七軍)', ab_p3t:'注意事項', ab_p3:'一部項目は権威ある確認が得られていないため「未確認」と表記しています。英語名の出典は公式/通行表記/本站訳注の3種に区分。', ab_p4t:'全出典',
+    at_title:'古道地図', at_tip:'上図は瀟賀古道の全路線図です。湖南省道県で分岐し、西線は江永・富川(麦嶺—葛坡)を南下、東線は江華・白沙を東進して賀州で合流します。桂嶺古道は東線から分かれます。西線の陸路は約170km、幅1〜1.5m、青石と玉砂利敷きです。', at_cities:'沿線都市(クリックで都市ページへ)', at_count:'{n}件', map_ph_t:'古道地図画像プレースホルダー', map_ph_s:'「地図画像を選択…」で地図を読み込み、マウスを乗せると座標(パーセント+ピクセル)が表示されます。今後の地点ラベル付けに利用できます', map_pick:'地図画像を選択…', map_hint:'座標:地図領域に対するパーセントとピクセル', map_alt:'古道地図(プレースホルダー画像)',
+    city_sites:'古道と遺跡', city_ich:'無形文化遺産と人物', city_none:'収録項目なし', city_count:'全{n}件',
+    ab_title:'このサイトについてと出典', ab_p1t:'これは何か', ab_p1:'「瀟賀古道文化データベース」は、瀟賀古道と沿線の街道・関所・遺跡・無形文化遺産・歴史人物を収録しています。古道は湖南道県の瀟水から広西賀州の賀江に至り、秦代の「新道」として長江水系と珠江水系を結びました。各項目に出典を明記しています。', ab_p2t:'収録範囲', ab_l1:'街道2件(瀟賀古道は道州で西線・東線に分岐、西線の陸路約170km、謝沐関)', ab_l2:'遺跡12件(臨賀故城・富川瑶族風雨橋群27座・福溪/岔山・上甘棠・黄姚など)', ab_l3:'無形文化遺産8件(女書・蝴蝶歌・長鼓舞・瑶族服飾・瑶族盤王節・富川織錦・盤王大歌・上灯炸龍節)', ab_l4:'人物4組(趙佗・李靖・潘美・岳飛)', ab_p3t:'注意事項', ab_p3:'一部項目は権威ある確認が得られていないため「未確認」と表記しています。英語名の出典は公式/通行表記/本站訳注の3種に区分。', ab_p4t:'全出典',
     notfound:'ページが見つかりません',
-    foot_about:'このプロジェクトについて', foot_desc:'潇賀古道と沿線の文化遺産を収録したデータベースです。古道は湖南の瀟水から広西の賀江に至ります。資料は公開された情報源によります。', foot_res:'内容', foot_r0:'音声データベース(蝴蝶歌/女書など)', foot_r1:'文化アーカイブ(遺跡/無形文化遺産/人物)', foot_r2:'古道地図(街道/関所)', foot_r3:'データ出典', foot_links:'権威あるリソース',
+    foot_about:'このプロジェクトについて', foot_desc:'瀟賀古道と沿線の文化遺産を収録したデータベースです。古道は湖南の瀟水から広西の賀江に至ります。資料は公開された情報源によります。', foot_res:'内容', foot_r0:'音声データベース(蝴蝶歌/女書など)', foot_r1:'文化アーカイブ(遺跡/無形文化遺産/人物)', foot_r2:'古道地図(街道/関所)', foot_r3:'データ出典', foot_links:'権威あるリソース',
     en_src:'英語名の出典', en_body_note:'英語本文は中国語の事実に基づく本站訳注(非公式)です。要点(facts)は中国語のままです。', city_count:'全{n}件', ab_p5t:'多言語について', multi_note:'インターフェース翻訳は国連・ユネスコおよび各国政府サイトの用語に基づきます。英語名は公式/通行表記/本站訳注の3種に区分(詳細ページに表示)。日本語・韓国語・フランス語・スペイン語・ロシア語はインターフェースのみで、本文と要点は中国語・英語で提供します。'
   },
   'ko': {
@@ -3302,11 +3456,11 @@ const I18N = {
     hero_title:'샤오허 고대도로 · 진대 신도', hero_sub:'후난 다오현 샤오수이에서 광시 허저우 허장까지 – 천년 고대도로의 유적·무형문화유산·인물', hero_note:'샤오허 고대도로와 연선 문화유산을 정리한 데이터베이스입니다. 자료는 정부 사이트·무형문화유산 목록·공개 연구에서 가져왔습니다.', hero_cta1:'문화 아카이브 보기', hero_cta2:'고대도로 지도 보기',
     home_feat:'주요 항목', home_more:'전체 보기 →',
     ar_title:'문화 아카이브', ar_note:'데이터 출처 →', ar_ph:'이름·지역·설명 검색…', city_all:'전체 지역', ar_count:'총 {n}건', ar_fav:'즐겨찾기 {n}건', ar_empty:'일치하는 항목이 없습니다. 조건을 바꿔 보세요',
-    snd_title:'사운드 데이터베이스', snd_tip:'동영상 26건(蝴蝶歌7/장고춤5/여서8/민속1/다큐5)을 수록. 재생 버튼을 누르면 동영상이 표시되며, 동시에 재생되는 것은 1건뿐입니다.', snd_play:'재생', snd_close:'접기', snd_local:'로컬 동영상', snd_online:'외부 스트리밍', snd_ext:'Bilibili에서 열기', snd_refs:'공신력 있는 참고 페이지', snd_notes:'설명', snd_notes_t:'동영상 26건의 출처는 모두 Bilibili이며 각 항목에 원출처를 표기했습니다: 18건은 데스크톱 「毕设音频」의 원본 영상에 대응하고 8건을 추가했습니다(3월 3일 蝴蝶歌, 후난 란산 장고춤, 상등작룡절 다큐, 《广西贺州 潇贺古道》5편). 용량이 큰 7건(다큐 5편과 장편 2건)은 플랫폼 원본을 바로 재생하고, 나머지 19건은 로컬 버전(video/ 디렉터리, BBDown 로그인 불필요, 단편 480P·장편 360P)입니다. Bilibili에서 삭제되면 링크가 무효가 될 수 있으나 로컬 파일은 영향받지 않습니다.',
+    snd_title:'사운드 데이터베이스', snd_tip:'사운드·영상 기록 37건(동영상 26건 + 오디오 11건)을 수록. 노래 종류와 장면별로 묶었습니다. 재생하면 플레이어가 열리며, 동시에 재생되는 것은 1건뿐입니다.', snd_play:'재생', snd_close:'접기', snd_local:'로컬 동영상', snd_online:'외부 스트리밍', snd_ext:'Bilibili에서 열기', snd_clip:'발췌 듣기', snd_refs:'공신력 있는 참고 페이지', snd_notes:'설명', snd_notes_t:'동영상 26건과 오디오 11건의 출처는 모두 Bilibili이며 각 항목에 원출처를 표기했습니다. 용량이 큰 7건은 플랫폼 원본을 바로 재생하고, 나머지 19건은 로컬 버전입니다. Bilibili에서 삭제되면 링크가 무효가 될 수 있으나 로컬 파일은 영향받지 않습니다.',
     d_intro:'개요', d_info:'기록 정보', d_facts:'요점', d_type:'분류', d_batch:'지정/연대', d_region:'지역', d_city:'소재 도시', d_src:'출처', d_related:'관련 항목', d_sounds:'관련 음성', fav_t:'즐겨찾기',
     at_title:'고대도로 지도', at_tip:'위 그림은 샤오허 고대도로 전 노선도입니다. 후난성 다오현에서 갈라져 서선은 장융·푸촨(마이링—거포)을 지나 남하하고, 동선은 장화·바이사를 지나 동진하여 허저우에서 합류합니다. 구이링 고대도로는 동선에서 갈라집니다. 서선 육로는 약 170km, 폭 1~1.5m, 청석과 조약돌 포장입니다.', at_cities:'연선 도시(클릭하면 도시 페이지로)', at_count:'{n}건', map_ph_t:'고대도로 지도 이미지 자리', map_ph_s:'「지도 이미지 선택…」으로 지도를 불러오고, 마우스를 올리면 좌표(퍼센트+픽셀)가 표시됩니다. 이후 지점 표시에 활용할 수 있습니다', map_pick:'지도 이미지 선택…', map_hint:'좌표: 지도 영역 기준 퍼센트와 픽셀', map_alt:'고대도로 지도(자리 이미지)',
     city_sites:'도로와 유적', city_ich:'무형문화유산과 인물', city_none:'수록 항목 없음', city_count:'총 {n}건',
-    ab_title:'소개와 출처', ab_p1t:'이 사이트는', ab_p1:'「샤오허 고대도로 음성 문화 데이터베이스」는 샤오허 고대도로와 연선의 도로·관문·유적·무형문화유산·역사 인물을 수록합니다. 고대도로는 후난 다오현 샤오수이에서 광시 허저우 허장까지 이어지며, 진대의 「신도」로서 장강 수계와 주강 수계를 연결했습니다. 각 항목에 출처를 표기합니다.', ab_p2t:'수록 범위', ab_l1:'도로 3건(샤오허 고대도로는 다오저우에서 서선·동선으로 갈라지며, 서선 육로 약 170km·셰무관·구이링 고대도로)', ab_l2:'유적 14건(린허 고성·푸촨 야오 풍우교군 27좌·수수/푸시/차산·상간탕·황야오 등)', ab_l3:'무형문화유산 8건(여서·후접가·장고춤·야오족 복식·야오족 반왕절·푸촨 직금·반왕대가·상등작룡절)', ab_l4:'인물·사건 8건(위투수이·자오퉈·톈자·리징·판메이·웨페이·어얼타이·제7홍군)', ab_p3t:'유의 사항', ab_p3:'일부 항목은 공신력 있는 확인이 되지 않아 「미확인」으로 표기합니다. 영어명 출처는 공식/통용 표기/본 사이트 번역의 3가지로 구분.', ab_p4t:'전체 출처',
+    ab_title:'소개와 출처', ab_p1t:'이 사이트는', ab_p1:'「샤오허 고대도로 음성 문화 데이터베이스」는 샤오허 고대도로와 연선의 도로·관문·유적·무형문화유산·역사 인물을 수록합니다. 고대도로는 후난 다오현 샤오수이에서 광시 허저우 허장까지 이어지며, 진대의 「신도」로서 장강 수계와 주강 수계를 연결했습니다. 각 항목에 출처를 표기합니다.', ab_p2t:'수록 범위', ab_l1:'도로 2건(샤오허 고대도로는 다오저우에서 서선·동선으로 갈라지며, 서선 육로 약 170km, 셰무관)', ab_l2:'유적 12건(린허 고성·푸촨 야오 풍우교군 27좌·푸시/차산·상간탕·황야오 등)', ab_l3:'무형문화유산 8건(여서·후접가·장고춤·야오족 복식·야오족 반왕절·푸촨 직금·반왕대가·상등작룡절)', ab_l4:'인물 4건(자오퉈·리징·판메이·웨페이)', ab_p3t:'유의 사항', ab_p3:'일부 항목은 공신력 있는 확인이 되지 않아 「미확인」으로 표기합니다. 영어명 출처는 공식/통용 표기/본 사이트 번역의 3가지로 구분.', ab_p4t:'전체 출처',
     notfound:'페이지를 찾을 수 없습니다',
     foot_about:'이 프로젝트 소개', foot_desc:'샤오허 고대도로와 연선 문화유산을 수록한 데이터베이스입니다. 고대도로는 후난 샤오수이에서 광시 허장까지 이어집니다. 자료는 공개 출처에 기반합니다.', foot_res:'내용', foot_r0:'사운드 데이터베이스(蝴蝶歌/여서 등)', foot_r1:'문화 아카이브(유적/무형문화유산/인물)', foot_r2:'고대도로 지도(도로/관문)', foot_r3:'데이터 출처', foot_links:'공신력 있는 자료',
     en_src:'영어명 출처', en_body_note:'영문 본문은 중국어 사실에 기반한 본 사이트 번역(비공식)입니다. 요점(facts)은 중국어로 표기됩니다.', city_count:'총 {n}건', ab_p5t:'다국어 안내', multi_note:'인터페이스 번역은 UN·유네스코 및 각국 정부 사이트 용어를 바탕으로 합니다. 영어명은 공식/통용 표기/본 사이트 번역으로 구분(상세 페이지에 표시). 일본어·한국어·프랑스어·스페인어·러시아어는 인터페이스만 지원하며 본문과 요점은 중국어·영어로 제공됩니다.'
@@ -3317,11 +3471,11 @@ const I18N = {
     hero_title:'Route antique Xiaohe · « Nouvelle route » des Qin', hero_sub:'Du fleuve Xiao (Daoxian, Hunan) au fleuve He (Hezhou, Guangxi) — sites, patrimoine immatériel et figures d\'une route millénaire', hero_note:'Base de données consacrée à la route antique Xiaohe et à son patrimoine. Sources publiques : sites gouvernementaux, listes du patrimoine et recherches.', hero_cta1:'Voir les archives', hero_cta2:'Voir l\'atlas',
     home_feat:'Entrées en vedette', home_more:'Tout voir →',
     ar_title:'Archives culturelles', ar_note:'Sources des données →', ar_ph:'Rechercher nom / région / description…', city_all:'Toutes les régions', ar_count:'{n} entrées', ar_fav:'{n} favoris', ar_empty:'Aucune entrée ne correspond. Essayez d\'autres filtres',
-    snd_title:'Base de données sonore', snd_tip:'26 vidéos (Chant du papillon 7 / Danse du tambour long 5 / Nüshu 8 / Fête 1 / Documentaire 5). Cliquez sur « ▶ Lire » pour afficher la vidéo ; une seule lecture à la fois.', snd_play:'Lire', snd_close:'Fermer', snd_local:'Vidéo locale', snd_online:'En ligne', snd_ext:'Ouvrir sur Bilibili', snd_refs:'Références faisant autorité', snd_notes:'Notes', snd_notes_t:'Les 26 vidéos proviennent de Bilibili et chaque entrée indique sa source. Les liens peuvent expirer si la source est retirée ; les fichiers locaux ne sont pas concernés.',
+    snd_title:'Base de données sonore', snd_tip:'37 enregistrements sonores et vidéo (26 vidéos + 11 extraits audio), classés par type de chant et par scène. La lecture ouvre le lecteur ; une seule lecture à la fois.', snd_play:'Lire', snd_close:'Fermer', snd_local:'Vidéo locale', snd_online:'En ligne', snd_ext:'Ouvrir sur Bilibili', snd_clip:'Extrait', snd_refs:'Références faisant autorité', snd_notes:'Notes', snd_notes_t:'Les 26 vidéos et 11 extraits audio proviennent de Bilibili et chaque entrée indique sa source. Les liens peuvent expirer si la source est retirée ; les fichiers locaux ne sont pas concernés.',
     d_intro:'Introduction', d_info:'Fiche', d_facts:'Points clés', d_type:'Catégorie', d_batch:'Liste / époque', d_region:'Région', d_city:'Ville', d_src:'Source', d_related:'Entrées liées', d_sounds:'Sons liés', fav_t:'Favori',
     at_title:'Atlas de la route antique', at_tip:'Schéma de l\'itinéraire complet de la route antique Xiaohe : elle part de Daoxian (Hunan), se divise à Daozhou, la ligne ouest passant par Jiangyong et Fuchuan (Mailing–Gepo) vers le sud, la ligne est par Jianghua et Baisha vers l\'est, et les deux se rejoignent à Hezhou. La route de Guiling se détache de la ligne est. La ligne ouest compte environ 170 km, large de 1 à 1,5 m, pavée de calcaire et de galets.', at_cities:'Villes le long de la route (cliquer pour ouvrir)', at_count:'{n} entrées', map_ph_t:'Emplacement pour image de carte', map_ph_s:'Cliquez sur « Choisir une image de carte… » ; le curseur affiche les coordonnées (pourcent + pixels), base pour de futurs points de repère', map_pick:'Choisir une image de carte…', map_hint:'Coordonnées : pourcent et pixels relatifs à la zone de la carte', map_alt:'Carte de la route antique (image de remplacement)',
     city_sites:'Routes et sites', city_ich:'Patrimoine et figures', city_none:'Aucune entrée', city_count:'{n} entrées',
-    ab_title:'À propos et sources', ab_p1t:'Ce que c\'est', ab_p1:'La « Base de données culturelle de la route antique Xiaohe » recense les routes, sites, patrimoine immatériel et figures liés à la route. La route relie le fleuve Xiao (Hunan) au fleuve He (Guangxi) ; la « Nouvelle route » des Qin a fait le lien entre les bassins du Yangtsé et de la rivière des Perles. Chaque fiche cite une source publique.', ab_p2t:'Contenu', ab_l1:'3 routes (la route antique Xiaohe se divise à Daozhou en ligne ouest — env. 170 km — et ligne est ; passe de Xiemu ; route antique de Guiling)', ab_l2:'14 sites (ville antique de Linhe, 27 ponts couverts yao de Fuchuan, villages historiques, Huangyao, etc.)', ab_l3:'8 éléments du patrimoine immatériel (écriture Nüshu, chant du papillon, danse du tambour long, costume yao, fête de Panwang, tissage yao de Fuchuan, épopée Panwang, fête du dragon)', ab_l4:'8 figures et événements (Wei Tushui, Zhao Tuo, Li Jing, Yue Fei, Ortai, 7e Armée rouge)', ab_p3t:'Notes', ab_p3:'Certaines informations non confirmées sont marquées « non vérifié ». Les noms anglais sont classés : officiel / romanisation / traduit par ce site.', ab_p4t:'Toutes les sources',
+    ab_title:'À propos et sources', ab_p1t:'Ce que c\'est', ab_p1:'La « Base de données culturelle de la route antique Xiaohe » recense les routes, sites, patrimoine immatériel et figures liés à la route. La route relie le fleuve Xiao (Hunan) au fleuve He (Guangxi) ; la « Nouvelle route » des Qin a fait le lien entre les bassins du Yangtsé et de la rivière des Perles. Chaque fiche cite une source publique.', ab_p2t:'Contenu', ab_l1:'2 itinéraires (la route antique Xiaohe se divise à Daozhou en ligne ouest — env. 170 km — et ligne est ; passe de Xiemu)', ab_l2:'12 sites (ville antique de Linhe, 27 ponts couverts yao de Fuchuan, villages historiques, Huangyao, etc.)', ab_l3:'8 éléments du patrimoine immatériel (écriture Nüshu, chant du papillon, danse du tambour long, costume yao, fête de Panwang, tissage yao de Fuchuan, épopée Panwang, fête des lanternes et du dragon)', ab_l4:'4 figures (Zhao Tuo, Li Jing, Pan Mei, Yue Fei)', ab_p3t:'Notes', ab_p3:'Certaines informations non confirmées sont marquées « non vérifié ». Les noms anglais sont classés : officiel / romanisation / traduit par ce site.', ab_p4t:'Toutes les sources',
     notfound:'Page introuvable',
     foot_about:'À propos du projet', foot_desc:'La base de données culturelle de la route antique Xiaohe recense la route et son patrimoine au long de Hezhou, Fuchuan, Daoxian et Jiangyong. Sources indiquées dans « À propos ».', foot_res:'Contenu', foot_r0:'Base de données sonore (chant du papillon / Nüshu)', foot_r1:'Archives culturelles (sites / patrimoine / figures)', foot_r2:'Atlas de la route antique (routes / passes)', foot_r3:'Sources des données', foot_links:'Ressources faisant autorité',
     en_src:'Source du nom anglais', en_body_note:'Le texte anglais est traduit par ce site d\'après les faits chinois (non officiel) ; les points clés restent en chinois.', city_count:'{n} entrées', ab_p5t:'Note multilingue', multi_note:'Les traductions de l\'interface suivent les termes relevés sur les sites de l\'ONU/UNESCO et des gouvernements ; les noms anglais sont classés officiel / romanisation / traduit par ce site (badge sur les fiches). Le japonais, coréen, français, espagnol et russe ne couvrent que l\'interface — le contenu des fiches reste en chinois et en anglais.'
@@ -3332,11 +3486,11 @@ const I18N = {
     hero_title:'Ruta antigua Xiaohe · « Nuevo camino » de los Qin', hero_sub:'Del río Xiao (Daoxian, Hunan) al río He (Hezhou, Guangxi) — sitios, patrimonio inmaterial y figuras de una ruta milenaria', hero_note:'Base de datos dedicada a la ruta antigua Xiaohe y su patrimonio. Fuentes públicas: sitios gubernamentales, listas de patrimonio e investigación.', hero_cta1:'Ver archivo cultural', hero_cta2:'Ver atlas de la ruta',
     home_feat:'Entradas destacadas', home_more:'Ver todo →',
     ar_title:'Archivo cultural', ar_note:'Fuentes de datos →', ar_ph:'Buscar nombre / región / descripción…', city_all:'Todas las regiones', ar_count:'{n} entradas', ar_fav:'{n} favoritos', ar_empty:'No hay entradas que coincidan. Pruebe otros filtros',
-    snd_title:'Base de datos de sonido', snd_tip:'26 vídeos (Canto de la mariposa 7 / Danza del tambor largo 5 / Nüshu 8 / Fiesta 1 / Documental 5). Pulse « ▶ Reproducir » para mostrar el vídeo; solo uno a la vez.', snd_play:'Reproducir', snd_close:'Cerrar', snd_local:'Vídeo local', snd_online:'En línea', snd_ext:'Abrir en Bilibili', snd_refs:'Referencias autorizadas', snd_notes:'Notas', snd_notes_t:'Los 26 vídeos proceden de Bilibili y cada entrada indica su fuente. Los enlaces pueden caducar si se retira la fuente; los archivos locales no.',
+    snd_title:'Base de datos de sonido', snd_tip:'37 registros de sonido y vídeo (26 vídeos + 11 extractos de audio), agrupados por tipo de canto y escena. La reproducción abre el reproductor; solo uno a la vez.', snd_play:'Reproducir', snd_close:'Cerrar', snd_local:'Vídeo local', snd_online:'En línea', snd_ext:'Abrir en Bilibili', snd_clip:'Extracto', snd_refs:'Referencias autorizadas', snd_notes:'Notas', snd_notes_t:'Los 26 vídeos y 11 extractos de audio proceden de Bilibili y cada entrada indica su fuente. Los enlaces pueden caducar si se retira la fuente; los archivos locales no.',
     d_intro:'Introducción', d_info:'Ficha', d_facts:'Puntos clave', d_type:'Categoría', d_batch:'Listado / época', d_region:'Región', d_city:'Ciudad', d_src:'Fuente', d_related:'Entradas relacionadas', d_sounds:'Sonidos relacionados', fav_t:'Favorito',
     at_title:'Atlas de la ruta antigua', at_tip:'Esquema del recorrido completo de la ruta antigua Xiaohe: parte de Daoxian (Hunan), se bifurca en Daozhou; la línea oeste pasa por Jiangyong y Fuchuan (Mailing–Gepo) hacia el sur y la línea este por Jianghua y Baisha hacia el este, y ambas se reúnen en Hezhou. La ruta de Guiling se desprende de la línea este. La línea oeste tiene unos 170 km, con 1 a 1,5 m de ancho, pavimentada con caliza y guijarros.', at_cities:'Ciudades de la ruta (clic para abrir)', at_count:'{n} entradas', map_ph_t:'Espacio para imagen de mapa', map_ph_s:'Pulse « Elegir imagen de mapa… »; el cursor muestra las coordenadas (porcentaje + píxeles), base para futuras marcas de puntos', map_pick:'Elegir imagen de mapa…', map_hint:'Coordenadas: porcentaje y píxeles relativos al área del mapa', map_alt:'Mapa de la ruta antigua (imagen de reemplazo)',
     city_sites:'Rutas y sitios', city_ich:'Patrimonio y figuras', city_none:'Sin entradas', city_count:'{n} entradas',
-    ab_title:'Sobre nosotros y fuentes', ab_p1t:'Qué es esto', ab_p1:'La « Base de datos cultural de la ruta antigua Xiaohe » reúne rutas, sitios, patrimonio inmaterial y figuras de la ruta. La ruta une el río Xiao (Hunan) con el río He (Guangxi); el « Nuevo camino » de los Qin conectó las cuencas del Yangtsé y del río de las Perlas. Cada ficha cita una fuente pública.', ab_p2t:'Contenido', ab_l1:'3 rutas (la ruta antigua Xiaohe se bifurca en Daozhou en línea oeste —unos 170 km— y línea este; paso de Xiemu; ruta antigua de Guiling)', ab_l2:'14 sitios (ciudad antigua de Linhe, 27 puentes cubiertos yao de Fuchuan, pueblos históricos, Huangyao, etc.)', ab_l3:'8 elementos del patrimonio inmaterial (escritura Nüshu, canto de la mariposa, danza del tambor largo, vestido yao, fiesta de Panwang, tejido yao de Fuchuan, epopeya Panwang, fiesta del dragón)', ab_l4:'8 figuras y eventos (Wei Tushui, Zhao Tuo, Li Jing, Yue Fei, Ortai, 7.º Ejército Rojo)', ab_p3t:'Notas', ab_p3:'Algunas informaciones no confirmadas se marcan « no verificado ». Los nombres en inglés se clasifican: oficial / romanización / traducido por este sitio.', ab_p4t:'Todas las fuentes',
+    ab_title:'Sobre nosotros y fuentes', ab_p1t:'Qué es esto', ab_p1:'La « Base de datos cultural de la ruta antigua Xiaohe » reúne rutas, sitios, patrimonio inmaterial y figuras de la ruta. La ruta une el río Xiao (Hunan) con el río He (Guangxi); el « Nuevo camino » de los Qin conectó las cuencas del Yangtsé y del río de las Perlas. Cada ficha cita una fuente pública.', ab_p2t:'Contenido', ab_l1:'2 rutas (la ruta antigua Xiaohe se bifurca en Daozhou en línea oeste —unos 170 km— y línea este; paso de Xiemu)', ab_l2:'12 sitios (ciudad antigua de Linhe, 27 puentes cubiertos yao de Fuchuan, pueblos históricos, Huangyao, etc.)', ab_l3:'8 elementos del patrimonio inmaterial (escritura Nüshu, canto de la mariposa, danza del tambor largo, vestido yao, fiesta de Panwang, tejido yao de Fuchuan, epopeya Panwang, fiesta de las linternas y del dragón)', ab_l4:'4 personajes (Zhao Tuo, Li Jing, Pan Mei, Yue Fei)', ab_p3t:'Notas', ab_p3:'Algunas informaciones no confirmadas se marcan « no verificado ». Los nombres en inglés se clasifican: oficial / romanización / traducido por este sitio.', ab_p4t:'Todas las fuentes',
     notfound:'Página no encontrada',
     foot_about:'Sobre el proyecto', foot_desc:'La base de datos cultural de la ruta antigua Xiaohe reúne la ruta y su patrimonio en Hezhou, Fuchuan, Daoxian y Jiangyong. Fuentes en « Sobre nosotros ».', foot_res:'Contenido', foot_r0:'Base de datos de sonido (canto de la mariposa / Nüshu)', foot_r1:'Archivo cultural (sitios / patrimonio / figuras)', foot_r2:'Atlas de la ruta antigua (rutas / pasos)', foot_r3:'Fuentes de datos', foot_links:'Recursos autorizados',
     en_src:'Fuente del nombre en inglés', en_body_note:'El texto en inglés es traducido por este sitio a partir de los hechos en chino (no oficial); los puntos clave permanecen en chino.', city_count:'{n} entradas', ab_p5t:'Nota multilingüe', multi_note:'Las traducciones de la interfaz siguen los términos de sitios de la ONU/UNESCO y gobiernos; los nombres en inglés se clasifican oficial / romanización / traducido por este sitio (insignia en las fichas). El japonés, coreano, francés, español y ruso cubren solo la interfaz — el contenido queda en chino e inglés.'
@@ -3347,11 +3501,11 @@ const I18N = {
     hero_title:'Древняя дорога Сяохэ · «Новый путь» Цинь', hero_sub:'От реки Сяо (Даосянь, Хунань) до реки Хэ (Хэчжоу, Гуанси) — памятники, нематериальное наследие и личности тысячелетней дороги', hero_note:'База данных о древней дороге Сяохэ и её наследии. Источники: правительственные сайты, списки наследия и открытые исследования.', hero_cta1:'Открыть культурный архив', hero_cta2:'Открыть атлас дороги',
     home_feat:'Избранные записи', home_more:'Смотреть все →',
     ar_title:'Культурный архив', ar_note:'Источники данных →', ar_ph:'Поиск: название / регион / описание…', city_all:'Все регионы', ar_count:'{n} записей', ar_fav:'{n} в избранном', ar_empty:'Нет подходящих записей. Попробуйте другие фильтры',
-    snd_title:'База данных звука', snd_tip:'26 видео (Песня бабочки 7 / Танец с длинным барабаном 5 / Нюйшу 8 / Праздник 1 / Документальный 5). Нажмите «▶ Воспроизвести», чтобы показать видео; одновременно играет только одно.', snd_play:'Воспроизвести', snd_close:'Закрыть', snd_local:'Локальное видео', snd_online:'Онлайн', snd_ext:'Открыть на Bilibili', snd_refs:'Авторитетные ссылки', snd_notes:'Примечания', snd_notes_t:'Все 26 видео взяты с Bilibili, у каждой записи указан источник. Ссылки могут перестать работать при удалении источника; локальные файлы — нет.',
+    snd_title:'База данных звука', snd_tip:'37 аудио- и видеозаписей (26 видео + 11 аудиофрагментов), сгруппированных по типу песни и сцене. Воспроизведение открывает плеер; одновременно играет только одна запись.', snd_play:'Воспроизвести', snd_close:'Закрыть', snd_local:'Локальное видео', snd_online:'Онлайн', snd_ext:'Открыть на Bilibili', snd_clip:'Фрагмент', snd_refs:'Авторитетные ссылки', snd_notes:'Примечания', snd_notes_t:'Все 26 видео и 11 аудиофрагментов взяты с Bilibili, у каждой записи указан источник. Ссылки могут перестать работать при удалении источника; локальные файлы — нет.',
     d_intro:'Введение', d_info:'Запись', d_facts:'Ключевые факты', d_type:'Категория', d_batch:'Список / эпоха', d_region:'Регион', d_city:'Город', d_src:'Источник', d_related:'Связанные записи', d_sounds:'Связанные звуки', fav_t:'Избранное',
     at_title:'Атлас древней дороги', at_tip:'Схема всего маршрута древней дороги Сяохэ: она начинается в Даосяне (Хунань), делится в Даочжоу; западная линия идёт на юг через Цзянъюн и Фучуань (Майлин–Гэпо), восточная — на восток через Цзянхуа и Байша, — и обе соединяются в Хэчжоу. Дорога Гуйлин ответвляется от восточной линии. Западная линия — около 170 км, шириной 1–1,5 м, мощена известняком и галькой.', at_cities:'Города вдоль дороги (нажмите, чтобы открыть)', at_count:'{n} записей', map_ph_t:'Место для изображения карты', map_ph_s:'Нажмите «Выбрать изображение карты…»; курсор показывает координаты (проценты + пиксели) — основа для будущих меток точек', map_pick:'Выбрать изображение карты…', map_hint:'Координаты: проценты и пиксели относительно области карты', map_alt:'Карта древней дороги (замещающее изображение)',
     city_sites:'Дороги и памятники', city_ich:'Наследие и личности', city_none:'Нет записей', city_count:'{n} записей',
-    ab_title:'О нас и источниках', ab_p1t:'Что это', ab_p1:'«База данных культурного наследия древней дороги Сяохэ» собирает сведения о дорогах, памятниках, нематериальном наследии и исторических лицах. Дорога соединяет реку Сяо (Хунань) с рекой Хэ (Гуанси); «Новый путь» Цинь связал бассейны Янцзы и Чжуцзяна. У каждой записи указан открытый источник.', ab_p2t:'Содержание', ab_l1:'3 дороги (дорога Сяохэ делится в Даочжоу на западную линию — около 170 км — и восточную; перевал Сему; древняя дорога Гуйлин)', ab_l2:'14 памятников (древний город Линьхэ, 27 крытых мостов яо в Фучуане, исторические деревни, Хуанъяо и др.)', ab_l3:'8 элементов нематериального наследия (письменность нюйшу, песня бабочки, танец с длинным барабаном, костюм яо, праздник Паньвана, ткачество яо Фучуань, эпос Паньвана, праздник дракона)', ab_l4:'8 личностей и событий (Вэй Тушуй, Чжао То, Ли Цзин, Юэ Фэй, Ортай, 7-я Красная армия)', ab_p3t:'Примечания', ab_p3:'Неподтверждённые сведения помечены «не проверено». Английские названия делятся: официальное / транслитерация / перевод этого сайта.', ab_p4t:'Все источники',
+    ab_title:'О нас и источниках', ab_p1t:'Что это', ab_p1:'«База данных культурного наследия древней дороги Сяохэ» собирает сведения о дорогах, памятниках, нематериальном наследии и исторических лицах. Дорога соединяет реку Сяо (Хунань) с рекой Хэ (Гуанси); «Новый путь» Цинь связал бассейны Янцзы и Чжуцзяна. У каждой записи указан открытый источник.', ab_p2t:'Содержание', ab_l1:'2 дороги (дорога Сяохэ делится в Даочжоу на западную линию — около 170 км — и восточную; перевал Сему)', ab_l2:'12 памятников (древний город Линьхэ, 27 крытых мостов яо в Фучуане, исторические деревни, Хуанъяо и др.)', ab_l3:'8 элементов нематериального наследия (письменность нюйшу, песня бабочки, танец с длинным барабаном, костюм яо, праздник Паньвана, ткачество яо Фучуань, эпос Паньвана, праздник фонарей и дракона)', ab_l4:'4 персоналии (Чжао То, Ли Цзин, Пань Мэй, Юэ Фэй)', ab_p3t:'Примечания', ab_p3:'Неподтверждённые сведения помечены «не проверено». Английские названия делятся: официальное / транслитерация / перевод этого сайта.', ab_p4t:'Все источники',
     notfound:'Страница не найдена',
     foot_about:'О проекте', foot_desc:'База данных культурного наследия древней дороги Сяохэ: дорога и её наследие в Хэчжоу, Фучуане, Даосяне и Цзянъюне. Источники — в разделе «О нас».', foot_res:'Содержание', foot_r0:'База данных звука (песня бабочки / нюйшу)', foot_r1:'Культурный архив (памятники / наследие / личности)', foot_r2:'Атлас древней дороги (дороги / перевалы)', foot_r3:'Источники данных', foot_links:'Авторитетные ресурсы',
     en_src:'Источник английского названия', en_body_note:'Английский текст переведён этим сайтом на основе китайских фактов (неофициально); ключевые факты остаются на китайском.', city_count:'{n} записей', ab_p5t:'Примечание о языках', multi_note:'Переводы интерфейса следуют формулировкам на сайтах ООН/ЮНЕСКО и правительств; английские названия делятся на официальные / транслитерацию / перевод этого сайта (значок на страницах записей). Японский, корейский, французский, испанский и русский покрывают только интерфейс — содержание записей на китайском и английском.'
