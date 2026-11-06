@@ -1,0 +1,321 @@
+/* ==========================================================================
+   专题页 · 内容组件（2026-11-07）
+   --------------------------------------------------------------------------
+   05 风雨桥「桥谱 · 二十七座」、06 盘王大歌「歌本 · 三个版本」。
+   只依赖 theme-experience.css 注入的 --main / --on / --accent / --surface，
+   不写死任何章节色；两个组件都不画 SVG，图形全部由版式、照片与文字构成。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   一、桥谱 / 年表 + 相片条 + 名录
+   -------------------------------------------------------------------------- */
+.atlas-lede{
+  max-width:40em;margin:0 0 clamp(24px,4vh,40px);
+  font-size:clamp(15px,1.05vw,17.5px);line-height:1.95;text-wrap:pretty;
+}
+.atlas-stage{position:relative}
+
+/* 年表 */
+.atlas-axis{
+  position:relative;height:126px;margin:0 0 16px;
+  touch-action:none;cursor:ew-resize;user-select:none;outline:none;
+}
+.atlas-axis:focus-visible{outline:1px solid var(--accent);outline-offset:10px}
+.axis-phase{
+  position:absolute;top:34px;bottom:44px;
+  background:color-mix(in srgb,var(--on) 5%,transparent);
+  border-left:1px solid var(--line-soft);
+  pointer-events:none;
+}
+.axis-phase b{
+  position:absolute;left:0;bottom:-28px;
+  display:flex;align-items:baseline;gap:9px;
+  font-family:var(--sans);font-weight:500;font-size:10px;line-height:1.4;
+  letter-spacing:.14em;white-space:nowrap;opacity:.82;
+}
+.axis-phase:last-child b{left:auto;right:0}
+.axis-phase b i{
+  font-style:normal;font-weight:400;font-size:9px;letter-spacing:.06em;
+  opacity:.55;font-variant-numeric:tabular-nums;
+}
+.axis-line{position:absolute;left:0;right:0;top:62px;height:1px;background:var(--line)}
+.axis-tick{
+  position:absolute;top:62px;width:1px;height:12px;transform:translate(-50%,-50%);
+  background:color-mix(in srgb,var(--on) 52%,transparent);
+  transition:height .22s ease,background .22s ease;
+}
+.axis-tick.is-on{background:var(--on);height:18px}
+.axis-tick.is-cur{background:var(--accent);width:2px;height:32px}
+.axis-cursor{
+  position:absolute;top:24px;bottom:24px;width:1px;background:var(--accent);
+  pointer-events:none;transition:left .3s var(--ease);
+}
+.atlas-axis.is-dragging .axis-cursor{transition:none}
+.axis-cursor b{
+  position:absolute;left:50%;top:-6px;transform:translate(-50%,-100%);
+  padding:3px 7px;background:var(--accent);color:#141A16;
+  font-family:var(--sans);font-weight:600;font-size:10.5px;line-height:1;
+  letter-spacing:.06em;font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+
+/* 相片条：整幅宽，横向拖动 */
+.atlas-strip{
+  overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x proximity;scrollbar-width:none;
+  padding:2px 2px 10px;
+}
+.atlas-strip::-webkit-scrollbar{display:none}
+.atlas-strip:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+.atlas-track{display:flex;gap:13px;width:max-content}
+
+.bthumb{
+  flex:0 0 auto;width:148px;padding:0;border:0;background:none;color:inherit;
+  text-align:left;cursor:pointer;scroll-snap-align:center;
+}
+.bthumb-media{
+  position:relative;display:block;aspect-ratio:5/3.3;overflow:hidden;
+  background:var(--surface);border:1px solid var(--line-soft);
+  transition:border-color .25s ease;
+}
+.bthumb img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  filter:saturate(.6) brightness(.88);
+  transition:filter .35s ease,transform .5s var(--ease);
+}
+.bthumb span{
+  display:block;margin-top:7px;font-size:11.5px;line-height:1.4;
+  letter-spacing:.03em;opacity:.62;
+}
+.bthumb span b{
+  display:block;margin-top:2px;font-weight:400;font-size:9.5px;
+  letter-spacing:.1em;opacity:.6;font-variant-numeric:tabular-nums;
+}
+.bthumb:hover img{transform:scale(1.04)}
+.bthumb[aria-pressed="true"] .bthumb-media{border-color:var(--accent)}
+.bthumb[aria-pressed="true"] img{filter:none;transform:none}
+.bthumb[aria-pressed="true"] span{opacity:1}
+.bthumb[aria-pressed="true"] span b{opacity:.9;color:var(--accent)}
+.bthumb:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+
+/* 详情：照片在左、释文在右 */
+.atlas-detail{
+  display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+  gap:clamp(20px,3.2vw,46px);align-items:start;
+  margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft);
+}
+.atlas-plate{margin:0;background:var(--surface);border:1px solid var(--line-soft)}
+.atlas-plate img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;transition:opacity .22s ease}
+.atlas-plate figcaption{
+  margin-top:7px;font-size:9.5px;line-height:1.6;letter-spacing:.02em;opacity:.52;
+}
+.atlas-kicker{
+  font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.7;
+  font-variant-numeric:tabular-nums;
+}
+.atlas-name{
+  font-family:var(--serif);font-size:clamp(28px,2.8vw,44px);line-height:1.1;
+  margin-top:6px;letter-spacing:-.01em;
+}
+.atlas-meta{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:10px;font-size:11.5px;letter-spacing:.03em;opacity:.9}
+.atlas-meta span::before{
+  content:"";display:inline-block;width:4px;height:4px;background:var(--accent);
+  margin-right:7px;vertical-align:2px;
+}
+.atlas-desc{margin-top:12px;font-size:clamp(13px,1vw,14.5px);line-height:1.94;max-width:34em;opacity:.92}
+
+.atlas-hint{margin:10px 0 0;font-size:10px;letter-spacing:.06em;opacity:.5}
+
+.atlas-counts{margin-top:clamp(28px,4.2vh,46px)}
+.atlas-counts .figrow{margin-top:0}
+.atlas-struct{
+  margin-top:16px;font-size:11.5px;line-height:1.9;letter-spacing:.02em;opacity:.72;
+}
+.atlas-struct .stat{display:inline-block;margin:2px 30px 2px 0}
+.atlas-struct b{font-weight:500;opacity:1}
+
+/* 名录 */
+.atlas-roster{margin-top:clamp(34px,5vh,58px);border-top:1px solid var(--line);padding-top:18px}
+.roster-head{
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
+  gap:8px 24px;margin-bottom:14px;
+}
+.roster-head h3{font-size:clamp(20px,1.8vw,28px);line-height:1.2}
+.roster-head span{font-size:10px;line-height:1.6;letter-spacing:.06em;opacity:.55;max-width:52ch}
+.roster-wrap{overflow-x:auto;margin:0 -2px;padding:2px}
+table.roster{
+  width:100%;min-width:600px;border-collapse:collapse;table-layout:fixed;
+  font-size:12.5px;line-height:1.7;text-align:left;
+}
+table.roster th,table.roster td{
+  border-bottom:1px solid var(--line-soft);padding:9px 16px 9px 0;vertical-align:top;
+}
+table.roster thead th{
+  font-family:var(--sans);font-weight:500;font-size:9px;line-height:1.6;
+  letter-spacing:.16em;text-transform:uppercase;opacity:.6;
+  border-bottom-color:var(--line);padding-top:0;padding-bottom:9px;
+}
+table.roster tr.grp th{
+  font-family:var(--sans);font-weight:500;font-size:10.5px;letter-spacing:.12em;
+  padding:13px 0 8px 12px;background:color-mix(in srgb,var(--on) 5%,transparent);
+  border-bottom-color:var(--line-soft);
+}
+table.roster tr.grp span{
+  margin-left:10px;font-weight:400;letter-spacing:.04em;opacity:.55;
+  font-variant-numeric:tabular-nums;
+}
+table.roster tbody tr[data-i]{transition:background .2s ease}
+table.roster tbody tr[data-i]:hover{background:color-mix(in srgb,var(--on) 4%,transparent)}
+table.roster tbody tr.is-cur{background:color-mix(in srgb,var(--accent) 15%,transparent)}
+button.rn{
+  appearance:none;border:0;border-bottom:1px solid transparent;background:none;
+  color:inherit;font:inherit;padding:0;text-align:left;cursor:pointer;
+}
+button.rn:hover{border-bottom-color:var(--accent)}
+table.roster tr.is-cur button.rn{color:var(--accent);border-bottom-color:var(--accent)}
+.atlas-note{
+  margin-top:18px;padding-top:14px;border-top:1px solid var(--line-soft);
+  font-size:10.5px;line-height:1.85;opacity:.62;max-width:72em;
+}
+.atlas-note b{font-weight:500;opacity:1}
+
+/* --------------------------------------------------------------------------
+   二、歌本 / 三个版本
+   -------------------------------------------------------------------------- */
+.songbook-lede{
+  max-width:40em;margin:0 0 clamp(24px,4vh,38px);
+  font-size:clamp(15px,1.05vw,17.5px);line-height:1.95;text-wrap:pretty;
+}
+.songbook{border-top:1px solid var(--line);padding-top:20px}
+
+.sb-head{
+  display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;
+  gap:18px clamp(28px,5vw,80px);
+}
+.sb-tabs{display:flex;flex-wrap:wrap;gap:clamp(16px,2.4vw,36px);align-items:baseline}
+.sb-tab{
+  display:flex;align-items:baseline;gap:8px;
+  padding:2px 0 8px;border:0;border-bottom:1px solid transparent;
+  background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;
+  opacity:.5;transition:opacity .2s ease,color .2s ease,border-color .2s ease;
+}
+.sb-tab b{font-family:var(--serif);font-size:clamp(24px,2vw,32px);line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
+.sb-tab span{font-size:11.5px;letter-spacing:.06em}
+.sb-tab em{font-style:normal;font-size:9px;letter-spacing:.12em;opacity:.65}
+.sb-tab:hover{opacity:.9}
+.sb-tab[aria-pressed="true"]{opacity:1;color:var(--accent);border-bottom-color:var(--accent)}
+.sb-tab[aria-pressed="true"] em{opacity:1}
+.sb-tab:focus-visible{outline:1px solid var(--accent);outline-offset:3px}
+
+.sb-meta{
+  display:flex;flex-wrap:wrap;align-items:baseline;
+  gap:2px 0;margin:0;font-size:11.5px;line-height:1.85;
+}
+.sb-meta dt{opacity:.55;letter-spacing:.05em}
+.sb-meta dd{margin:0 26px 0 7px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sb-meta dd b{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.01em}
+
+/* 歌本：行数就是段数，版本一换，书真的变薄 */
+.sb-book{
+  position:relative;margin-top:22px;max-width:880px;
+  padding:16px 18px 46px 22px;
+  border-left:3px solid var(--accent);
+  background:linear-gradient(to right,color-mix(in srgb,var(--on) 6%,transparent),transparent 72%);
+}
+.sb-lines{display:flex;flex-direction:column;gap:8px;max-width:760px}
+.sb-line{
+  height:2px;background:color-mix(in srgb,var(--on) 34%,transparent);
+  transform-origin:0 50%;
+}
+.sb-line:nth-child(4n+1){background:color-mix(in srgb,var(--on) 48%,transparent)}
+.sb-book-count{
+  position:absolute;left:22px;bottom:12px;
+  font-family:var(--serif);font-size:12px;letter-spacing:.08em;opacity:.65;
+}
+.sb-book-count b{font-size:24px;font-weight:700;margin-right:5px;color:var(--accent)}
+.sb-book-label{
+  position:absolute;right:14px;bottom:16px;
+  font-size:9px;letter-spacing:.22em;opacity:.4;
+}
+@media (prefers-reduced-motion:no-preference){
+  .sb-line{animation:sbIn .5s var(--ease) both;animation-delay:calc(var(--k,0) * 9ms)}
+}
+@keyframes sbIn{from{opacity:0;transform:scaleX(.2)}to{opacity:1;transform:scaleX(1)}}
+
+.sb-chips{
+  display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr);
+  gap:22px clamp(28px,4vw,58px);
+  margin-top:26px;padding-top:18px;border-top:1px solid var(--line-soft);
+}
+.sb-label{margin:0 0 8px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;opacity:.55}
+.sb-chips .chips{display:flex;flex-wrap:wrap;gap:6px}
+.sb-chips .chips span{
+  padding:4px 9px;border:1px solid var(--line-soft);font-size:11px;letter-spacing:.05em;opacity:.9;
+}
+
+.sb-note{
+  margin-top:22px;padding-top:14px;border-top:1px solid var(--line-soft);
+  font-size:10.5px;line-height:1.9;opacity:.62;max-width:64em;
+}
+
+.sb-names{margin-top:clamp(34px,5vh,54px);border-top:1px solid var(--line);padding-top:18px}
+.sb-names-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;margin-bottom:6px}
+.sb-names-head h3{font-size:clamp(19px,1.7vw,26px)}
+.sb-names-head span{font-size:10px;letter-spacing:.06em;opacity:.55}
+.sb-groups{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px clamp(24px,4vw,58px);margin-top:14px;
+}
+.sb-group h4{
+  font-family:var(--sans);font-weight:500;font-size:11.5px;letter-spacing:.08em;
+  padding-bottom:5px;border-bottom:1px solid var(--line-soft);margin-bottom:8px;
+}
+.sb-group h4 span{margin-left:8px;font-weight:400;letter-spacing:.03em;opacity:.5}
+.sb-group p{font-size:13px;line-height:1.95;opacity:.9}
+
+/* --------------------------------------------------------------------------
+   三、窄屏
+   -------------------------------------------------------------------------- */
+@media (max-width:1080px){
+  .atlas-detail{grid-template-columns:minmax(0,1fr)}
+  .atlas-plate img{aspect-ratio:16/9}
+  .sb-head{display:block}
+  .sb-meta{margin-top:10px}
+}
+@media (max-width:720px){
+  .atlas-axis{height:112px;margin-bottom:12px}
+  .axis-phase{top:30px;bottom:40px}
+  .axis-phase b{bottom:-26px;gap:7px;font-size:9px}
+  .axis-phase b i{font-size:8px}
+  .axis-line,.axis-tick{top:56px}
+  .axis-cursor{top:22px;bottom:22px}
+  .bthumb{width:118px}
+  .atlas-detail{gap:16px;margin-top:16px}
+  .atlas-plate img{aspect-ratio:16/10}
+  .atlas-struct .stat{display:block;margin:0 0 2px}
+  .sb-tabs{gap:12px}
+  .sb-tab b{font-size:24px}
+  .sb-tab em{display:none}
+  .sb-meta dd{margin-right:18px}
+  .sb-groups{grid-template-columns:minmax(0,1fr)}
+  .sb-lines{gap:7px;max-width:none}
+  .sb-book{padding:14px 14px 44px 18px}
+  .sb-book-count{left:18px}
+  .sb-chips{grid-template-columns:minmax(0,1fr)}
+
+  /* 名录：手机上改成两行一条，不再横向截断 */
+  .roster-wrap{overflow:visible}
+  table.roster{min-width:0;display:block}
+  table.roster thead{display:none}
+  table.roster tbody{display:block}
+  table.roster tr{display:block}
+  table.roster tr.grp th{display:block;padding:12px 0 6px 10px}
+  table.roster tr[data-i]{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    gap:1px 12px;padding:9px 0;border-bottom:1px solid var(--line-soft);
+  }
+  table.roster tr[data-i] td{border:0;padding:0}
+  table.roster tr[data-i] td:nth-child(1){grid-column:1;grid-row:1;font-size:13.5px}
+  table.roster tr[data-i] td:nth-child(3){grid-column:2;grid-row:1;text-align:right;font-variant-numeric:tabular-nums}
+  table.roster tr[data-i] td:nth-child(2){grid-column:1;grid-row:2;font-size:10.5px;opacity:.6}
+  table.roster tr[data-i] td:nth-child(4){grid-column:2;grid-row:2;font-size:10.5px;opacity:.6;text-align:right}
+}

@@ -42,6 +42,7 @@ if(location.search.indexOf('arrive=')>-1){
 @font-face{font-family:'Noto Sans Nushu';src:url('../assets/fonts/site/NotoSansNushu-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 </style>
 <link rel="stylesheet" href="theme-experience.css">
+<link rel="stylesheet" href="assets/objects.css?v=20261107a">
 <link rel="stylesheet" href="../assets/audio-player.css?v=20261102a">
 <style>:root{--main:#15120F;--on:#F2EDE2;--accent:#D2A03F;--surface:#070504;--deep:#0A0806}</style>
 </head>
@@ -100,7 +101,7 @@ if(location.search.indexOf('arrive=')>-1){
         <div class="story-body"><div class="prose">
         <p>《盘王大歌》，又称《盘王大歌书》《还愿歌》《鼠干歌》《流乐书下卷》，是瑶族的<b>创世与迁徙史诗</b>，
         现存歌本约<b>八千行</b>，现存最早的抄本为<b>清乾隆年间</b>。流传有<b>三十六段、二十四段与十二段</b>三种版本，
-        后两种是前一种的摘选本。</p>
+        后两种是前一种的摘选本。唱本由<b>序歌、插歌、正歌、杂歌</b>四部组成。</p>
         <p>三十六段本包括<b>三十六歌、七曲</b>：记录瑶族的神话、历史、政治、经济、文化艺术与社会生活，
         当地称之为「懂宗收」，即瑶族的百科全书。<b>湖南江华瑶族自治县是保存《盘王大歌》最丰富的地方。</b></p>
         <p class="soft">名录脉络：2008 年列入湖南省第二批省级非遗名录项目；2014 年 7 月由文化和旅游部公示，
@@ -124,7 +125,7 @@ if(location.search.indexOf('arrive=')>-1){
         <p><b>唱什么</b>：内容大致七类，包括神话传说（《盘古歌》《洪水淹天》《葫芦晓》）、
         瑶族迁徙与居住（《十二姓瑶人游天下》《千家峒歌》《过山根》）、生产生活（《放猎狗》）、
         男女之情（数量最多，如《梁山伯》《夜深深》）、历史人物传说（《鲁班造寺》《彭祖歌》）、
-        祭祀歌（《送神歌》《庙愿歌》）与自然现象（《天地暗》）。</p>
+        祭祀歌（《送神歌》《庙愿歌》）与自然现象（《天地暗》）。已核到的 21 首歌名见下面「歌本 · 三个版本」。</p>
         <p><b>用什么曲</b>：歌有歌名，曲有曲牌，共<b>七支「七任曲」</b>，即梅花曲、南花子、飞江南、
         相逢贤曲、万段曲、亚六曲、荷叶杯。</p>
         <p><b>在什么场合唱</b>：盘王节「还盘王愿」仪式中演唱。其中「流乐」下卷摆洪沙大席，
@@ -155,6 +156,68 @@ if(location.search.indexOf('arrive=')>-1){
       <div class="story-main">
         <div class="story-head"><h2>记录与版本</h2><span class="en-tag">Records and editions</span></div>
         <div class="story-body"><div class="figrow"><div class="fig"><div class="n">约 8000</div><div class="l">行 · 现存歌本</div><div class="s">三十六/二十四/十二段三种版本</div></div><div class="fig"><div class="n">7</div><div class="l">任曲 · 曲牌</div><div class="s">梅花曲 · 南花子 · 飞江南…</div></div><div class="fig"><div class="n">2014</div><div class="l">国家级非遗</div><div class="s">第四批 · 民间文学类</div></div><div class="fig"><div class="n">清乾隆</div><div class="l">最早抄本</div><div class="s">现存抄本年代上限</div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="story-block songbook-block" data-step="04" id="songbookSection">
+  <div class="wrap">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">04</span>
+        <span class="story-en">Editions</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <div class="story-head"><h2>歌本 · 三个版本</h2><span class="en-tag">One book, three editions</span></div>
+        <p class="songbook-lede">《盘王大歌》有三十六段、二十四段与十二段三种版本，后两种是前一种的摘选本；三十六段本包括三十六歌、七曲，现存歌本约八千行，最早抄本为清乾隆年间。切一个版本，看书怎么变薄。</p>
+
+        <div class="songbook" id="songbookBook">
+          <div class="sb-head">
+            <div class="sb-tabs" role="group" aria-label="选择版本">
+              <button class="sb-tab" type="button" data-v="36" aria-pressed="true"><b>36</b><span>三十六段本</span><em>全本</em></button>
+              <button class="sb-tab" type="button" data-v="24" aria-pressed="false"><b>24</b><span>二十四段本</span><em>摘选</em></button>
+              <button class="sb-tab" type="button" data-v="12" aria-pressed="false"><b>12</b><span>十二段本</span><em>摘选</em></button>
+            </div>
+            <dl class="sb-meta" aria-live="polite">
+              <dt>段数</dt><dd><b id="sbCount">36</b> 段</dd>
+              <dt>占全本</dt><dd id="sbRatio">100%</dd>
+              <dt>性质</dt><dd id="sbNature">全本 · 三十六歌、七曲</dd>
+              <dt>行数</dt><dd id="sbLinesMeta">约八千行</dd>
+            </dl>
+          </div>
+          <div class="sb-book">
+            <div class="sb-lines" id="sbLines" aria-hidden="true"></div>
+            <span class="sb-book-count"><b>36</b> 段</span>
+            <span class="sb-book-label">歌本 · PANWANG</span>
+          </div>
+          <div class="sb-chips">
+            <div class="sb-chipgroup">
+              <p class="sb-label">四部 · 唱本结构</p>
+              <div class="chips"><span>序歌</span><span>插歌</span><span>正歌</span><span>杂歌</span></div>
+            </div>
+            <div class="sb-chipgroup">
+              <p class="sb-label">七任曲 · 七支曲牌</p>
+              <div class="chips"><span>梅花曲</span><span>南花子</span><span>飞江南</span><span>相逢贤曲</span><span>万段曲</span><span>亚六曲</span><span>荷叶杯</span></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="sb-note">二十四段、十二段保留了哪一些段目，公开资料没有对应表；这里只按段数画，不臆造「删掉了哪几段」。四部据中国非物质文化遗产网项目页，版本、行数与七任曲据江华县人民政府《盘王大歌》。</p>
+
+        <div class="sb-names">
+          <div class="sb-names-head"><h3>三十六段本里，已经核到的歌名</h3><span>21 首 · 七类 · 官方页以「如」举例，不是完整段目表</span></div>
+          <div class="sb-groups">
+            <div class="sb-group"><h4>神话传说<span>6</span></h4><p>《远古天地人间》《盘古歌》《洪水淹天》《葫芦晓》《源流歌》《盘王登殿瑶人出世歌》</p></div>
+            <div class="sb-group"><h4>迁徙与居住<span>5</span></h4><p>《十二姓瑶人游天下》《千家峒歌》《桃源峒歌》《梅山峒歌》《过山根》</p></div>
+            <div class="sb-group"><h4>生产生活<span>1</span></h4><p>《放猎狗》</p></div>
+            <div class="sb-group"><h4>男女之情<span>3</span></h4><p>《梁山伯》《月亮亮》《夜深深》</p></div>
+            <div class="sb-group"><h4>历史人物传说<span>2</span></h4><p>《鲁班造寺》《彭祖歌》</p></div>
+            <div class="sb-group"><h4>祭祀歌<span>2</span></h4><p>《送神歌》《庙愿歌》</p></div>
+            <div class="sb-group"><h4>自然现象<span>2</span></h4><p>《天地暗》《北边暗》</p></div>
+          </div>
+          <p class="sb-note" style="margin-top:16px">其余段目名未见公开目录，暂不列；补到之后再加。</p>
+        </div>
       </div>
     </div>
   </div>
@@ -211,7 +274,7 @@ if(location.search.indexOf('arrive=')>-1){
       <h2 id="sourceTitle">资料来源</h2>
       <p class="ledger-note">本页每条事实的出处，逐条列出，可随时核对。完整来源说明见 <a href="../database.html#/about">「关于与来源」</a>。</p>
       <div class="ledger-meta">
-        <span>04 / Sources · 9 条</span>
+        <span>05 / Sources · 11 条</span>
         <a class="ledger-back" href="#main">回到页首 <span aria-hidden="true">↑</span></a>
       </div>
     </div>
@@ -230,6 +293,8 @@ if(location.search.indexOf('arrive=')>-1){
           <tr><td class="g">源流古证</td><td>《搜神记》「用糁，杂鱼肉，叩槽而号，以祭盘瓠」；《蛮子歌》「时节祠盘瓠」</td><td><a class="src-link" href="https://zh.wikisource.org/zh-hans/%E6%90%9C%E7%A5%9E%E8%A8%98/%E7%AC%AC14%E5%8D%B7" target="_blank" rel="noopener noreferrer">干宝《搜神记》卷十四</a>；<a class="src-link" href="https://zh.wikisource.org/zh-hans/%E8%A0%BB%E5%AD%90%E6%AD%8C" target="_blank" rel="noopener noreferrer">刘禹锡《蛮子歌》</a>（《刘梦得文集》）</td></tr>
           <tr><td class="g">手抄本图像</td><td>江华县湘江乡《盘王大歌》清代手抄本图像，可作临摹参考（需注明出处）</td><td><a class="src-link" href="http://whhlyt.hunan.gov.cn/news/tpxw/201909/t20190910_5482779.html" target="_blank" rel="noopener noreferrer">湖南省文化和旅游厅</a> 2019-09</td></tr>
           <tr><td class="g">音视频</td><td>站内收 12 秒选段（《万段曲》，来源 B 站 BV1JUyABpEbb，见本章「声音轨迹」与声音数据库第 Ⅴ 组）；完整演出视频未逐条核验，暂不列为档案</td><td>哔哩哔哩；平台检索 2026-10</td></tr>
+          <tr><td class="g">唱本结构</td><td>由序歌、插歌、正歌和杂歌四部组成</td><td><a class="src-link" href="https://www.ihchina.cn/project_details/12403.html" target="_blank" rel="noopener noreferrer">中国非物质文化遗产网</a>·盘王大歌（1245／Ⅰ-151，2014 第四批）</td></tr>
+          <tr><td class="g">内容分类</td><td>七类内容与举例歌名（神话传说、迁徙居住、生产生活、男女之情、历史人物、祭祀、自然现象）；本页核到 21 首，官方页以「如」举例，非完整段目表</td><td><a class="src-link" href="http://www.jh.gov.cn/jh/yzwh/202206/101c4ae631474ab9a86f74d8afa0762c.shtml" target="_blank" rel="noopener noreferrer">江华瑶族自治县人民政府《盘王大歌》</a>（2022-06-30）</td></tr>
         </tbody>
       </table>
       <p class="ledger-fine">⚠ 音档只有 12 秒选段（《万段曲》），完整版与现场录音尚未取得；网上能搜到的演出视频未逐条核验，暂不列为档案。</p>
@@ -239,6 +304,7 @@ if(location.search.indexOf('arrive=')>-1){
 <script src="../assets/audio-player.js?v=20261106a" defer></script>
 <script src="assets/motifs.js" defer></script>
 <script src="experience.js" defer></script>
+<script src="assets/songbook.js" defer></script>
 <script src="../assets/leave-guard.js" defer></script>
 <!-- 首屏图案 → 六主题图案（分层解释） -->
 <script src="assets/motif-entry.js" data-motif-index="4" defer></script>
