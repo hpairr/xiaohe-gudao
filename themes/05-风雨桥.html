@@ -11,6 +11,7 @@ if(location.search.indexOf('arrive=')>-1){
     var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
     document.documentElement.classList.add('is-revealing');
     window.setTimeout(function(){
+      document.documentElement.classList.add('is-iris');
       document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
       if(v)v.style.display='none';
       if(t)t.style.display='none';
@@ -120,16 +121,14 @@ if(location.search.indexOf('arrive=')>-1){
             </div>
 
             <article class="atlas-detail">
-              <figure class="atlas-plate">
-                <img src="assets/bridge/01.webp" alt="回澜风雨桥，石拱 · 三孔" width="1200" height="725" decoding="async">
-                <figcaption>回澜风雨桥　图：项目自备（2026-11-07）</figcaption>
-                <button class="plate-zoom" type="button" aria-label="放大查看这张照片">⤢ 放大</button>
-              </figure>
               <div>
                 <p class="atlas-kicker">明 · 1602</p>
                 <h3 class="atlas-name">回澜</h3>
                 <p class="atlas-meta"><span class="atlas-type">石拱 · 三孔</span><span class="atlas-place">朝东镇 · 油沐／沐笼</span></p>
+              </div>
+              <div>
                 <p class="atlas-desc">三孔石拱，桥廊、桥亭、楼阁俱全；楼阁砖墙有人物花鸟壁画，脊饰保存较好。桥上立 12 块修桥石碑，其中明代陕西道监察御史何廷枢所书《重建廻澜石亭桥》，是研究这一带风雨桥史的重要材料。</p>
+                <p class="atlas-credit" id="atlasCredit">图：项目自备（2026-11-07）</p>
               </div>
             </article>
           </div>
@@ -348,13 +347,6 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </section>
-<div class="bridge-lightbox" id="bridgeLightbox" hidden role="dialog" aria-modal="true" aria-label="放大查看风雨桥照片">
-  <button class="bl-close" type="button" aria-label="关闭">×</button>
-  <figure>
-    <img alt="">
-    <figcaption></figcaption>
-  </figure>
-</div>
 <script src="../assets/audio-player.js?v=20261106a" defer></script>
 <script src="assets/motifs.js" defer></script>
 <script src="experience.js" defer></script>
@@ -364,6 +356,7 @@ if(location.search.indexOf('arrive=')>-1){
 <script src="assets/motif-entry.js" data-motif-index="3" defer></script>
 </body>
 </html>
+
 
 
 

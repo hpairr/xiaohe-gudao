@@ -69,7 +69,7 @@
 .atlas-track{display:flex;gap:13px;width:max-content}
 
 .bthumb{
-  flex:0 0 auto;width:148px;padding:0;border:0;background:none;color:inherit;
+  flex:0 0 auto;width:132px;padding:0;border:0;background:none;color:inherit;
   text-align:left;cursor:pointer;scroll-snap-align:center;
 }
 .bthumb-media{
@@ -84,60 +84,27 @@
 }
 .bthumb span{
   display:block;margin-top:7px;font-size:11.5px;line-height:1.4;
-  letter-spacing:.03em;opacity:.62;
+  letter-spacing:.03em;opacity:.62;transition:font-size .3s var(--ease);
 }
 .bthumb span b{
   display:block;margin-top:2px;font-weight:400;font-size:9.5px;
   letter-spacing:.1em;opacity:.6;font-variant-numeric:tabular-nums;
 }
 .bthumb:hover img{transform:scale(1.04)}
+.bthumb[aria-pressed="true"]{width:224px}
 .bthumb[aria-pressed="true"] .bthumb-media{border-color:var(--accent)}
 .bthumb[aria-pressed="true"] img{filter:none;transform:none}
-.bthumb[aria-pressed="true"] span{opacity:1}
+.bthumb[aria-pressed="true"] span{opacity:1;font-size:13px}
 .bthumb[aria-pressed="true"] span b{opacity:.9;color:var(--accent)}
 .bthumb:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
 
-/* 详情：照片在左、释文在右 */
+/* 详情：不再放大图，只留释文；中间那张已经在相片条里放大 */
 .atlas-detail{
-  display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
-  gap:clamp(20px,3.2vw,46px);align-items:start;
-  margin-top:20px;padding-top:18px;border-top:1px solid var(--line-soft);
+  display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
+  gap:clamp(18px,3vw,44px);align-items:start;
+  margin-top:20px;padding-top:16px;border-top:1px solid var(--line-soft);
 }
-.atlas-plate{position:relative;margin:0;background:var(--surface);border:1px solid var(--line-soft)}
-.atlas-plate img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;transition:opacity .22s ease}
-.plate-zoom{
-  position:absolute;right:9px;top:9px;z-index:2;
-  padding:6px 10px;border:1px solid color-mix(in srgb,var(--on) 35%,transparent);
-  background:rgba(10,14,12,.55);color:#F2EDE2;
-  font-family:var(--sans);font-size:10.5px;line-height:1;letter-spacing:.08em;
-  cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
-  transition:background .2s ease,border-color .2s ease;
-}
-.plate-zoom:hover{background:rgba(10,14,12,.78);border-color:var(--accent)}
-.plate-zoom:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
-
-/* 大图查看 */
-.bridge-lightbox{
-  position:fixed;inset:0;z-index:1000;
-  display:flex;align-items:center;justify-content:center;
-  padding:clamp(16px,4vw,48px);
-  background:rgba(8,10,12,.92);
-  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
-}
-.bridge-lightbox[hidden]{display:none}
-.bridge-lightbox figure{margin:0;max-width:min(94vw,1400px);max-height:92vh;display:flex;flex-direction:column;gap:10px}
-.bridge-lightbox img{display:block;max-width:100%;max-height:84vh;width:auto;height:auto;object-fit:contain;margin:0 auto}
-.bridge-lightbox figcaption{color:#F2EDE2;font-size:10.5px;letter-spacing:.04em;opacity:.7;text-align:center}
-.bl-close{
-  position:absolute;right:18px;top:14px;
-  width:38px;height:38px;border:1px solid rgba(242,237,226,.35);
-  background:transparent;color:#F2EDE2;font-size:22px;line-height:1;cursor:pointer;
-}
-.bl-close:hover{background:rgba(242,237,226,.12)}
-body.is-lightbox{overflow:hidden}
-.atlas-plate figcaption{
-  margin-top:7px;font-size:9.5px;line-height:1.6;letter-spacing:.02em;opacity:.52;
-}
+.atlas-credit{margin-top:12px;font-size:9.5px;line-height:1.6;letter-spacing:.02em;opacity:.5}
 .atlas-kicker{
   font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.7;
   font-variant-numeric:tabular-nums;
@@ -235,7 +202,6 @@ table.roster tr.is-cur button.rn{color:var(--accent);border-bottom-color:var(--a
    -------------------------------------------------------------------------- */
 @media (max-width:1080px){
   .atlas-detail{grid-template-columns:minmax(0,1fr)}
-  .atlas-plate img{aspect-ratio:16/9}
 }
 @media (max-width:720px){
   .atlas-axis{height:112px;margin-bottom:12px}
@@ -244,9 +210,9 @@ table.roster tr.is-cur button.rn{color:var(--accent);border-bottom-color:var(--a
   .axis-phase b i{display:none}
   .axis-line,.axis-tick{top:56px}
   .axis-cursor{top:22px;bottom:22px}
-  .bthumb{width:118px}
-  .atlas-detail{gap:16px;margin-top:16px}
-  .atlas-plate img{aspect-ratio:16/10}
+  .bthumb{width:104px}
+  .bthumb[aria-pressed="true"]{width:168px}
+  .atlas-detail{gap:14px;margin-top:14px}
   .atlas-struct .stat{display:block;margin:0 0 2px}
 
   /* 名录：手机上改成两行一条，不再横向截断 */

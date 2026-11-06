@@ -54,8 +54,7 @@
   var strip = host.querySelector('.atlas-strip');
   var track = host.querySelector('.atlas-track');
   var detail = host.querySelector('.atlas-detail');
-  var img = host.querySelector('.atlas-plate img');
-  var cap = host.querySelector('.atlas-plate figcaption');
+  var creditEl = host.querySelector('.atlas-credit');
   var kicker = host.querySelector('.atlas-kicker');
   var nameEl = host.querySelector('.atlas-name');
   var typeEl = host.querySelector('.atlas-type');
@@ -100,7 +99,6 @@
   }
 
   var sel = -1;
-  var token = 0;
 
   function select(i, opts) {
     opts = opts || {};
@@ -128,17 +126,7 @@
     typeEl.textContent = b.s;
     placeEl.textContent = b.p;
     descEl.textContent = b.d;
-    img.alt = b.n + '风雨桥，' + b.s;
-    cap.textContent = b.n + '风雨桥　' + credit(b);
-
-    /* 图片先预载再换，避免拖动时闪白 */
-    var tok = ++token;
-    var next = 'assets/bridge/' + b.img + '.webp';
-    var pre = new Image();
-    pre.onload = pre.onerror = function () {
-      if (tok === token) img.src = next;
-    };
-    pre.src = next;
+    creditEl.textContent = credit(b);
 
     if (opts.reveal !== false) {
       var t = thumbs[i];
@@ -203,7 +191,7 @@
   track.addEventListener('click', function (e) {
     var t = e.target.closest('.bthumb');
     if (!t) return;
-    select(Number(t.getAttribute('data-i')), { reveal: false });
+    select(Number(t.getAttribute('data-i')));
   });
 
   strip.addEventListener('keydown', function (e) {
@@ -247,40 +235,6 @@
       select(Number(btn.getAttribute('data-i')));
     });
   });
-
-  /* ---------------- 查看大图 ---------------- */
-  var zoomBtn = detail.querySelector('.plate-zoom');
-  var lightbox = document.getElementById('bridgeLightbox');
-  if (zoomBtn && lightbox) {
-    var lbImg = lightbox.querySelector('img');
-    var lbCap = lightbox.querySelector('figcaption');
-    var lbClose = lightbox.querySelector('.bl-close');
-    var lastFocus = null;
-
-    var openLightbox = function () {
-      lastFocus = document.activeElement;
-      lbImg.src = img.src;
-      lbImg.alt = img.alt;
-      lbCap.textContent = cap.textContent;
-      lightbox.hidden = false;
-      document.body.classList.add('is-lightbox');
-      lbClose.focus();
-    };
-    var closeLightbox = function () {
-      lightbox.hidden = true;
-      document.body.classList.remove('is-lightbox');
-      if (lastFocus) lastFocus.focus();
-    };
-
-    zoomBtn.addEventListener('click', openLightbox);
-    lbClose.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', function (e) {
-      if (e.target === lightbox) closeLightbox();
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !lightbox.hidden) closeLightbox();
-    });
-  }
 
   select(0, { force: true, reveal: false });
 })();
