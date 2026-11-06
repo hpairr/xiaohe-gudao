@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>潇贺古道有声文化数据库 · 文化档案 / 声音 / 图志</title>
-<meta name="description" content="潇贺古道有声文化数据库：26 条文化档案、37 条声音与影像记录（26 条视频 + 11 段音频）、古道图志与七语界面。古道北起湖南道县潇水，南抵广西贺州贺江。">
+<meta name="description" content="潇贺古道有声文化数据库：26 条文化档案、37 条声音与影像记录（26 条影像 + 11 段音频，30 条带 12 秒选段）、古道图志与七语界面。古道北起湖南道县潇水，南抵广西贺州贺江。">
 <meta name="keywords" content="潇贺古道,有声文化数据库,文化档案,声音档案,古道图志,女书,蝴蝶歌,长鼓舞,富川风雨桥,风雨桥,瑶族织锦,富川瑶族织锦,盘王大歌,上灯炸龙,瑶族,非遗">
 <meta name="author" content="潇贺古道有声文化数据库">
 <link rel="canonical" href="https://hpairr.github.io/xiaohe-gudao/database.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="潇贺古道有声文化数据库">
 <meta property="og:title" content="潇贺古道有声文化数据库 · 文化档案 / 声音 / 图志">
-<meta property="og:description" content="26 条文化档案、37 条声音与影像记录（26 条视频 + 11 段音频）、古道图志与七语界面；以声音与影像为线索的潇贺古道文化数据库。">
+<meta property="og:description" content="26 条文化档案、37 条声音与影像记录（26 条影像 + 11 段音频，30 条带 12 秒选段）、古道图志与七语界面；以声音与影像为线索的潇贺古道文化数据库。">
 <meta property="og:image" content="https://hpairr.github.io/xiaohe-gudao/assets/img/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -595,6 +595,22 @@ body[data-sect="archive"] .logo-mark{background:#1F2D3D}
 
   /* 档案网格：图 + 硬边界 + 目录号，不用白卡 */
   .ed-archive-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:38px 26px;padding-top:26px}
+  /* 条目索引：没有影像的条目在这里排成窄栏，不与图版抢版面 */
+  .ed-index{margin-top:40px;padding-top:13px;border-top:1px solid var(--ink);max-width:780px}
+  .ed-index-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:2px}
+  .ed-index-head .lab{font:10px/1 var(--sans);letter-spacing:.2em;color:var(--ink)}
+  .ed-index-head .meta{font:10px/1 var(--sans);letter-spacing:.12em;color:var(--ink-soft)}
+  .ed-index-list{display:grid;grid-template-columns:1fr 1fr;column-gap:38px}
+  .ed-index-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto 12px;gap:9px;align-items:baseline;
+    padding:10px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
+  .ed-index-row .no{font-family:var(--serif);font-size:10px;color:var(--cinnabar);letter-spacing:.04em}
+  .ed-index-row .nm{font-family:var(--serif);font-size:14.5px;line-height:1.5;letter-spacing:.02em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ed-index-row .mt{font:10px/1.5 var(--sans);letter-spacing:.06em;color:var(--ink-soft);white-space:nowrap}
+  .ed-index-row .ar{font-size:10px;color:var(--ink-soft);opacity:.5;text-align:right}
+  .ed-index-row:hover .nm{color:var(--qun)}
+  .ed-index-row:hover .ar{opacity:1}
+  @media (max-width:900px){.ed-index{max-width:none}.ed-index-list{grid-template-columns:1fr}}
   .ed-card{position:relative;display:flex;flex-direction:column;min-width:0;color:var(--ink);border-top:1px solid var(--ink);padding-top:9px;text-decoration:none}
   .ed-card:hover{text-decoration:none;color:var(--cinnabar)}
   .ed-card.is-lead{grid-column:span 2}
@@ -634,6 +650,16 @@ body[data-sect="archive"] .logo-mark{background:#1F2D3D}
   .ed-detail-figure .ph em{font:400 10px/1 var(--sans);letter-spacing:.24em;color:var(--ink-soft);font-style:normal}
   .ed-detail-figure figcaption{display:flex;justify-content:space-between;gap:16px;padding-top:8px;border-top:1px solid var(--line);margin-top:8px;font-size:10.5px;letter-spacing:.08em;color:var(--ink-soft);line-height:1.6}
   .ed-detail-rail{border-top:1px solid var(--ink);padding-top:8px;position:sticky;top:84px}
+  /* 无影像条目：不设图位，元数据横排成一条规格带 */
+  .ed-detail-grid.is-noimg{grid-template-columns:minmax(0,1fr);padding-top:20px}
+  .ed-detail-grid.is-noimg .ed-detail-rail{position:static;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(20px,3vw,48px);border-top:0;padding-top:0}
+  .ed-detail-grid.is-noimg .ed-rail-row{padding:9px 0}
+  @media (max-width:900px){
+    .ed-detail-grid.is-noimg .ed-detail-rail{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:560px){
+    .ed-detail-grid.is-noimg .ed-detail-rail{grid-template-columns:1fr}
+  }
   .ed-rail-row{display:grid;grid-template-columns:82px minmax(0,1fr);gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.7}
   .ed-rail-row .lab{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
   .ed-rail-row .val{color:var(--ink);min-width:0;word-break:break-word}
@@ -684,10 +710,6 @@ body[data-sect="archive"] .logo-mark{background:#1F2D3D}
   .ed-snd-play:hover{color:var(--ink);border-bottom-color:var(--ink)}
   .ed-snd-ext{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;border-bottom:1px solid transparent;padding:5px 0}
   .ed-snd-ext:hover{color:var(--qun);border-bottom-color:var(--qun);text-decoration:none}
-  /* 「听选段」是 <button>，得自己把 UA 的底色和边框清掉，才和旁边的链接同一条基线 */
-  .ed-snd-clip{border:0;border-radius:0;background:none;cursor:pointer;color:var(--ink-soft);font-family:var(--sans);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;border-bottom:1px solid transparent;padding:5px 0}
-  .ed-snd-clip:hover{color:var(--qun);border-bottom-color:var(--qun)}
-  .ed-snd-clip svg{margin-right:3px;vertical-align:-1px}
   .ed-snd-row .snd-stage{grid-column:2 / -1;width:100%;margin-top:8px}
   .ed-snd-row .snd-stage iframe,.ed-snd-row .snd-stage video{width:100%;max-width:860px;display:block;background:#000}
   /* 封面：点开先看到画面，点画面才加载原片 */
@@ -1409,7 +1431,7 @@ const SOURCES = [
 const SOUNDS = [
   /* 蝴蝶歌(6) */
   { id:'so1', name:'CCTV青歌赛·蝴蝶歌组合《迎客歌》', platform:'哔哩哔哩', bvid:'BV1Qf421B7Wk', url:'https://www.bilibili.com/video/BV1Qf421B7Wk/', note:'央视青歌赛原生态唱法比赛实况,权威舞台版', clip:'assets/audio/butterfly2.mp3' },
-  { id:'so4', name:'贺州蝴蝶歌', platform:'哔哩哔哩', bvid:'BV17C4y1v7hZ', url:'https://www.bilibili.com/video/BV17C4y1v7hZ/', note:'贺州本地蝴蝶歌音视频' },
+  { id:'so4', name:'贺州蝴蝶歌', platform:'哔哩哔哩', bvid:'BV17C4y1v7hZ', url:'https://www.bilibili.com/video/BV17C4y1v7hZ/', note:'贺州本地蝴蝶歌音视频', clip:'assets/audio/so4.mp3' },
   { id:'so5', name:'来富川总要听听蝴蝶歌吧《流水欢歌迎客来》', platform:'哔哩哔哩(富川县民族艺术团)', bvid:'BV1B8411S74T', url:'https://www.bilibili.com/video/BV1B8411S74T/', note:'富川本地官方艺术团现场版', clip:'assets/audio/butterfly.mp3' },
   { id:'so6', name:'八桂錱艺·最美瑶族蝴蝶歌', platform:'哔哩哔哩', bvid:'BV1vL411j7jS', url:'https://www.bilibili.com/video/BV1vL411j7jS/', note:'广西非遗展演' },
   { id:'so7', name:'瑶族蝴蝶歌《幸福泡在酒碗里》', platform:'哔哩哔哩', bvid:'BV1aF411H7yP', url:'https://www.bilibili.com/video/BV1aF411H7yP/', note:'编创新作,播放4万+', clip:'assets/audio/butterfly3.mp3' },
@@ -1422,18 +1444,18 @@ const SOUNDS = [
   /* 女书(8) */
   { id:'so14', name:'9分钟视频,复原一场女书婚礼', platform:'哔哩哔哩(新华社官方)', bvid:'BV1Lx4y1o7pQ', url:'https://www.bilibili.com/video/BV1Lx4y1o7pQ/', note:'新华社出品,含歌堂吟唱声,播放37.9万', clip:'assets/audio/nushu2.mp3' },
   { id:'so15a', name:'李雨儿《女书组歌》·P1《姐妹书》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=1', note:'女书题材创作组歌,专业演唱', clip:'assets/audio/nushu3.mp3' },
-  { id:'so15b', name:'李雨儿《女书组歌》·P2《训女词》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=2', note:'女书题材创作组歌,专业演唱' },
+  { id:'so15b', name:'李雨儿《女书组歌》·P2《训女词》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=2', note:'女书题材创作组歌,专业演唱', clip:'assets/audio/so15b.mp3' },
   { id:'so15c', name:'李雨儿《女书组歌》·P3《女书魂》', platform:'哔哩哔哩', bvid:'BV1zL411J7bR', url:'https://www.bilibili.com/video/BV1zL411J7bR/?p=3', note:'女书题材创作组歌,专业演唱', clip:'assets/audio/nushu4.mp3' },
   { id:'so16', name:'女书歌曲《金坨女》分享', platform:'哔哩哔哩(关联江永文旅)', bvid:'BV1QTrTY2EAF', url:'https://www.bilibili.com/video/BV1QTrTY2EAF/', note:'女书歌曲实唱', clip:'assets/audio/nushu.mp3' },
   { id:'so17', name:'女书习俗·何静华·综述片(湖南省非遗保护中心)', platform:'哔哩哔哩', bvid:'BV1ko4y1S74E', url:'https://www.bilibili.com/video/BV1ko4y1S74E/', note:'何静华为国家级代表性传承人' },
-  { id:'so18', name:'纪录短片《江永女书》', platform:'哔哩哔哩', bvid:'BV1qNNBzwEUZ', url:'https://www.bilibili.com/video/BV1qNNBzwEUZ/', note:'独立纪录短片' },
-  { id:'so19', name:'我们在湘南小村,遇见一种「性别为女」的文字', platform:'哔哩哔哩', bvid:'BV1G14y1Q7Uz', url:'https://www.bilibili.com/video/BV1G14y1Q7Uz/', note:'实地探访女书发源地,含现场声音' },
+  { id:'so18', name:'纪录短片《江永女书》', platform:'哔哩哔哩', bvid:'BV1qNNBzwEUZ', url:'https://www.bilibili.com/video/BV1qNNBzwEUZ/', note:'独立纪录短片', clip:'assets/audio/so18.mp3' },
+  { id:'so19', name:'我们在湘南小村,遇见一种「性别为女」的文字', platform:'哔哩哔哩', bvid:'BV1G14y1Q7Uz', url:'https://www.bilibili.com/video/BV1G14y1Q7Uz/', note:'实地探访女书发源地,含现场声音', clip:'assets/audio/so19.mp3' },
   /* 补充:三月三蝴蝶歌(BBDown 下载) */
-  { id:'so2', name:'瑶族蝴蝶歌《蝴蝶歌》·广西三月三八桂嘉年华闭幕式(2024)', platform:'哔哩哔哩(广西卫视)', bvid:'BV1qx4y1H7hd', url:'https://www.bilibili.com/video/BV1qx4y1H7hd/', note:'省级官方晚会舞台;同一晚会完整节目见「广西民歌·大地飞歌」' },
+  { id:'so2', name:'瑶族蝴蝶歌《蝴蝶歌》·广西三月三八桂嘉年华闭幕式(2024)', platform:'哔哩哔哩(广西卫视)', bvid:'BV1qx4y1H7hd', url:'https://www.bilibili.com/video/BV1qx4y1H7hd/', note:'省级官方晚会舞台;同一晚会完整节目见「广西民歌·大地飞歌」', clip:'assets/audio/so2.mp3' },
   /* 补充:湖南蓝山长鼓舞(BBDown 下载) */
-  { id:'so12', name:'湖南蓝山汇源瑶族长鼓舞', platform:'哔哩哔哩', bvid:'BV1mE411D76X', url:'https://www.bilibili.com/video/BV1mE411D76X/', note:'潇贺古道北段湖南侧实拍' },
+  { id:'so12', name:'湖南蓝山汇源瑶族长鼓舞', platform:'哔哩哔哩', bvid:'BV1mE411D76X', url:'https://www.bilibili.com/video/BV1mE411D76X/', note:'潇贺古道北段湖南侧实拍', clip:'assets/audio/so12.mp3' },
   /* 民俗节庆:上灯炸龙节(BBDown 下载) */
-  { id:'so21', name:'富川上灯炸龙节·纪录片《山那边有条会飞的龙》', platform:'哔哩哔哩', bvid:'BV1bz4y1E7RN', url:'https://www.bilibili.com/video/BV1bz4y1E7RN/', note:'18分钟纪录片,含现场音效' },
+  { id:'so21', name:'富川上灯炸龙节·纪录片《山那边有条会飞的龙》', platform:'哔哩哔哩', bvid:'BV1bz4y1E7RN', url:'https://www.bilibili.com/video/BV1bz4y1E7RN/', note:'18分钟纪录片,含现场音效', clip:'assets/audio/so21.mp3' },
   /* 潇贺古道纪录片 5 集(BBDown 下载) */
   { id:'so30a', name:'《广西贺州 潇贺古道》纪录片 P1', platform:'哔哩哔哩', bvid:'BV1vx411j7Ah', url:'https://www.bilibili.com/video/BV1vx411j7Ah/?p=1', note:'5集合集,每集约30分钟;集序以B站分P为准' },
   { id:'so30b', name:'《广西贺州 潇贺古道》纪录片 P2', platform:'哔哩哔哩', bvid:'BV1vx411j7Ah', url:'https://www.bilibili.com/video/BV1vx411j7Ah/?p=2', note:'5集合集,每集约30分钟;集序以B站分P为准' },
@@ -1502,11 +1524,10 @@ function attr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot
 
 function playSound(id, stage, b){
   const s = SOUNDS.find(x=>x.id===id) || {};
-  /* 声音库的播放顺序：有本地影像的先放影像（声画都在），
-     只有选段的放选段，最后才把平台外链交给第三方播放器。
-     带选段又有影像的条目，行里会多一个「听选段」按钮。 */
-  if(coverOf(id)){ renderCover(id, s, stage, b); return; }
+  /* 有 12 秒选段的条目只放选段：原片动辄几十兆，线上不该为一个条目拖整段视频。
+     没有选段的才退到本地影像，再没有就把平台外链交给第三方播放器。 */
   if(s.clip){ playClip(s, stage, b); return; }
+  if(coverOf(id)){ renderCover(id, s, stage, b); return; }
   const mine = (VIDEO_URLS[id]||'').trim();
   if(mine){ renderMedia(mine, stage, b); return; }
   playLocal(id, s, stage, b, '');
@@ -1539,8 +1560,8 @@ function playLocal(id, s, stage, b, cover){
     + (cover ? ' poster="'+cover+'"' : '')
     + ' style="width:100%;border-radius:6px;background:#000" src="'+local+'"></video>';
   const v = stage.querySelector('video');
-  /* 线上未随仓库上传原片时:先退到本地选段,再退到来源平台,而不是留一块黑屏 */
-  v.addEventListener('error', ()=>{ if(s.clip){ playClip(s, stage, b); } else { renderMedia(s.url||'', stage, b); } }, {once:true});
+  /* 线上未随仓库上传原片时:自动改走来源平台,而不是留一块黑屏 */
+  v.addEventListener('error', ()=>{ renderMedia(s.url||'', stage, b); }, {once:true});
   v.addEventListener('ended', ()=>{ stage.innerHTML=''; b.innerHTML = iconPlay()+' '+L.snd_play; });
 }
 function renderMedia(url, stage, b){
@@ -2065,6 +2086,10 @@ function viewArchive(){
     (!filterKw || (i.name+i.region+i.desc+(i.facts||[]).join('')).toLowerCase().includes(filterKw.toLowerCase()))
   );
   const favCnt = favCount();
+  /* 有图的进图版区，没有图的收进下面的条目索引：
+     图版区不留空槽，索引区不写「暂无实景」——两类各自成片，互不打断。 */
+  const withImg = list.filter(i=>imgOf(i));
+  const textOnly = list.filter(i=>!imgOf(i));
   arListLen = list.length;
   const countOf = c => ALL.filter(x=>x.cat===c).length;
   return `
@@ -2087,7 +2112,7 @@ function viewArchive(){
             <div class="ed-aside-row"><span class="lab">${ed('遗迹','Sites')}</span><span class="val">${countOf('遗迹')}</span></div>
             <div class="ed-aside-row"><span class="lab">${ed('非遗','ICH')}</span><span class="val">${countOf('非遗')}</span></div>
             <div class="ed-aside-row"><span class="lab">${ed('人物','Figures')}</span><span class="val">${countOf('人物')}</span></div>
-            <p class="note">${ed('按「通道—遗迹—非遗—人物」四层组织；每一条都可以回到路线与出处。','Organised in four layers: routes, sites, ICH, figures. Every record returns to the road and its source.')}</p>
+            <p class="note">${ed('按「通道—遗迹—非遗—人物」四类编目：有影像的入图版，其余入条目索引，编号 01–26 连续。每条都能回到图志与出处。','Catalogued in four groups — routes, sites, ICH and figures. Records with images form the plates; the rest are listed in the index, on one continuous 01–26 numbering. Every record returns to the atlas and its source.')}</p>
           </aside>
         </div>
       </header>
@@ -2128,22 +2153,38 @@ function viewArchive(){
         <span class="sort">${ed('按类型 · 地点排序','SORTED BY TYPE / PLACE')}</span>
       </div>
 
-      ${list.length ? `<div class="ed-archive-grid">
-        ${list.map((i,idx)=>`
+      ${list.length ? `${withImg.length?`<div class="ed-archive-grid">
+        ${withImg.map(i=>`
           <a class="ed-card" href="#/detail/${i.id}">
             <span class="ed-card-top">
-              <span class="ed-card-index">${String(idx+1).padStart(2,'0')}</span>
+              <span class="ed-card-index">${String(list.indexOf(i)+1).padStart(2,'0')}</span>
               <span>${catL(i.cat)}${i.batch?' · '+batchEn(i.batch):''}</span>
               <span class="fav-btn ${favState(i.id)?'on':''}" role="button" tabindex="0" data-fav="${i.id}" title="${L.fav_t}" aria-label="${L.fav_t}" aria-pressed="${favState(i.id)?'true':'false'}">${iconHeart(favState(i.id))}</span>
             </span>
             <span class="ed-card-media">
-              ${imgOf(i)?`<img src="${imgOf(i)}" alt="${nm(i)}" loading="lazy">`:`<span class="ph"><b>${catL(i.cat)}</b><em>${ed('暂无实景','NO IMAGE')}</em></span>`}
+              <img src="${imgOf(i)}" alt="${nm(i)}" loading="lazy">
             </span>
             <span class="ed-card-title"><span>${nm(i)}</span><span class="arrow">↗</span></span>
             <span class="ed-card-sub"><span class="place">${regEn(i.region||i.city)}</span><span>${cityEn(i.city)}</span></span>
             <span class="ed-card-desc">${ds(i)}</span>
           </a>`).join('')}
-      </div>` : `<div class="ed-empty">${L.ar_empty}</div>`}
+      </div>`:''}
+      ${textOnly.length?`
+      <div class="ed-index">
+        <div class="ed-index-head">
+          <span class="lab">${ed('条目索引','RECORD INDEX')}</span>
+          <span class="meta">${textOnly.length} ${ed('条','records')}</span>
+        </div>
+        <div class="ed-index-list">
+          ${textOnly.map(i=>`
+          <a class="ed-index-row" href="#/detail/${i.id}">
+            <span class="no">${String(list.indexOf(i)+1).padStart(2,'0')}</span>
+            <span class="nm">${nm(i)}</span>
+            <span class="mt">${catL(i.cat)} · ${cityEn(i.city)}</span>
+            <span class="ar" aria-hidden="true">↗</span>
+          </a>`).join('')}
+        </div>
+      </div>`:''}` : `<div class="ed-empty">${L.ar_empty}</div>`}
       </div>
     </div>
   </section>`;
@@ -2239,27 +2280,27 @@ function viewDetail(id){
         </div>
       </header>
 
-      <div class="ed-detail-grid">
-        <figure class="ed-detail-figure">
-          ${img?`<img src="${img}" alt="${nm(item)}">`:`<div class="ph"><b>${cat}</b><em>${ed('暂无实景','NO IMAGE')}</em></div>`}
-          <figcaption><span>${ed('档案图像','ARCHIVE IMAGE')}</span><span>${esc(img ? ed('资料图 · 仅作示意','Reference image') : ed('暂无实景','No image'))}</span></figcaption>
-        </figure>
+      <div class="ed-detail-grid${img?'':' is-noimg'}">
+        ${img?`<figure class="ed-detail-figure">
+          <img src="${img}" alt="${nm(item)}">
+          <figcaption><span>${ed('档案图像','ARCHIVE IMAGE')}</span><span>${ed('资料图 · 仅作示意','Reference image')}</span></figcaption>
+        </figure>`:''}
 
         <aside class="ed-detail-rail" aria-label="${ed('档案信息','Record metadata')}">
           <div class="ed-rail-row"><span class="lab">${ed('类别','TYPE')}</span><span class="val">${cat}</span></div>
-          ${item.batch?`<div class="ed-rail-row"><span class="lab">${ed('批次','BATCH')}</span><span class="val">${batchEn(item.batch)}</span></div>`:''}
-          <div class="ed-rail-row"><span class="lab">${ed('地区','PLACE')}</span><span class="val">${place||'—'}</span></div>
-          <div class="ed-rail-row"><span class="lab">${ed('城市','CITY')}</span><span class="val"><a href="#/city/${item.city}">${cityEn(item.city)}</a></span></div>
+          ${item.batch?`<div class="ed-rail-row"><span class="lab">${item.cat==='人物'?ed('年代','DATE'):ed('批次','BATCH')}</span><span class="val">${batchEn(item.batch)}</span></div>`:''}
+          <div class="ed-rail-row"><span class="lab">${item.cat==='人物'?ed('时代·身份','PERIOD / ROLE'):ed('地区','PLACE')}</span><span class="val">${place||'—'}</span></div>
+          <div class="ed-rail-row"><span class="lab">${item.cat==='人物'?ed('关联地','RELATED PLACE'):ed('城市','CITY')}</span><span class="val"><a href="#/city/${item.city}">${cityEn(item.city)}</a></span></div>
           <div class="ed-rail-row"><span class="lab">${ed('古道图志','ROAD ATLAS')}</span><span class="val"><a href="#/atlas">${ed('查看图志 ↗','Open the atlas ↗')}</a></span></div>
           <div class="ed-rail-row"><span class="lab">${ed('可听','LISTEN')}</span><span class="val">${sndRelated.length?sndRelated.slice(0,2).map(s=>`<a class="mini" href="${s.url}" target="_blank" rel="noopener">${sndName(s)}</a>`).join(''):`<a href="#/sounds">${ed('声音数据库 ↗','Sound archive ↗')}</a>`}</span></div>
-          <p class="ed-rail-foot">${ed('元数据按「对象—地点—来源」组织；图像只作档案示意，不作为文物断代依据。','Metadata follows object—place—source. Images are reference views, not dating evidence.')}</p>
+          ${img?`<p class="ed-rail-foot">${ed('元数据按「对象—地点—来源」组织；图像只作档案示意，不作为文物断代依据。','Metadata follows object—place—source. Images are reference views, not dating evidence.')}</p>`:''}
         </aside>
       </div>
 
       <div class="ed-detail-body">
         <div class="ed-prose">
           <span class="ed-section-no">01 / ${ed('摘要','ABSTRACT')}</span>
-          <h2>${ed('它是什么','What it is')}</h2>
+          <h2>${item.cat==='人物' ? ed('他是谁','Who he was') : ed('它是什么','What it is')}</h2>
           <p class="lead" ${isNushu?'id="nushuDesc"':''}>${ds(item)}</p>
           ${isEn()?`<p class="ed-note">${L.en_body_note}</p>`:''}
           ${sndRelated.length?`<p class="ed-note">${ed('这条档案在声音数据库中有对应记录；可以先听，再回到文字。','This record has related listening material in the sound archive. Listen first, then return to the text.')}</p>`:''}
@@ -2557,13 +2598,12 @@ function sndCard(s, idx){
         <span>${isEn()?(PLATFORM_EN[s.platform]||s.platform):s.platform}</span>
         <span class="dot"></span>
         <span>${s.clip
-          ? (VIDEO_COVERS[s.id] ? ed('本地视频 · 含音频选段','Local video · audio excerpt') : ed('本地音频','Local audio'))
+          ? ed('12 秒音频选段','12-second excerpt')
           : (isRemote(s.id)?L.snd_online:L.snd_local)}</span>
       </div>
     </div>
     <div class="ed-snd-actions">
       <button class="snd-play ed-snd-play" data-id="${s.id}" aria-expanded="false">${iconPlay()} ${L.snd_play}</button>
-      ${s.clip && VIDEO_COVERS[s.id] ? `<button class="snd-clip ed-snd-clip" data-id="${s.id}" type="button">${iconPlay()} ${L.snd_clip}</button>` : ''}
       <a class="ed-snd-ext" href="${s.url}" target="_blank" rel="noopener">${L.snd_ext} ↗</a>
     </div>
     <div class="snd-stage" data-id="${s.id}"></div>
@@ -2585,6 +2625,7 @@ const SND_SHEET_PLAIN = ['#EFE9DC','#141A16','#6B6355'];
 function viewSounds(){
   let n = 0;
   const { videos: videoN, audioOnly: audioN } = soundStats();
+  const excerptN = SOUNDS.filter(x=>x.clip).length;
   return `
   <section class="ed-page" data-page="sounds">
     <div class="container">
@@ -2596,7 +2637,7 @@ function viewSounds(){
         <div class="ed-head-grid">
           <div>
             <h1 class="ed-title"><span data-i18n="snd_title">${L.snd_title}</span><span class="ed-en">SOUND ARCHIVE / ${SOUNDS.length} RECORDS</span></h1>
-            <p class="ed-lede">${ed(SOUNDS.length+' 条声音与影像记录（'+videoN+' 条视频 + '+audioN+' 段音频），按歌种与场景分组。点开播放，一次一条。','Listen first, read second. '+SOUNDS.length+' sound and film records ('+videoN+' videos + '+audioN+' audio excerpts), grouped by genre and occasion; play one at a time.')}
+            <p class="ed-lede">${ed(SOUNDS.length+' 条记录（'+videoN+' 条影像 + '+audioN+' 段音频），其中 '+excerptN+' 条可直接试听 12 秒选段；按歌种与场景分组，点开播放，一次一条。','Listen first, read second. '+SOUNDS.length+' records ('+videoN+' films + '+audioN+' audio excerpts); '+excerptN+' of them play a 12-second excerpt right here, grouped by genre and occasion, one at a time.')}
             </p>
           </div>
           <aside class="ed-aside" aria-label="${ed('声音统计','Sound statistics')}">
@@ -2660,21 +2701,6 @@ function bindSounds(){
     /* 按钮文案只反映"展开/收起"两种状态,暂停/继续交给播放器控件,避免状态混淆 */
     playSound(id, stage, b);
   }));
-  /* 影像条目自带的音频选段：单独一个按钮，点它只放声音，不覆盖影像的播放键 */
-  document.querySelectorAll('.snd-clip').forEach(btn=>btn.addEventListener('click', ()=>{
-    const id = btn.dataset.id;
-    const s = SOUNDS.find(x=>x.id===id);
-    const stage = document.querySelector('.snd-stage[data-id="'+id+'"]');
-    if(!s || !s.clip || !stage) return;
-    document.querySelectorAll('.snd-stage').forEach(x=>x.innerHTML='');
-    document.querySelectorAll('.snd-play').forEach(x=>{ x.innerHTML = iconPlay() + ' ' + L.snd_play; x.setAttribute('aria-expanded','false'); });
-    document.querySelectorAll('.ed-snd-row').forEach(r=>r.classList.remove('is-open'));
-    const row = btn.closest('.ed-snd-row');
-    row?.classList.add('is-open');
-    const play = row?.querySelector('.snd-play');
-    if(play){ play.innerHTML = iconClose() + ' ' + L.snd_close; play.setAttribute('aria-expanded','true'); }
-    playClip(s, stage, play || btn);
-  }));
 }
 
 /* ---- 关于与来源 ---- */
@@ -2698,7 +2724,7 @@ function viewAbout(){
         <div class="ed-head-grid">
           <div>
             <h1 class="ed-title"><span data-i18n="ab_title">${L.ab_title}</span><span class="ed-en">METHOD / SOURCES / RIGHTS</span></h1>
-            <p class="ed-lede">${ed('共 26 条档案、37 条声音与影像记录（26 条视频 + 11 段音频）。每条事实都<span class="nb">标注</span>出处；无法核实或存在争议的部分，在页面上标明。','26 records and 37 sound and video items (26 videos + 11 audio excerpts). Each fact cites a source; disputed or unverified points are marked.')}
+            <p class="ed-lede">${ed('共 26 条档案、37 条声音与影像记录（26 条影像 + 11 段音频，其中 30 条带 12 秒选段）。每条事实都<span class="nb">标注</span>出处；无法核实或存在争议的部分，在页面上标明。','26 records and 37 sound and video items (26 films + 11 audio excerpts; 30 carry a 12-second excerpt). Each fact cites a source; disputed or unverified points are marked.')}
               <span class="muted">${ed('本页说明收录范围、资料处理方式与全部来源。','This page states scope, method and every source.')}</span>
             </p>
           </div>
@@ -2734,7 +2760,7 @@ function viewAbout(){
               <li><b>盘王大歌列入时间</b>　2014 年 7 月为公示，11 月 11 日经国务院公布（国发〔2014〕59 号）；此前「7 月列入」的写法已按公布日期改正。</li>
               <li><b>岳飞「入莫邪关」</b>　出自《宋史·杨再兴传》，不是《宋史·岳飞传》；莫邪关一般认为即今富川谢沐关，此层推断已写明「一说」。</li>
               <li><b>《蛮子歌》《搜神记》</b>　刘禹锡原作「时节祠盘瓠」，《搜神记》原作「叩槽而号，以祭盘瓠」；两处引文均已按原文订正。</li>
-              <li><b>声音总数</b>　37 条＝26 条视频＋11 段音频；另有 12 段选段挂在影像条目上（行内「听选段」），全站共 23 段 MP3。26 只是视频条数，不是记录总数。</li>
+              <li><b>声音总数</b>　37 条＝26 条影像＋11 段音频；其中 30 条带 12 秒选段（点播放直接放音频，不加载原片），另 7 条纪录片内嵌 B 站播放器。全站共 30 段 MP3。26 只是视频条数，不是记录总数。</li>
               <li><b>盘王大歌的音档</b>　旧版页脚写「站内尚无音档」，与站内已有的 12 秒选段（《万段曲》）矛盾，已改为「只有选段、完整版未取得」。</li>
               <li><b>惠风亭的国保名称</b>　此前写作「潇贺古道（湘桂古道）江华段」，实为第七批国保「湘桂古道永州段」（7-1228-3-526，跨道县、江华、江永，30 处文物点）；已改正，惠风亭是该段江华部分的文物点之一。</li>
               <li><b>黄姚的线路归属</b>　此前写「不在潇贺古道主干线节点上」过于绝对：县政府《潇贺古道线概况》与文化和旅游部「广西·潇贺古道 千年乡愁」线路都把黄姚纳入。现表述为「不在西线陆路节点上，按线路参照收录」。</li>
@@ -3397,7 +3423,7 @@ const I18N = {
     hero_cta1:'浏览文化档案', hero_cta2:'查看古道图志',
     home_feat:'精选条目', home_more:'全部条目 →',
     ar_title:'文化档案', ar_note:'数据来源说明 →', ar_ph:'搜索条目名称 / 地区 / 简介…',
-    snd_title:'声音数据库', snd_tip:'本栏目收录 37 条声音与影像记录（26 条视频 + 11 段音频），按歌种与场景分组。点击播放后展开播放器，同一时间只播放一条。', snd_play:'播放', snd_close:'收起', snd_local:'本地视频', snd_online:'平台外链', snd_ext:'B站原站', snd_clip:'听选段', snd_refs:'权威参考页', snd_notes:'如实说明', snd_notes_t:'26 条视频与 11 段音频均来自 B 站，已逐条标注原始出处。平台链接可能因原视频下架而失效；本地文件不受影响。',
+    snd_title:'声音数据库', snd_tip:'本栏目收录 37 条声音与影像记录（26 条视频 + 11 段音频），按歌种与场景分组。点击播放后展开播放器，同一时间只播放一条。', snd_play:'播放', snd_close:'收起', snd_local:'本地视频', snd_online:'平台外链', snd_ext:'B站原站', snd_refs:'权威参考页', snd_notes:'如实说明', snd_notes_t:'26 条视频与 11 段音频均来自 B 站，已逐条标注原始出处。平台链接可能因原视频下架而失效；本地文件不受影响。',
     city_all:'全部地区', ar_count:'共 {n} 条', ar_fav:'已收藏 {n} 条', ar_empty:'没有匹配的条目,换个筛选试试',
     d_intro:'简介', d_info:'档案信息', d_facts:'要点', d_type:'类别', d_batch:'批次/年代', d_region:'地区', d_city:'所在城市', d_src:'数据来源', d_related:'相关条目', d_sounds:'相关声音', fav_t:'收藏',
     at_title:'古道图志', at_tip:'上方为潇贺古道全程路线示意:北起湖南道县,于道州分岔,西线经江永、富川麦岭—葛坡南下,东线经江华、白沙东行,两线于贺州合流;桂岭古道自东线岔出。西线陆路约 170 公里,路宽 1 至 1.5 米,以青石与鹅卵石铺筑。', at_cities:'沿线城市(点击进入城市页)', at_count:'收录 {n} 条', map_ph_t:'古道地图图片占位区', map_ph_s:'点击下方「选择地图图片…」放入你的古道地图;鼠标移入后显示坐标指示(百分比 + 像素),便于后续标注位置', map_pick:'选择地图图片…', map_hint:'坐标显示:相对地图区域的百分比与像素,为后续地图位置标识打基础', map_alt:'古道地图(占位图片)',
@@ -3420,7 +3446,7 @@ const I18N = {
     hero_cta1:'Browse the Archive', hero_cta2:'Explore the Atlas',
     home_feat:'Featured Entries', home_more:'View all →',
     ar_title:'Cultural Archive', ar_note:'About the data →', ar_ph:'Search name / region / description…',
-    snd_title:'Sound Archive', snd_tip:'37 sound and video records (26 videos + 11 audio excerpts), grouped by song type and setting. Play expands the player; only one plays at a time — starting a new one stops the previous.', snd_play:'Play', snd_close:'Close', snd_local:'Local video', snd_online:'Streamed', snd_ext:'Open on Bilibili', snd_clip:'Excerpt', snd_refs:'Authoritative references', snd_notes:'Notes', snd_notes_t:'All 26 videos and 11 audio excerpts come from Bilibili, and each entry credits its original source. The 7 largest videos stream from the platform; the other 19 videos are bundled locally. Platform links may break if a source is taken down; local copies are unaffected.',
+    snd_title:'Sound Archive', snd_tip:'37 sound and video records (26 videos + 11 audio excerpts), grouped by song type and setting. Play expands the player; only one plays at a time — starting a new one stops the previous.', snd_play:'Play', snd_close:'Close', snd_local:'Local video', snd_online:'Streamed', snd_ext:'Open on Bilibili', snd_refs:'Authoritative references', snd_notes:'Notes', snd_notes_t:'All 26 videos and 11 audio excerpts come from Bilibili, and each entry credits its original source. The 7 largest videos stream from the platform; the other 19 videos are bundled locally. Platform links may break if a source is taken down; local copies are unaffected.',
     city_all:'All regions', ar_count:'{n} entries', ar_fav:'{n} favourited', ar_empty:'No matching entries — try other filters',
     d_intro:'Introduction', d_info:'Record', d_facts:'Key facts', d_type:'Category', d_batch:'Batch / Era', d_region:'Region', d_city:'City', d_src:'Data source', d_related:'Related entries', d_sounds:'Related sounds', fav_t:'Favorite',
     at_title:'Road Atlas', at_tip:'Route diagram of the Xiaohe Ancient Road: it starts at Daoxian (Hunan), forks at Daozhou, runs south along the west line via Jiangyong and Fuchuan (Mailing–Gepo) and east along the east line via Jianghua and Baisha, and the two lines rejoin at Hezhou. The Guiling road branches off the east line. The west line is c.170 km of land route, 1–1.5 m wide, paved with limestone and cobbles.', at_cities:'Cities along the road (click to open)', at_count:'{n} entries', map_ph_t:'Ancient-Road Map Placeholder', map_ph_s:'Click "Choose map image…" to load your map; move the mouse over it to see coordinates (percent + pixels) for future point marking', map_pick:'Choose map image…', map_hint:'Coordinates: percent & pixels relative to the map area, groundwork for future point labels', map_alt:'Ancient road map (placeholder image)',
@@ -3441,7 +3467,7 @@ const I18N = {
     hero_title:'瀟賀古道・秦の新道', hero_sub:'湖南道県の瀟水から広西賀州の賀江へ――千年古道の遺跡・無形文化遺産・人物', hero_note:'瀟賀古道と沿線の文化遺産をまとめたデータベースです。資料は政府サイト・無形文化遺産一覧・公開研究によります。', hero_cta1:'文化アーカイブを見る', hero_cta2:'古道地図を見る',
     home_feat:'注目の項目', home_more:'すべて見る →',
     ar_title:'文化アーカイブ', ar_note:'データ出典 →', ar_ph:'名称・地域・説明を検索…', city_all:'すべての地域', ar_count:'全{n}件', ar_fav:'お気に入り {n}件', ar_empty:'該当項目がありません。条件を変えてください',
-    snd_title:'音声データベース', snd_tip:'音声・映像記録37件(動画26件+音声11件)を収録。歌の種類と場面で分類しています。再生するとプレーヤーが開き、同時に再生されるのは1件だけです。', snd_play:'再生', snd_close:'閉じる', snd_local:'ローカル動画', snd_online:'外部配信', snd_ext:'Bilibiliで開く', snd_clip:'抜粋を聴く', snd_refs:'権威ある参考ページ', snd_notes:'説明', snd_notes_t:'動画26件と音声11件の出所はすべてBilibiliで、各項目に出典を明記しています。容量の大きい7件はプラットフォームの原片を直接再生し、残り19件はローカル版です。Bilibili側で削除されるとリンクが無効になる場合がありますが、ローカルファイルは影響を受けません。',
+    snd_title:'音声データベース', snd_tip:'音声・映像記録37件(動画26件+音声11件)を収録。歌の種類と場面で分類しています。再生するとプレーヤーが開き、同時に再生されるのは1件だけです。', snd_play:'再生', snd_close:'閉じる', snd_local:'ローカル動画', snd_online:'外部配信', snd_ext:'Bilibiliで開く', snd_refs:'権威ある参考ページ', snd_notes:'説明', snd_notes_t:'動画26件と音声11件の出所はすべてBilibiliで、各項目に出典を明記しています。容量の大きい7件はプラットフォームの原片を直接再生し、残り19件はローカル版です。Bilibili側で削除されるとリンクが無効になる場合がありますが、ローカルファイルは影響を受けません。',
     d_intro:'概要', d_info:'档案情報', d_facts:'要点', d_type:'種別', d_batch:'批次/年代', d_region:'地域', d_city:'所在都市', d_src:'出典', d_related:'関連項目', d_sounds:'関連音声', fav_t:'お気に入り',
     at_title:'古道地図', at_tip:'上図は瀟賀古道の全路線図です。湖南省道県で分岐し、西線は江永・富川(麦嶺—葛坡)を南下、東線は江華・白沙を東進して賀州で合流します。桂嶺古道は東線から分かれます。西線の陸路は約170km、幅1〜1.5m、青石と玉砂利敷きです。', at_cities:'沿線都市(クリックで都市ページへ)', at_count:'{n}件', map_ph_t:'古道地図画像プレースホルダー', map_ph_s:'「地図画像を選択…」で地図を読み込み、マウスを乗せると座標(パーセント+ピクセル)が表示されます。今後の地点ラベル付けに利用できます', map_pick:'地図画像を選択…', map_hint:'座標:地図領域に対するパーセントとピクセル', map_alt:'古道地図(プレースホルダー画像)',
     city_sites:'古道と遺跡', city_ich:'無形文化遺産と人物', city_none:'収録項目なし', city_count:'全{n}件',
@@ -3456,7 +3482,7 @@ const I18N = {
     hero_title:'샤오허 고대도로 · 진대 신도', hero_sub:'후난 다오현 샤오수이에서 광시 허저우 허장까지 – 천년 고대도로의 유적·무형문화유산·인물', hero_note:'샤오허 고대도로와 연선 문화유산을 정리한 데이터베이스입니다. 자료는 정부 사이트·무형문화유산 목록·공개 연구에서 가져왔습니다.', hero_cta1:'문화 아카이브 보기', hero_cta2:'고대도로 지도 보기',
     home_feat:'주요 항목', home_more:'전체 보기 →',
     ar_title:'문화 아카이브', ar_note:'데이터 출처 →', ar_ph:'이름·지역·설명 검색…', city_all:'전체 지역', ar_count:'총 {n}건', ar_fav:'즐겨찾기 {n}건', ar_empty:'일치하는 항목이 없습니다. 조건을 바꿔 보세요',
-    snd_title:'사운드 데이터베이스', snd_tip:'사운드·영상 기록 37건(동영상 26건 + 오디오 11건)을 수록. 노래 종류와 장면별로 묶었습니다. 재생하면 플레이어가 열리며, 동시에 재생되는 것은 1건뿐입니다.', snd_play:'재생', snd_close:'접기', snd_local:'로컬 동영상', snd_online:'외부 스트리밍', snd_ext:'Bilibili에서 열기', snd_clip:'발췌 듣기', snd_refs:'공신력 있는 참고 페이지', snd_notes:'설명', snd_notes_t:'동영상 26건과 오디오 11건의 출처는 모두 Bilibili이며 각 항목에 원출처를 표기했습니다. 용량이 큰 7건은 플랫폼 원본을 바로 재생하고, 나머지 19건은 로컬 버전입니다. Bilibili에서 삭제되면 링크가 무효가 될 수 있으나 로컬 파일은 영향받지 않습니다.',
+    snd_title:'사운드 데이터베이스', snd_tip:'사운드·영상 기록 37건(동영상 26건 + 오디오 11건)을 수록. 노래 종류와 장면별로 묶었습니다. 재생하면 플레이어가 열리며, 동시에 재생되는 것은 1건뿐입니다.', snd_play:'재생', snd_close:'접기', snd_local:'로컬 동영상', snd_online:'외부 스트리밍', snd_ext:'Bilibili에서 열기', snd_refs:'공신력 있는 참고 페이지', snd_notes:'설명', snd_notes_t:'동영상 26건과 오디오 11건의 출처는 모두 Bilibili이며 각 항목에 원출처를 표기했습니다. 용량이 큰 7건은 플랫폼 원본을 바로 재생하고, 나머지 19건은 로컬 버전입니다. Bilibili에서 삭제되면 링크가 무효가 될 수 있으나 로컬 파일은 영향받지 않습니다.',
     d_intro:'개요', d_info:'기록 정보', d_facts:'요점', d_type:'분류', d_batch:'지정/연대', d_region:'지역', d_city:'소재 도시', d_src:'출처', d_related:'관련 항목', d_sounds:'관련 음성', fav_t:'즐겨찾기',
     at_title:'고대도로 지도', at_tip:'위 그림은 샤오허 고대도로 전 노선도입니다. 후난성 다오현에서 갈라져 서선은 장융·푸촨(마이링—거포)을 지나 남하하고, 동선은 장화·바이사를 지나 동진하여 허저우에서 합류합니다. 구이링 고대도로는 동선에서 갈라집니다. 서선 육로는 약 170km, 폭 1~1.5m, 청석과 조약돌 포장입니다.', at_cities:'연선 도시(클릭하면 도시 페이지로)', at_count:'{n}건', map_ph_t:'고대도로 지도 이미지 자리', map_ph_s:'「지도 이미지 선택…」으로 지도를 불러오고, 마우스를 올리면 좌표(퍼센트+픽셀)가 표시됩니다. 이후 지점 표시에 활용할 수 있습니다', map_pick:'지도 이미지 선택…', map_hint:'좌표: 지도 영역 기준 퍼센트와 픽셀', map_alt:'고대도로 지도(자리 이미지)',
     city_sites:'도로와 유적', city_ich:'무형문화유산과 인물', city_none:'수록 항목 없음', city_count:'총 {n}건',
@@ -3471,7 +3497,7 @@ const I18N = {
     hero_title:'Route antique Xiaohe · « Nouvelle route » des Qin', hero_sub:'Du fleuve Xiao (Daoxian, Hunan) au fleuve He (Hezhou, Guangxi) — sites, patrimoine immatériel et figures d\'une route millénaire', hero_note:'Base de données consacrée à la route antique Xiaohe et à son patrimoine. Sources publiques : sites gouvernementaux, listes du patrimoine et recherches.', hero_cta1:'Voir les archives', hero_cta2:'Voir l\'atlas',
     home_feat:'Entrées en vedette', home_more:'Tout voir →',
     ar_title:'Archives culturelles', ar_note:'Sources des données →', ar_ph:'Rechercher nom / région / description…', city_all:'Toutes les régions', ar_count:'{n} entrées', ar_fav:'{n} favoris', ar_empty:'Aucune entrée ne correspond. Essayez d\'autres filtres',
-    snd_title:'Base de données sonore', snd_tip:'37 enregistrements sonores et vidéo (26 vidéos + 11 extraits audio), classés par type de chant et par scène. La lecture ouvre le lecteur ; une seule lecture à la fois.', snd_play:'Lire', snd_close:'Fermer', snd_local:'Vidéo locale', snd_online:'En ligne', snd_ext:'Ouvrir sur Bilibili', snd_clip:'Extrait', snd_refs:'Références faisant autorité', snd_notes:'Notes', snd_notes_t:'Les 26 vidéos et 11 extraits audio proviennent de Bilibili et chaque entrée indique sa source. Les liens peuvent expirer si la source est retirée ; les fichiers locaux ne sont pas concernés.',
+    snd_title:'Base de données sonore', snd_tip:'37 enregistrements sonores et vidéo (26 vidéos + 11 extraits audio), classés par type de chant et par scène. La lecture ouvre le lecteur ; une seule lecture à la fois.', snd_play:'Lire', snd_close:'Fermer', snd_local:'Vidéo locale', snd_online:'En ligne', snd_ext:'Ouvrir sur Bilibili', snd_refs:'Références faisant autorité', snd_notes:'Notes', snd_notes_t:'Les 26 vidéos et 11 extraits audio proviennent de Bilibili et chaque entrée indique sa source. Les liens peuvent expirer si la source est retirée ; les fichiers locaux ne sont pas concernés.',
     d_intro:'Introduction', d_info:'Fiche', d_facts:'Points clés', d_type:'Catégorie', d_batch:'Liste / époque', d_region:'Région', d_city:'Ville', d_src:'Source', d_related:'Entrées liées', d_sounds:'Sons liés', fav_t:'Favori',
     at_title:'Atlas de la route antique', at_tip:'Schéma de l\'itinéraire complet de la route antique Xiaohe : elle part de Daoxian (Hunan), se divise à Daozhou, la ligne ouest passant par Jiangyong et Fuchuan (Mailing–Gepo) vers le sud, la ligne est par Jianghua et Baisha vers l\'est, et les deux se rejoignent à Hezhou. La route de Guiling se détache de la ligne est. La ligne ouest compte environ 170 km, large de 1 à 1,5 m, pavée de calcaire et de galets.', at_cities:'Villes le long de la route (cliquer pour ouvrir)', at_count:'{n} entrées', map_ph_t:'Emplacement pour image de carte', map_ph_s:'Cliquez sur « Choisir une image de carte… » ; le curseur affiche les coordonnées (pourcent + pixels), base pour de futurs points de repère', map_pick:'Choisir une image de carte…', map_hint:'Coordonnées : pourcent et pixels relatifs à la zone de la carte', map_alt:'Carte de la route antique (image de remplacement)',
     city_sites:'Routes et sites', city_ich:'Patrimoine et figures', city_none:'Aucune entrée', city_count:'{n} entrées',
@@ -3486,7 +3512,7 @@ const I18N = {
     hero_title:'Ruta antigua Xiaohe · « Nuevo camino » de los Qin', hero_sub:'Del río Xiao (Daoxian, Hunan) al río He (Hezhou, Guangxi) — sitios, patrimonio inmaterial y figuras de una ruta milenaria', hero_note:'Base de datos dedicada a la ruta antigua Xiaohe y su patrimonio. Fuentes públicas: sitios gubernamentales, listas de patrimonio e investigación.', hero_cta1:'Ver archivo cultural', hero_cta2:'Ver atlas de la ruta',
     home_feat:'Entradas destacadas', home_more:'Ver todo →',
     ar_title:'Archivo cultural', ar_note:'Fuentes de datos →', ar_ph:'Buscar nombre / región / descripción…', city_all:'Todas las regiones', ar_count:'{n} entradas', ar_fav:'{n} favoritos', ar_empty:'No hay entradas que coincidan. Pruebe otros filtros',
-    snd_title:'Base de datos de sonido', snd_tip:'37 registros de sonido y vídeo (26 vídeos + 11 extractos de audio), agrupados por tipo de canto y escena. La reproducción abre el reproductor; solo uno a la vez.', snd_play:'Reproducir', snd_close:'Cerrar', snd_local:'Vídeo local', snd_online:'En línea', snd_ext:'Abrir en Bilibili', snd_clip:'Extracto', snd_refs:'Referencias autorizadas', snd_notes:'Notas', snd_notes_t:'Los 26 vídeos y 11 extractos de audio proceden de Bilibili y cada entrada indica su fuente. Los enlaces pueden caducar si se retira la fuente; los archivos locales no.',
+    snd_title:'Base de datos de sonido', snd_tip:'37 registros de sonido y vídeo (26 vídeos + 11 extractos de audio), agrupados por tipo de canto y escena. La reproducción abre el reproductor; solo uno a la vez.', snd_play:'Reproducir', snd_close:'Cerrar', snd_local:'Vídeo local', snd_online:'En línea', snd_ext:'Abrir en Bilibili', snd_refs:'Referencias autorizadas', snd_notes:'Notas', snd_notes_t:'Los 26 vídeos y 11 extractos de audio proceden de Bilibili y cada entrada indica su fuente. Los enlaces pueden caducar si se retira la fuente; los archivos locales no.',
     d_intro:'Introducción', d_info:'Ficha', d_facts:'Puntos clave', d_type:'Categoría', d_batch:'Listado / época', d_region:'Región', d_city:'Ciudad', d_src:'Fuente', d_related:'Entradas relacionadas', d_sounds:'Sonidos relacionados', fav_t:'Favorito',
     at_title:'Atlas de la ruta antigua', at_tip:'Esquema del recorrido completo de la ruta antigua Xiaohe: parte de Daoxian (Hunan), se bifurca en Daozhou; la línea oeste pasa por Jiangyong y Fuchuan (Mailing–Gepo) hacia el sur y la línea este por Jianghua y Baisha hacia el este, y ambas se reúnen en Hezhou. La ruta de Guiling se desprende de la línea este. La línea oeste tiene unos 170 km, con 1 a 1,5 m de ancho, pavimentada con caliza y guijarros.', at_cities:'Ciudades de la ruta (clic para abrir)', at_count:'{n} entradas', map_ph_t:'Espacio para imagen de mapa', map_ph_s:'Pulse « Elegir imagen de mapa… »; el cursor muestra las coordenadas (porcentaje + píxeles), base para futuras marcas de puntos', map_pick:'Elegir imagen de mapa…', map_hint:'Coordenadas: porcentaje y píxeles relativos al área del mapa', map_alt:'Mapa de la ruta antigua (imagen de reemplazo)',
     city_sites:'Rutas y sitios', city_ich:'Patrimonio y figuras', city_none:'Sin entradas', city_count:'{n} entradas',
@@ -3501,7 +3527,7 @@ const I18N = {
     hero_title:'Древняя дорога Сяохэ · «Новый путь» Цинь', hero_sub:'От реки Сяо (Даосянь, Хунань) до реки Хэ (Хэчжоу, Гуанси) — памятники, нематериальное наследие и личности тысячелетней дороги', hero_note:'База данных о древней дороге Сяохэ и её наследии. Источники: правительственные сайты, списки наследия и открытые исследования.', hero_cta1:'Открыть культурный архив', hero_cta2:'Открыть атлас дороги',
     home_feat:'Избранные записи', home_more:'Смотреть все →',
     ar_title:'Культурный архив', ar_note:'Источники данных →', ar_ph:'Поиск: название / регион / описание…', city_all:'Все регионы', ar_count:'{n} записей', ar_fav:'{n} в избранном', ar_empty:'Нет подходящих записей. Попробуйте другие фильтры',
-    snd_title:'База данных звука', snd_tip:'37 аудио- и видеозаписей (26 видео + 11 аудиофрагментов), сгруппированных по типу песни и сцене. Воспроизведение открывает плеер; одновременно играет только одна запись.', snd_play:'Воспроизвести', snd_close:'Закрыть', snd_local:'Локальное видео', snd_online:'Онлайн', snd_ext:'Открыть на Bilibili', snd_clip:'Фрагмент', snd_refs:'Авторитетные ссылки', snd_notes:'Примечания', snd_notes_t:'Все 26 видео и 11 аудиофрагментов взяты с Bilibili, у каждой записи указан источник. Ссылки могут перестать работать при удалении источника; локальные файлы — нет.',
+    snd_title:'База данных звука', snd_tip:'37 аудио- и видеозаписей (26 видео + 11 аудиофрагментов), сгруппированных по типу песни и сцене. Воспроизведение открывает плеер; одновременно играет только одна запись.', snd_play:'Воспроизвести', snd_close:'Закрыть', snd_local:'Локальное видео', snd_online:'Онлайн', snd_ext:'Открыть на Bilibili', snd_refs:'Авторитетные ссылки', snd_notes:'Примечания', snd_notes_t:'Все 26 видео и 11 аудиофрагментов взяты с Bilibili, у каждой записи указан источник. Ссылки могут перестать работать при удалении источника; локальные файлы — нет.',
     d_intro:'Введение', d_info:'Запись', d_facts:'Ключевые факты', d_type:'Категория', d_batch:'Список / эпоха', d_region:'Регион', d_city:'Город', d_src:'Источник', d_related:'Связанные записи', d_sounds:'Связанные звуки', fav_t:'Избранное',
     at_title:'Атлас древней дороги', at_tip:'Схема всего маршрута древней дороги Сяохэ: она начинается в Даосяне (Хунань), делится в Даочжоу; западная линия идёт на юг через Цзянъюн и Фучуань (Майлин–Гэпо), восточная — на восток через Цзянхуа и Байша, — и обе соединяются в Хэчжоу. Дорога Гуйлин ответвляется от восточной линии. Западная линия — около 170 км, шириной 1–1,5 м, мощена известняком и галькой.', at_cities:'Города вдоль дороги (нажмите, чтобы открыть)', at_count:'{n} записей', map_ph_t:'Место для изображения карты', map_ph_s:'Нажмите «Выбрать изображение карты…»; курсор показывает координаты (проценты + пиксели) — основа для будущих меток точек', map_pick:'Выбрать изображение карты…', map_hint:'Координаты: проценты и пиксели относительно области карты', map_alt:'Карта древней дороги (замещающее изображение)',
     city_sites:'Дороги и памятники', city_ich:'Наследие и личности', city_none:'Нет записей', city_count:'{n} записей',

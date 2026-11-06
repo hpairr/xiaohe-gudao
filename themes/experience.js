@@ -232,7 +232,7 @@
         clone.animate([
           { transform: 'translate3d(0,0,0) scale(1)' },
           { transform: `translate3d(${dx.toFixed(2)}px,${dy.toFixed(2)}px,0) scale(${scale.toFixed(4)})` }
-        ], { duration: 680, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'forwards' });
+        ], { duration: 680, delay: 300, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'forwards' });
 
         window.setTimeout(() => {
           root.classList.add('is-arrival-landed', 'is-revealing');
@@ -240,7 +240,7 @@
             clone.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: 'forwards' });
             window.setTimeout(finishArrival, 140);
           }, 560);
-        }, 680);
+        }, 980);
       });
     };
 
@@ -306,3 +306,4 @@
     if (event.target.closest('.theme-hero')) nav.classList.remove('is-scrolled');
   });
 })();
+

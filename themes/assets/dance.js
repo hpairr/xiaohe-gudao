@@ -1,7 +1,8 @@
 /* ==========================================================================
    长鼓舞专题 · 基础教学台
    --------------------------------------------------------------------------
-   教学片（18 MB）跟着仓库一起发布，正常情况就是能播的视频：
+   教学片不随仓库发布（原片 18 MB 留在本机 video/04-changgu-basics.mp4），
+   线上拿不到文件时自动退成静帧，交互不变：
    1) 点右侧动作名 → 影片跳到该动作起点；播放 → 当前动作、所在组、刻度尺同步。
    2) 原片加载失败（断网、被墙、文件缺失）→ 自动切到同一位置的静帧，
       由 tools/make_video_stills.py 从原片截取，交互不变，只是不播。
@@ -12,6 +13,9 @@
   'use strict';
 
   const FRAME_DIR = 'assets/dance-frames/';
+  /* 教学片地址。留空 = 用 HTML 里的 ../video/04-changgu-basics.mp4（不进仓库）；
+     以后把片子放到 B 站以外的直链或对象存储，填这里就能在页内播，其余不用改。 */
+  const VIDEO_SRC = '';
   /* 片长 01:56。读不到 metadata 时用它算刻度尺比例 */
   const TOTAL = 117;
   /* 跳转时略过动作起点，避开上一动作的收势 */
@@ -27,6 +31,8 @@
     if (!section) return;
 
     const video = section.querySelector('[data-bs-video]');
+    /* 填了外链就改用它；留空则沿用 HTML 里写的本地文件（线上会 404，走静帧兜底） */
+    if (video && VIDEO_SRC) video.setAttribute('src', VIDEO_SRC);
     const still = section.querySelector('[data-bs-still]');
     const film = section.querySelector('.bs-film');
     const tape = section.querySelector('[data-bs-tape]');

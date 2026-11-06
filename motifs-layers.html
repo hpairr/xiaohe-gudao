@@ -89,6 +89,7 @@ img{max-width:100%}
 }
 
 /* ── 图案：正中 ─────────────────────────────────────────────── */
+.mo-plate img{-webkit-user-drag:none;user-select:none}
 .mo-plate{
   position:absolute;left:0;top:0;background:var(--bg);
 }
@@ -113,17 +114,28 @@ img{max-width:100%}
 /* ── 左：编号与名字 ─────────────────────────────────────────── */
 .mo-meta{
   position:absolute;left:var(--pad);top:50%;
-  width:clamp(140px,13vw,180px);text-align:right;
+  width:clamp(230px,22vw,300px);text-align:center;
   opacity:0;transform:translateY(calc(-50% + 12px));
   transition:opacity .5s var(--ease),transform .6s var(--ease);
 }
 .mo-detail.is-in .mo-meta{opacity:1;transform:translateY(-50%)}
 .mo-meta .no{font:700 clamp(40px,4.6vw,64px)/1 var(--serif);color:var(--ac)}
-.mo-meta .cn{margin-top:16px;font:500 clamp(22px,2.3vw,30px)/1.25 var(--serif)}
+.mo-meta .cn{margin-top:16px;font:500 clamp(20px,2vw,28px)/1.25 var(--serif);white-space:nowrap}
 .mo-meta .en{margin-top:8px;font:400 9.5px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
-.mo-meta .vrule{margin:20px 0 0 auto;width:1px;height:clamp(40px,7vh,72px);background:var(--line)}
-.mo-meta .back{margin-top:14px;font:400 11px/1.6 var(--sans);letter-spacing:.06em;color:var(--soft);text-decoration:none;display:inline-block}
+.mo-meta .vrule{margin:18px auto 0;width:1px;height:clamp(40px,7vh,72px);background:var(--line)}
+.mo-meta .back{margin-top:14px;font:400 11px/1.6 var(--sans);letter-spacing:.06em;color:var(--soft);text-decoration:none;display:inline-block;text-align:center}
 .mo-meta .back:hover{color:var(--fg)}
+.mo-head{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;align-items:center;gap:10px}
+.mo-title{min-width:0;text-align:center}
+.mo-nav{
+  width:34px;height:34px;border:1px solid var(--line);border-radius:50%;
+  background:transparent;color:var(--soft);font:400 16px/1 var(--sans);
+  display:grid;place-items:center;cursor:pointer;padding:0;
+}
+.mo-nav:hover{color:var(--fg);border-color:var(--fg)}
+.mo-nav[hidden]{display:none}
+.mo-nav.is-off{visibility:hidden;pointer-events:none}
+
 
 /* ── 右：分层解释 ──────────────────────────────────────────── */
 .mo-panel{
@@ -176,6 +188,17 @@ img{max-width:100%}
 }
 .mo-detail.is-in .mo-close{opacity:1}
 .mo-close:hover{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.mo-sound{
+  position:absolute;right:calc(var(--pad) + 48px);top:16px;z-index:3;
+  height:38px;padding:0 14px;border:1px solid var(--line);border-radius:19px;
+  background:transparent;color:var(--soft);font:400 10px/1 var(--sans);
+  letter-spacing:.06em;cursor:pointer;opacity:0;
+  transition:opacity .5s var(--ease),background-color .25s,color .25s,border-color .25s;
+}
+.mo-detail.is-in .mo-sound{opacity:1}
+.mo-sound:hover{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.mo-sound[aria-pressed="true"]{border-color:var(--ac);color:var(--ac)}
+
 .mo-close:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 .mo-close svg{width:14px;height:14px}
 
@@ -200,19 +223,26 @@ img{max-width:100%}
 <body>
 <div class="mo-detail" id="detail" role="dialog" aria-modal="true" aria-label="图案分层解释">
   <div class="mo-plate" id="plate">
-    <img class="base" id="plateBase" alt="" width="1600" height="1600">
+    <img class="base" id="plateBase" draggable="false" alt="" width="1600" height="1600" elementtiming="mo-base">
     <div class="mo-stack" id="stack"></div>
   </div>
 
   <div class="mo-meta">
-    <div class="no" id="metaNo">壹</div>
-    <div class="cn" id="metaCn">女书</div>
-    <div class="en" id="metaEn">NÜSHU</div>
+    <div class="mo-head">
+      <button class="mo-nav mo-prev" id="prevTheme" type="button" aria-label="上一个图案详情" title="上一个图案">←</button>
+      <div class="mo-title">
+        <div class="no" id="metaNo">壹</div>
+        <div class="cn" id="metaCn">女书</div>
+        <div class="en" id="metaEn">NÜSHU</div>
+      </div>
+      <button class="mo-nav mo-next" id="nextTheme" type="button" aria-label="下一个图案详情" title="下一个图案">→</button>
+    </div>
     <i class="vrule"></i>
     <a class="back" id="backLink" href="themes/02-女书.html">← 回到女书</a>
-    <a class="back" id="newLink" href="motifs.html" style="margin-left:12px">看分类详情 →</a>
   </div>
 
+  <audio id="detailAudioA" preload="auto" loop hidden></audio>
+  <audio id="detailAudioB" preload="auto" loop hidden></audio>
   <div class="mo-mtitle" id="mTitle" aria-hidden="true"></div>
 
   <div class="mo-panel" id="panel">
@@ -220,6 +250,7 @@ img{max-width:100%}
     <div id="layerList"></div>
   </div>
 
+  <button class="mo-sound" id="soundBtn" type="button" aria-label="播放背景音乐" aria-pressed="false">播放</button>
   <button class="mo-close" id="closeBtn" type="button" aria-label="返回到专题页（Esc）">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
   </button>
@@ -231,7 +262,7 @@ img{max-width:100%}
 
 <!-- 图层清单：由 assets/theme-pattern/layers/manifest.json 生成，勿手改；
      改动请在 manifest.json 改，再重跑 tools/gen-motif-layers.py -->
-<script type="application/json" id="layer-data">{"nushu":[{"order":1,"name":"底色","file":"nushu-layer-01.png"},{"order":2,"name":"八角花","file":"nushu-layer-02.png"},{"order":3,"name":"最外框回型装订","file":"nushu-layer-03.png"},{"order":4,"name":"最外框角落花","file":"nushu-layer-04.png"},{"order":5,"name":"中间女书","file":"nushu-layer-05.png"},{"order":6,"name":"外框女书","file":"nushu-layer-06.png"},{"order":7,"name":"中心","file":"nushu-layer-07.png"}],"butterfly":[{"order":1,"name":"底色","file":"butterfly-layer-01.png"},{"order":2,"name":"最外框","file":"butterfly-layer-02.png"},{"order":3,"name":"外框红花","file":"butterfly-layer-03.png"},{"order":4,"name":"大波型","file":"butterfly-layer-04.png"},{"order":5,"name":"小波型","file":"butterfly-layer-05.png"},{"order":6,"name":"蝴蝶","file":"butterfly-layer-06.png"},{"order":7,"name":"内框","file":"butterfly-layer-07.png"}],"drum":[{"order":1,"name":"底色","file":"drum-layer-01.png"},{"order":2,"name":"角落半圆","file":"drum-layer-02.png"},{"order":3,"name":"外框方块","file":"drum-layer-03.png"},{"order":4,"name":"小鼓身","file":"drum-layer-04.png"},{"order":5,"name":"内框图形","file":"drum-layer-05.png"},{"order":6,"name":"三框","file":"drum-layer-06.png"},{"order":7,"name":"内框花纹","file":"drum-layer-07.png"},{"order":8,"name":"鼓花","file":"drum-layer-08.png"},{"order":9,"name":"鼓身","file":"drum-layer-09.png"}],"bridge":[{"order":1,"name":"底色","file":"bridge-layer-01.png"},{"order":2,"name":"中心","file":"bridge-layer-02.png"},{"order":3,"name":"外框花纹","file":"bridge-layer-03.png"},{"order":4,"name":"内框花纹","file":"bridge-layer-04.png"},{"order":5,"name":"最外框花纹","file":"bridge-layer-05.png"},{"order":6,"name":"内框房檐","file":"bridge-layer-06.png"},{"order":7,"name":"角落内框花纹","file":"bridge-layer-07.png"}],"panwang":[{"order":1,"name":"底色","file":"panwang-layer-01.png"},{"order":2,"name":"内框花纹","file":"panwang-layer-02.png"},{"order":3,"name":"外框角落花纹","file":"panwang-layer-03.png"},{"order":4,"name":"外框花纹","file":"panwang-layer-04.png"},{"order":5,"name":"内框花","file":"panwang-layer-05.png"},{"order":6,"name":"中心","file":"panwang-layer-06.png"}],"brocade":[{"order":1,"name":"底色","file":"brocade-layer-01.png"},{"order":2,"name":"内框花纹","file":"brocade-layer-02.png"},{"order":3,"name":"内框中间花纹","file":"brocade-layer-03.png"},{"order":4,"name":"中心","file":"brocade-layer-04.png"},{"order":5,"name":"内框左右花纹","file":"brocade-layer-05.png"},{"order":6,"name":"外框上下花纹","file":"brocade-layer-06.png"},{"order":7,"name":"最外框左右花纹","file":"brocade-layer-07.png"},{"order":8,"name":"内框角落花纹","file":"brocade-layer-08.png"}]}</script>
+<script type="application/json" id="layer-data">{"nushu":[{"order":1,"name":"底色","file":"nushu-layer-01.png","desc":"底层，铺底色。"},{"order":2,"name":"八角花","file":"nushu-layer-02.png","desc":"八角八边的外框；内芯可换花鸟、莲花或蝶纹。三朝书内页正中常见。"},{"order":3,"name":"最外框回型装订","file":"nushu-layer-03.png","desc":"三朝书七眼钉形成的回字形线迹，用作外框。"},{"order":4,"name":"最外框角落花","file":"nushu-layer-04.png","desc":"牡丹花头取样的团花角饰，四角对称。"},{"order":5,"name":"中间女书","file":"nushu-layer-05.png","desc":"女书文字排成的中间层图案。"},{"order":6,"name":"外框女书","file":"nushu-layer-06.png","desc":"女书文字排成的外框图案。"},{"order":7,"name":"中心","file":"nushu-layer-07.png","desc":"盘长结与莲花叠在内芯。"}],"butterfly":[{"order":1,"name":"底色","file":"butterfly-layer-01.png","desc":"底层，铺底色。"},{"order":2,"name":"最外框","file":"butterfly-layer-02.png","desc":"四向几何团花：回纹勾角、双叶、四个红三角。"},{"order":3,"name":"外框红花","file":"butterfly-layer-03.png","desc":"瑶族大八角花的几何变体，红花位于四角。"},{"order":4,"name":"大波型","file":"butterfly-layer-04.png","desc":"二声部同起同收，长句画成大波。"},{"order":5,"name":"小波型","file":"butterfly-layer-05.png","desc":"二声部同起同收，短句画成小波。"},{"order":6,"name":"蝴蝶","file":"butterfly-layer-06.png","desc":"瑶族蝴蝶纹的半抽象画法，四翅用直线折面。"},{"order":7,"name":"内框","file":"butterfly-layer-07.png","desc":"蝴蝶纹与花卉纹交替，围住中心。"}],"drum":[{"order":1,"name":"底色","file":"drum-layer-01.png","desc":"底层，铺底色。"},{"order":2,"name":"角落半圆","file":"drum-layer-02.png","desc":"四角的半圆角饰。"},{"order":3,"name":"外框方块","file":"drum-layer-03.png","desc":"普通装饰图。"},{"order":4,"name":"小鼓身","file":"drum-layer-04.png","desc":"两只鼓身交叉，尺寸小于外侧鼓身。"},{"order":5,"name":"内框图形","file":"drum-layer-05.png","desc":"普通装饰图。"},{"order":6,"name":"三框","file":"drum-layer-06.png","desc":"三重方框逐层收进，框距按鼓点分组。"},{"order":7,"name":"内框花纹","file":"drum-layer-07.png","desc":"山形锯齿与菱形回钩连续排列。"},{"order":8,"name":"鼓花","file":"drum-layer-08.png","desc":"八角花与八瓣花叠在鼓面中心。"},{"order":9,"name":"鼓身","file":"drum-layer-09.png","desc":"两只细腰鼓交叉成 X，保留鼓皮、腰线和彩绘分段。"}],"bridge":[{"order":1,"name":"底色","file":"bridge-layer-01.png","desc":"底层，铺底色。"},{"order":2,"name":"中心","file":"bridge-layer-02.png","desc":"中心为桥屋与窗格纹样。"},{"order":3,"name":"外框花纹","file":"bridge-layer-03.png","desc":"桥廊木窗的格心，方框套方框。"},{"order":4,"name":"内框花纹","file":"bridge-layer-04.png","desc":"窗棂的十字格与井字格密排。"},{"order":5,"name":"最外框花纹","file":"bridge-layer-05.png","desc":"檐口瓦片的正负形排列。"},{"order":6,"name":"内框房檐","file":"bridge-layer-06.png","desc":"四角翘起的屋檐，正负形各取一半。"},{"order":7,"name":"角落内框花纹","file":"bridge-layer-07.png","desc":"从房檐起翘和瓦当取形，填在角部。"}],"panwang":[{"order":1,"name":"底色","file":"panwang-layer-01.png","desc":"底层，铺底色。"},{"order":2,"name":"内框花纹","file":"panwang-layer-02.png","desc":"盘王印外圈的粗细线交替。"},{"order":3,"name":"外框角落花纹","file":"panwang-layer-03.png","desc":"盘王印章型的角块，四角各一。"},{"order":4,"name":"外框花纹","file":"panwang-layer-04.png","desc":"三角与联珠交替的横向带。"},{"order":5,"name":"内框花","file":"panwang-layer-05.png","desc":"八出放射的大八角花形。"},{"order":6,"name":"中心","file":"panwang-layer-06.png","desc":"方心外方内八角；形制参照连南、乳源盘王印，不是本地实物。"}],"brocade":[{"order":1,"name":"底色","file":"brocade-layer-01.png","desc":"底层，铺底色。"},{"order":2,"name":"内框花纹","file":"brocade-layer-02.png","desc":"折线带，锯齿与小花交替。"},{"order":3,"name":"内框中间花纹","file":"brocade-layer-03.png","desc":"菱形花按八出排开。"},{"order":4,"name":"中心","file":"brocade-layer-04.png","desc":"白框挑花里的卍字与十字变体。"},{"order":5,"name":"内框左右花纹","file":"brocade-layer-05.png","desc":"卍字与回纹的连续带，左右各一条。"},{"order":6,"name":"外框上下花纹","file":"brocade-layer-06.png","desc":"万字与菱格上下压边。"},{"order":7,"name":"最外框左右花纹","file":"brocade-layer-07.png","desc":"最外框左右两侧的边饰。"},{"order":8,"name":"内框角落花纹","file":"brocade-layer-08.png","desc":"角落的嵌色方格。"}]}</script>
 
 <script>
 (function(){
@@ -259,7 +290,7 @@ var $=function(s,r){return (r||document).querySelector(s);};
 var detail=$('#detail'),plate=$('#plate'),stack=$('#stack'),baseImg=$('#plateBase');
 var layerList=$('#layerList'),layerCountEl=$('#layerCount'),panel=$('#panel');
 var metaNo=$('#metaNo'),metaCn=$('#metaCn'),metaEn=$('#metaEn'),mTitle=$('#mTitle');
-var backLink=$('#backLink'),newLink=$('#newLink'),closeBtn=$('#closeBtn'),selftestEl=$('#selftest');
+var backLink=$('#backLink'),closeBtn=$('#closeBtn'),selftestEl=$('#selftest');
 
 var FINE=matchMedia('(hover: hover) and (pointer: fine)');
 
@@ -308,6 +339,9 @@ function mixHex(fg,bg,a){
 function fill(i){
   var t=THEMES[i],ls=LAYERS[t.k]||[];
   cur=i;
+  var pv=$('#prevTheme'),nx=$('#nextTheme');
+  if(pv){pv.hidden=false;pv.disabled=(i===0);pv.classList.toggle('is-off',i===0);}
+  if(nx){nx.hidden=false;nx.disabled=(i===THEMES.length-1);nx.classList.toggle('is-off',i===THEMES.length-1);}
   var d=detail.style;
   d.setProperty('--bg',t.bg);
   d.setProperty('--fg',t.fg);
@@ -325,7 +359,6 @@ function fill(i){
   mTitle.lastChild.textContent=t.cn;
   backLink.href='themes/'+t.page;
   backLink.textContent='← 回到'+t.cn;
-  if(newLink) newLink.href='motifs.html?theme='+t.k;
   document.title=t.cn+' · 图案分层解释';
 
   baseImg.src='assets/img/motifs/m'+(i+1)+'-'+t.k+'.webp';
@@ -337,7 +370,16 @@ function fill(i){
   baseReady=false;
   baseImg.style.opacity='0';
   var token=++baseToken;
-  var mark=function(){ if(token===baseToken&&!baseReady){ baseReady=true; isolate(curHint); } };
+  /* 整图到了只做一件事：在层图**之上**把它淡进来。
+     绝不能同时把层图淡出 —— 两层同时反着淡时，合成后的总不透明度在交叉点会掉到
+     ≈0.75（1−t+t²），图案先暗一下再亮回来，看起来就是「像加载图片那样闪一下」。
+     等整图铺满（.18s + 余量）之后，再把层图撤掉；那时它被整图整块盖住，撤掉看不见。 */
+  var mark=function(){
+    if(token!==baseToken||baseReady) return;
+    baseReady=true;
+    baseImg.style.opacity='1';
+    setTimeout(function(){ if(token===baseToken) isolate(curHint); },240);
+  };
   if(baseImg.decode) baseImg.decode().then(mark,mark);
   else if(baseImg.complete) mark();
   else baseImg.addEventListener('load',mark,{once:true});
@@ -373,10 +415,12 @@ function fill(i){
     b.setAttribute('aria-pressed','false');
     b.innerHTML='<span class="lno">'+('0'+(n+1)).slice(-2)+'</span><span class="lname"></span>';
     b.querySelector('.lname').textContent=L.name;
-    var body=document.createElement('span');
-    body.className='lbody';
-    body.textContent='第 '+(n+1)+' 层';
-    b.appendChild(body);
+    if(L.desc){
+      var body=document.createElement('span');
+      body.className='lbody';
+      body.textContent=L.desc;
+      b.appendChild(body);
+    }
     b.addEventListener('click',function(){isolate(n);});
     b.addEventListener('pointerenter',function(){if(FINE.matches)isolate(n);});
     b.addEventListener('pointerleave',function(){if(FINE.matches)isolate(-1);});
@@ -443,11 +487,185 @@ function back(){ location.href='themes/'+THEMES[cur].page; }
 closeBtn.addEventListener('click',back);
 backLink.addEventListener('click',function(e){e.preventDefault();back();});
 detail.addEventListener('click',function(e){
+  if(suppressBack){suppressBack=false;e.preventDefault();e.stopPropagation();return;}
   if(e.target===detail||e.target===plate||e.target.classList.contains('base'))back();
 });
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){e.preventDefault();back();}
 });
+
+/* ── 左右切换图案详情 ─────────────────────────────────────── */
+var prevTheme=$('#prevTheme'),nextTheme=$('#nextTheme');
+function stepTheme(delta){
+  var n=cur+delta;
+  if(n<0||n>=THEMES.length)return;
+  fill(n);
+  try{history.replaceState(null,'','?theme='+THEMES[n].k);}catch(err){}
+  switchAudio(THEMES[n].k,0);
+}
+if(prevTheme)prevTheme.addEventListener('click',function(){stepTheme(-1);});
+if(nextTheme)nextTheme.addEventListener('click',function(){stepTheme(1);});
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowLeft'){e.preventDefault();stepTheme(-1);}
+  if(e.key==='ArrowRight'){e.preventDefault();stepTheme(1);}
+});
+
+
+/* ── 详情页音乐：接住专题页进度，切主题时交叉淡入 ───────────── */
+var AUDIO_STATE='xiaohe-audio-state';
+var SOUND_KEY='xiaohe-sound';
+var VOLUME_KEY='xiaohe-volume';
+var audioA=document.getElementById('detailAudioA');
+var audioB=document.getElementById('detailAudioB');
+var soundBtn=document.getElementById('soundBtn');
+var audioActive=null,audioStandby=null,audioKey=THEMES[cur].k;
+var audioMuted=false,audioBlocked=false,audioLevel=.62;
+try{
+  audioMuted=localStorage.getItem(SOUND_KEY)==='off';
+  var savedVol=parseFloat(localStorage.getItem(VOLUME_KEY));
+  if(isFinite(savedVol))audioLevel=Math.max(0,Math.min(1,savedVol))*.62;
+}catch(e){}
+function audioTarget(){return audioMuted?0:audioLevel;}
+function setAudioButton(){
+  if(!soundBtn)return;
+  var playing=!!audioActive&&!audioActive.paused&&!audioMuted;
+  soundBtn.textContent=audioMuted?'开启声音':(playing?'静音':'播放');
+  soundBtn.setAttribute('aria-pressed',audioMuted?'true':'false');
+  soundBtn.setAttribute('aria-label',audioMuted?'开启声音':(playing?'静音':'播放背景音乐'));
+}
+function fadeAudio(el,to,duration,done){
+  if(!el)return;
+  var from=el.volume,start=performance.now();
+  function step(now){
+    var p=Math.min(1,(now-start)/Math.max(1,duration));
+    el.volume=Math.max(0,Math.min(1,from+(to-from)*p));
+    if(p<1)requestAnimationFrame(step);
+    else if(done)done();
+  }
+  requestAnimationFrame(step);
+}
+function writeAudioState(){
+  try{
+    sessionStorage.setItem(AUDIO_STATE,JSON.stringify({
+      key:audioKey,
+      position:audioActive?Math.max(0,audioActive.currentTime||0):0,
+      playing:!!audioActive&&!audioActive.paused&&!audioMuted,
+      at:Date.now()
+    }));
+  }catch(e){}
+}
+function playAudio(el,position){
+  if(!el)return;
+  audioBlocked=false;
+  el.volume=0;
+  var start=function(){
+    try{
+      var d=isFinite(el.duration)&&el.duration>0?el.duration:0;
+      var p=Math.max(0,Number(position)||0);
+      if(d)p=p%d;
+      el.currentTime=p;
+    }catch(e){}
+    var promise=el.play();
+    if(promise&&promise.catch)promise.catch(function(){audioBlocked=true;setAudioButton();});
+    fadeAudio(el,audioTarget(),500,setAudioButton);
+  };
+  if(el.readyState>=1)start();
+  else el.addEventListener('loadedmetadata',start,{once:true});
+  setAudioButton();
+}
+function switchAudio(key,position){
+  if(!audioA||!audioB)return;
+  audioKey=key;
+  if(!audioActive){
+    audioActive=audioA;audioStandby=audioB;
+    audioActive.dataset.key=key;
+    audioActive.src='assets/audio/'+key+'.mp3';
+    audioActive.loop=true;
+    if(!audioMuted)playAudio(audioActive,position||0);
+    else setAudioButton();
+    return;
+  }
+  if(audioActive.dataset.key===key){
+    if(!audioMuted&&audioActive.paused)playAudio(audioActive,position||0);
+    else if(!audioMuted)fadeAudio(audioActive,audioTarget(),300,setAudioButton);
+    else setAudioButton();
+    return;
+  }
+  var old=audioActive,next=audioStandby;
+  next.dataset.key=key;
+  next.src='assets/audio/'+key+'.mp3';
+  next.loop=true;
+  next.volume=0;
+  fadeAudio(old,0,300,function(){try{old.pause();}catch(e){}});
+  audioActive=next;
+  audioStandby=old;
+  if(!audioMuted)playAudio(next,position||0);
+  else setAudioButton();
+  setAudioButton();
+}
+function toggleAudio(){
+  if(audioMuted){
+    audioMuted=false;
+    try{localStorage.setItem(SOUND_KEY,'on');}catch(e){}
+    if(audioActive&&audioActive.paused)playAudio(audioActive,audioActive.currentTime||0);
+    else if(audioActive)fadeAudio(audioActive,audioTarget(),300,setAudioButton);
+  }else if(audioActive&&audioActive.paused){
+    playAudio(audioActive,audioActive.currentTime||0);
+  }else{
+    audioMuted=true;
+    try{localStorage.setItem(SOUND_KEY,'off');}catch(e){}
+    if(audioActive)fadeAudio(audioActive,0,250,function(){
+      try{audioActive.pause();}catch(e){}
+      setAudioButton();
+    });
+  }
+  setAudioButton();
+  writeAudioState();
+}
+if(soundBtn)soundBtn.addEventListener('click',toggleAudio);
+if(audioA&&audioB){
+  audioA.addEventListener('playing',setAudioButton);
+  audioB.addEventListener('playing',setAudioButton);
+  audioA.addEventListener('pause',setAudioButton);
+  audioB.addEventListener('pause',setAudioButton);
+  audioActive=audioA;audioStandby=audioB;
+  audioActive.dataset.key=audioKey;
+  audioActive.src='assets/audio/'+audioKey+'.mp3';
+  audioActive.loop=true;
+  var savedState=null;
+  try{savedState=JSON.parse(sessionStorage.getItem(AUDIO_STATE)||'null');}catch(e){}
+  if(savedState&&savedState.key===audioKey&&savedState.playing&&Date.now()-(savedState.at||0)<30000&&!audioMuted){
+    playAudio(audioActive,(Number(savedState.position)||0)+(Date.now()-(savedState.at||0))/1000);
+  }else{
+    setAudioButton();
+  }
+}
+addEventListener('pagehide',writeAudioState);
+addEventListener('beforeunload',writeAudioState);
+
+
+/* ── 左右滑动切换 ─────────────────────────────────────────── */
+var suppressBack=false;
+(function(){
+  var sx=0,sy=0,down=false;
+  detail.addEventListener('pointerdown',function(e){
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    if(e.target.closest('button,a,.mo-panel,.mo-close,.mo-sound'))return;
+    e.preventDefault();
+    sx=e.clientX;sy=e.clientY;down=true;
+  });
+  detail.addEventListener('pointerup',function(e){
+    if(!down)return;
+    down=false;
+    var dx=e.clientX-sx,dy=e.clientY-sy;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.4){
+      suppressBack=true;
+      setTimeout(function(){suppressBack=false;},400);
+      stepTheme(dx<0?1:-1);
+    }
+  });
+  detail.addEventListener('pointercancel',function(){down=false;});
+})();
 
 /* ── 自检 ──────────────────────────────────────────────────── */
 function whenLoaded(list,ms){
@@ -549,3 +767,5 @@ if(new URLSearchParams(location.search).get('selftest')==='1') runSelfTest();
 </script>
 </body>
 </html>
+
+

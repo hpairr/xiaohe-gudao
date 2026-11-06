@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" class="no-js">
 <head>
 <meta charset="utf-8">
@@ -11,11 +11,12 @@ if(location.search.indexOf('arrive=')>-1){
     var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
     document.documentElement.classList.add('is-revealing');
     window.setTimeout(function(){
+      document.documentElement.classList.add('is-iris');
       document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
       if(v)v.style.display='none';
       if(t)t.style.display='none';
     },680);
-  },6000);
+  },2500);
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -229,3 +230,7 @@ if(location.search.indexOf('arrive=')>-1){
 <script src="assets/motif-entry.js" data-motif-index="5" defer></script>
 </body>
 </html>
+
+
+
+

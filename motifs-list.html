@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>图案详情 · 潇贺古道有声文化数据库</title>
+<meta name="description" content="六章 31 层纹样，按传统纹样、建筑与器物、声音与结构、原创装饰分类；逐层说明并附图层。">
+<meta name="theme-color" content="#1D2652">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+@font-face{font-family:'Noto Serif SC';src:url('assets/fonts/site/NotoSerifSC-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Noto Serif SC';src:url('assets/fonts/site/NotoSerifSC-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Noto Sans SC';src:url('assets/fonts/site/NotoSansSC-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Noto Sans SC';src:url('assets/fonts/site/NotoSansSC-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+
+:root{
+  --paper:#F3EEE3;
+  --paper-deep:#EAE2D2;
+  --ink:#1D2652;
+  --ink-soft:#3A4160;
+  --muted:#5F5A50;
+  --red:#A9362E;
+  --teal:#2C5A4E;
+  --line:rgba(29,38,82,.22);
+  --line-soft:rgba(29,38,82,.12);
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC',STSong,'SimSun',serif;
+  --sans:'Noto Sans SC','Source Han Sans SC','Microsoft YaHei','PingFang SC',sans-serif;
+  --pad:clamp(20px,4.4vw,64px);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-gutter:stable}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:400 15px/1.75 var(--sans);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+::selection{background:var(--red);color:var(--paper)}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.18em}
+a:hover{color:var(--red)}
+button{font:inherit;color:inherit}
+img{max-width:100%;display:block}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+.skip{position:fixed;left:12px;top:-60px;z-index:200;background:var(--ink);color:var(--paper);padding:10px 14px;text-decoration:none;font-size:12px}
+.skip:focus{top:12px}
+
+/* 标题 */
+.masthead{max-width:1240px;margin:0 auto;padding:calc(var(--pad)*.9) var(--pad) 0}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:20px;border-bottom:1px solid var(--line);padding-bottom:14px;font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.topline .back{text-decoration:none;color:var(--ink)}
+.topline .site{text-transform:uppercase;letter-spacing:.16em}
+.masthead-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,5vw,80px);align-items:end;padding:clamp(32px,6vw,72px) 0 clamp(28px,4vw,48px)}
+h1{margin:0;font:700 clamp(54px,8.4vw,108px)/.98 var(--serif);letter-spacing:-.035em}
+.masthead-copy{padding-bottom:6px}
+.lead{margin:0;font-size:clamp(15px,1.15vw,17px);line-height:1.8;max-width:36em;color:var(--ink-soft)}
+.meta{margin:18px 0 0;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.meta b{font-weight:500;color:var(--ink)}
+
+/* 筛选 / 章导航 */
+.toolbar{position:sticky;top:0;z-index:30;background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:clamp(10px,2vw,20px)}
+.toolbar-inner{max-width:1240px;margin:0 auto;padding:0 var(--pad)}
+.toolbar-row{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:10px 0 8px}
+.filters{display:flex;gap:26px;align-items:center;overflow-x:auto;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filter{background:none;border:0;border-bottom:2px solid transparent;padding:6px 0 5px;cursor:pointer;white-space:nowrap;font-size:12px;letter-spacing:.06em;color:var(--muted);transition:color .2s,border-color .2s}
+.filter .n{display:inline-block;margin-left:7px;font-size:9.5px;letter-spacing:.04em;color:var(--muted);font-variant-numeric:tabular-nums}
+.filter:hover{color:var(--ink)}
+.filter[aria-pressed="true"]{color:var(--red);border-bottom-color:var(--red)}
+.filter[aria-pressed="true"] .n{color:var(--red)}
+.count{margin:0;font-size:10px;letter-spacing:.08em;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.chapters{display:flex;gap:24px;overflow-x:auto;padding:0 0 9px;border-top:1px solid var(--line-soft);scrollbar-width:none}
+.chapters::-webkit-scrollbar{display:none}
+.chapters a{white-space:nowrap;text-decoration:none;font-size:11px;letter-spacing:.08em;color:var(--muted);padding:8px 0 6px;border-bottom:2px solid transparent}
+.chapters a:hover{color:var(--ink)}
+.chapters a[aria-current="true"]{color:var(--red);border-bottom-color:var(--red)}
+.plain-note{max-width:1240px;margin:0 auto;padding:10px var(--pad) 0;font-size:11px;line-height:1.6;color:var(--muted)}
+.plain-note b{font-weight:500;color:var(--ink)}
+
+/* 正文 */
+main{max-width:1240px;margin:0 auto;padding:0 var(--pad) 40px}
+.chapter{padding-top:clamp(38px,6vw,72px);scroll-margin-top:132px}
+.chapter + .chapter{border-top:1px solid var(--line);margin-top:clamp(8px,1.4vw,18px)}
+.chapter-head{display:grid;grid-template-columns:7.5rem minmax(0,1fr) auto;gap:clamp(16px,3vw,40px);align-items:start;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.chapter-id{display:flex;flex-direction:column;gap:8px}
+.chapter-no{font:500 40px/1 var(--serif);color:var(--red);letter-spacing:-.04em}
+.chapter-en{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);line-height:1.4}
+.chapter-copy h2{margin:0;font:700 clamp(28px,3.4vw,42px)/1.1 var(--serif);letter-spacing:-.025em}
+.chapter-copy p{margin:9px 0 0;max-width:48em;font-size:13.5px;line-height:1.8;color:var(--ink-soft)}
+.chapter-note{margin:8px 0 0;font-size:11.5px;line-height:1.7;color:var(--red)}
+.chapter-count{font-size:10px;letter-spacing:.1em;color:var(--muted);padding-top:8px;font-variant-numeric:tabular-nums}
+
+.rows{margin-top:2px}
+.row{display:grid;grid-template-columns:3.1rem minmax(0,1fr) 7rem;gap:clamp(12px,2.2vw,30px);align-items:center;padding:18px 0;border-bottom:1px solid var(--line-soft);transition:background-color .2s ease}
+.row:not(.is-plain){cursor:pointer}
+.row:not(.is-plain):hover{background:var(--paper-deep)}
+.row.is-plain{grid-template-columns:3.1rem minmax(0,1fr);background:transparent;padding:12px 0}
+.row-no{font:400 10px/1.7 var(--sans);letter-spacing:.08em;color:var(--muted);align-self:start;padding-top:5px;font-variant-numeric:tabular-nums}
+.row-copy h3{margin:0;font:500 clamp(19px,1.55vw,23px)/1.3 var(--serif);letter-spacing:-.015em}
+.row-copy p{margin:5px 0 0;max-width:46em;font-size:12.5px;line-height:1.75;color:var(--muted)}
+.row.is-plain .row-copy p{color:var(--muted)}
+.row-tag{display:inline-flex;align-items:center;gap:7px;margin-top:8px;font-size:9.5px;letter-spacing:.1em;color:var(--muted)}
+.row-tag::before{content:"";width:4px;height:4px;background:currentColor;display:block;flex:none}
+.tag-traditional{color:var(--red)}
+.tag-architecture{color:var(--ink-soft)}
+.tag-sound{color:var(--teal)}
+.tag-original{color:var(--muted)}
+.row-thumb{width:100%;height:auto;aspect-ratio:1;object-fit:contain;background:var(--paper-deep);border:1px solid var(--line-soft);padding:6px}
+.row.is-plain .row-thumb{display:none}
+
+/* 跟随预览 */
+.preview{position:fixed;left:0;top:0;width:300px;z-index:80;pointer-events:none;opacity:0;visibility:hidden;will-change:transform}
+.preview-frame{aspect-ratio:1;background:var(--paper);border:1px solid var(--line);padding:10px;box-shadow:0 14px 34px rgba(29,38,82,.12)}
+.preview-frame img{width:100%;height:100%;object-fit:contain}
+.preview-cap{display:flex;align-items:baseline;gap:8px;padding-top:8px;font-size:10px;letter-spacing:.06em;color:var(--muted);background:var(--paper);padding:8px 2px 0}
+.preview-cap b{font-weight:500;color:var(--ink);font-family:var(--serif);font-size:12px}
+.preview-cap .pno{color:var(--red);font-variant-numeric:tabular-nums}
+
+/* 详情弹窗 */
+dialog#detail{width:min(1040px,92vw);max-height:88vh;padding:0;border:0;background:var(--paper);color:var(--ink);box-shadow:0 30px 80px rgba(10,14,28,.36)}
+dialog#detail::backdrop{background:rgba(16,21,38,.58)}
+.detail-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);min-height:min(620px,82vh)}
+.detail-figure{margin:0;background:var(--paper-deep);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(20px,3.4vw,44px);min-height:320px}
+.detail-figure img{max-width:100%;max-height:min(56vh,520px);object-fit:contain;background:var(--paper);border:1px solid var(--line-soft)}
+.detail-figure figcaption{margin-top:12px;font-size:10px;letter-spacing:.08em;color:var(--muted);text-align:center}
+.detail-copy{padding:clamp(24px,3.6vw,52px);display:flex;flex-direction:column;justify-content:center;position:relative}
+.detail-kicker{margin:0 0 10px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.detail-copy h2{margin:0;font:700 clamp(30px,3.4vw,44px)/1.1 var(--serif);letter-spacing:-.03em}
+.detail-tag{margin:12px 0 0;font-size:10px;letter-spacing:.12em;color:var(--muted)}\n.detail-tag.tag-traditional{color:var(--red)}\n.detail-tag.tag-architecture{color:var(--ink-soft)}\n.detail-tag.tag-sound{color:var(--teal)}\n.detail-tag.tag-original{color:var(--muted)}
+.detail-desc{margin:18px 0 0;font-size:14px;line-height:1.9;color:var(--ink-soft)}
+.detail-source{margin:16px 0 0;font-size:11px;line-height:1.7;color:var(--muted)}
+.detail-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line-soft);font-size:11.5px}
+.detail-links a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+.detail-close{position:absolute;right:16px;top:16px;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:var(--paper);cursor:pointer;font-size:18px;line-height:1;z-index:2}
+.detail-close:hover{background:var(--ink);color:var(--paper)}
+html.is-dialog{overflow:hidden}
+.chapter.is-target .chapter-head{border-bottom-color:var(--red)}
+.chapter.is-target .chapter-no{color:var(--ink)}
+
+/* 页脚 */
+.foot{max-width:1240px;margin:0 auto;padding:28px var(--pad) 44px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;font-size:10.5px;letter-spacing:.04em;color:var(--muted)}
+.foot a{text-decoration:none;border-bottom:1px solid var(--line-soft)}
+
+/* 响应式 */
+@media (max-width:900px){
+  .masthead-grid{grid-template-columns:1fr;align-items:start}
+  .chapter-head{grid-template-columns:4.4rem minmax(0,1fr)}
+  .chapter-count{grid-column:2;padding-top:0;justify-self:end}
+  .row{grid-template-columns:2.4rem minmax(0,1fr) 5.6rem;gap:14px}
+  .row.is-plain{grid-template-columns:2.4rem minmax(0,1fr)}
+  .detail-grid{grid-template-columns:1fr;min-height:0}
+  .detail-figure{min-height:0;padding:18px}
+  .detail-figure img{max-height:38vh}
+  .detail-copy{padding:24px}
+}
+@media (max-width:640px){
+  .topline{font-size:10px}
+  .toolbar-row{flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0 6px}
+  .filters{width:100%;gap:20px}
+  .filter{font-size:11px}
+  .count{font-size:9px}
+  .chapters{gap:18px}
+  .chapter-head{grid-template-columns:1fr;gap:8px}
+  .chapter-id{flex-direction:row;align-items:baseline;gap:10px}
+  .chapter-no{font-size:30px}
+  .chapter-en{font-size:8px}
+  .chapter-copy h2{font-size:28px}
+  .chapter-copy p{font-size:12.5px}
+  .chapter-count{grid-column:1;justify-self:start;font-size:9px}
+  .row{grid-template-columns:1.8rem minmax(0,1fr) 4.6rem;gap:10px;padding:14px 0}
+  .row.is-plain{grid-template-columns:1.8rem minmax(0,1fr)}
+  .row-copy h3{font-size:18px}
+  .row-copy p{font-size:11.8px;line-height:1.7}
+  .row-thumb{padding:4px}
+  .preview{display:none}
+  .foot{flex-direction:column;gap:8px}
+  .detail-links{gap:14px}
+}
+@media (hover:none){
+  .preview{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .preview{display:none}
+}
+@media print{
+  .toolbar,.preview,.detail-close,.foot{display:none!important}
+  .masthead{padding-top:0}
+  .chapter{break-inside:avoid}
+  .row{break-inside:avoid}
+  .row-thumb{width:80px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">跳到内容</a>
+
+<header class="masthead">
+  <div class="topline">
+    <a class="back" id="backLink" href="themes/01-潇贺古道.html">← 返回专题页</a>
+    <span class="site">潇贺古道有声文化数据库</span>
+  </div>
+  <div class="masthead-grid">
+    <h1>图案详情</h1>
+    <div class="masthead-copy">
+      <p class="lead">六章里的每一层纹样，按来源分成四类。把鼠标放到名字上，图会跟着走；点开看它落在哪。</p>
+      <p class="meta"><b>六章</b> · 31 层 · <b>四类</b>来源</p>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar" id="toolbar">
+  <div class="toolbar-inner">
+    <div class="toolbar-row">
+      <div class="filters" role="group" aria-label="按来源筛选">
+      <button class="filter" type="button" data-filter="all" aria-pressed="true">全部<span class="n">31</span></button>
+      <button class="filter" type="button" data-filter="traditional" aria-pressed="false">传统纹样<span class="n">21</span></button>
+      <button class="filter" type="button" data-filter="architecture" aria-pressed="false">建筑与器物<span class="n">6</span></button>
+      <button class="filter" type="button" data-filter="sound" aria-pressed="false">声音与结构<span class="n">2</span></button>
+      <button class="filter" type="button" data-filter="original" aria-pressed="false">原创装饰<span class="n">2</span></button>
+      </div>
+      <p class="count" id="count" aria-live="polite">显示 31 / 31</p>
+    </div>
+    <nav class="chapters" aria-label="六章">
+      <a href="#nushu" aria-current="true">女书</a>
+      <a href="#butterfly">蝴蝶歌</a>
+      <a href="#drum">长鼓舞</a>
+      <a href="#bridge">富川风雨桥</a>
+      <a href="#panwang">盘王大歌</a>
+      <a href="#brocade">瑶族织锦</a>
+    </nav>
+  </div>
+</div>
+
+<p class="plain-note"><b>普通装饰图</b>：标着这四个字的两层，是画面里的填充，不配图，也不作解释。<br>缩略图的纸底或墨底按图层明度自动选，只为看清线条，不是纹样底色。</p>
+
+<main id="main">
+<section class="chapter" id="nushu" data-theme="nushu" data-page="themes/02-女书.html">
+  <header class="chapter-head">
+    <div class="chapter-id"><span class="chapter-no">壹</span><span class="chapter-en">NÜSHU</span></div>
+    <div class="chapter-copy"><h2>女书</h2><p>女书的纹样几乎都围绕三朝书：书页正中一枚八角花，四角压红纸剪花，连装订线也成了边框。</p></div>
+    <span class="chapter-count">4 层</span>
+  </header>
+  <div class="rows">
+    <article class="row" data-cat="traditional" data-key="nushu" data-no="02" data-name="八角花" data-theme="女书" data-desc="八角八边的连弧框，芯部可换花鸟、莲花或蝶纹。传统三朝书里它落在书页正中；这里被放大成整页的框。" data-source="参考：三朝书八角花原件、张曼华《三朝书》" data-page="themes/02-女书.html" data-img="assets/theme-pattern/thumbs/nushu-02.webp" data-full="assets/theme-pattern/display/nushu-02.webp" role="button" tabindex="0" aria-label="打开 八角花 的说明">
+  <span class="row-no">02</span>
+  <div class="row-copy">
+    <h3>八角花</h3>
+    <p>八角八边的连弧框，芯部可换花鸟、莲花或蝶纹。传统三朝书里它落在书页正中；这里被放大成整页的框。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/nushu-02.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="nushu" data-no="03" data-name="回型装订" data-theme="女书" data-desc="三朝书七眼钉走出的回字形线迹。原本是装订结构，被借到画面里当外框。" data-source="参考：张曼华《三朝书》装订线" data-page="themes/02-女书.html" data-img="assets/theme-pattern/thumbs/nushu-03.webp" data-full="assets/theme-pattern/display/nushu-03.webp" role="button" tabindex="0" aria-label="打开 回型装订 的说明">
+  <span class="row-no">03</span>
+  <div class="row-copy">
+    <h3>回型装订</h3>
+    <p>三朝书七眼钉走出的回字形线迹。原本是装订结构，被借到画面里当外框。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/nushu-03.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="nushu" data-no="04" data-name="角落花" data-theme="女书" data-desc="取牡丹花头的团花式角饰，四角对称，压住画面的边。" data-source="参考：三朝书边角红纸剪花" data-page="themes/02-女书.html" data-img="assets/theme-pattern/thumbs/nushu-04.webp" data-full="assets/theme-pattern/display/nushu-04.webp" role="button" tabindex="0" aria-label="打开 角落花 的说明">
+  <span class="row-no">04</span>
+  <div class="row-copy">
+    <h3>角落花</h3>
+    <p>取牡丹花头的团花式角饰，四角对称，压住画面的边。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/nushu-04.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="nushu" data-no="07" data-name="中心" data-theme="女书" data-desc="盘长结与莲花叠在内芯，做整个八角花的收束点。" data-source="参考：女书八角花内芯题材" data-page="themes/02-女书.html" data-img="assets/theme-pattern/thumbs/nushu-07.webp" data-full="assets/theme-pattern/display/nushu-07.webp" role="button" tabindex="0" aria-label="打开 中心 的说明">
+  <span class="row-no">07</span>
+  <div class="row-copy">
+    <h3>中心</h3>
+    <p>盘长结与莲花叠在内芯，做整个八角花的收束点。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/nushu-07.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+  </div>
+</section>
+
+<section class="chapter" id="butterfly" data-theme="butterfly" data-page="themes/03-蝴蝶歌.html">
+  <header class="chapter-head">
+    <div class="chapter-id"><span class="chapter-no">贰</span><span class="chapter-en">BUTTERFLY SONG</span></div>
+    <div class="chapter-copy"><h2>蝴蝶歌</h2><p>蝴蝶歌是声音，不是纹样。这里的层多从二声部的同起同收、富川瑶锦的半抽象蝴蝶借形。</p></div>
+    <span class="chapter-count">5 层</span>
+  </header>
+  <div class="rows">
+    <article class="row" data-cat="traditional" data-key="butterfly" data-no="02" data-name="最外框" data-theme="蝴蝶歌" data-desc="取样自一幅四向几何团花：回纹勾角、四组双叶、四个红三角。它不是蝴蝶，是边框的骨架。" data-source="取样：四向几何团花（回纹勾角）" data-page="themes/03-蝴蝶歌.html" data-img="assets/theme-pattern/thumbs/butterfly-02.webp" data-full="assets/theme-pattern/display/butterfly-02.webp" role="button" tabindex="0" aria-label="打开 最外框 的说明">
+  <span class="row-no">02</span>
+  <div class="row-copy">
+    <h3>最外框</h3>
+    <p>取样自一幅四向几何团花：回纹勾角、四组双叶、四个红三角。它不是蝴蝶，是边框的骨架。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/butterfly-02.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="butterfly" data-no="03" data-name="外框红花" data-theme="蝴蝶歌" data-desc="瑶族大八角花的几何变体。红花落在四角，给边框打节奏。" data-source="参考：瑶族大八角花形纹" data-page="themes/03-蝴蝶歌.html" data-img="assets/theme-pattern/thumbs/butterfly-03.webp" data-full="assets/theme-pattern/display/butterfly-03.webp" role="button" tabindex="0" aria-label="打开 外框红花 的说明">
+  <span class="row-no">03</span>
+  <div class="row-copy">
+    <h3>外框红花</h3>
+    <p>瑶族大八角花的几何变体。红花落在四角，给边框打节奏。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/butterfly-03.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="sound" data-key="butterfly" data-no="04/05" data-name="大小波形" data-theme="蝴蝶歌" data-desc="二声部同起同收：长句画成大波，短句画成小波，两条线在句尾合回同度。" data-source="参考：蝴蝶歌二声部（同起同收）" data-page="themes/03-蝴蝶歌.html" data-img="assets/theme-pattern/thumbs/butterfly-waves.webp" data-full="assets/theme-pattern/display/butterfly-waves.webp" role="button" tabindex="0" aria-label="打开 大小波形 的说明">
+  <span class="row-no">04/05</span>
+  <div class="row-copy">
+    <h3>大小波形</h3>
+    <p>二声部同起同收：长句画成大波，短句画成小波，两条线在句尾合回同度。</p>
+    <span class="row-tag tag-sound">声音与结构</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/butterfly-waves.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="butterfly" data-no="06" data-name="蝴蝶" data-theme="蝴蝶歌" data-desc="瑶族蝴蝶纹的半抽象写法，四翅用直线折面，翅内收着声部线。" data-source="参考：瑶族蝴蝶纹、富川瑶锦半抽象蝴蝶" data-page="themes/03-蝴蝶歌.html" data-img="assets/theme-pattern/thumbs/butterfly-06.webp" data-full="assets/theme-pattern/display/butterfly-06.webp" role="button" tabindex="0" aria-label="打开 蝴蝶 的说明">
+  <span class="row-no">06</span>
+  <div class="row-copy">
+    <h3>蝴蝶</h3>
+    <p>瑶族蝴蝶纹的半抽象写法，四翅用直线折面，翅内收着声部线。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/butterfly-06.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="butterfly" data-no="07" data-name="内框" data-theme="蝴蝶歌" data-desc="蝶翅与花头一隔一地排开，把中心的声部线围住。" data-source="参考：蝴蝶纹与花卉纹" data-page="themes/03-蝴蝶歌.html" data-img="assets/theme-pattern/thumbs/butterfly-07.webp" data-full="assets/theme-pattern/display/butterfly-07.webp" role="button" tabindex="0" aria-label="打开 内框 的说明">
+  <span class="row-no">07</span>
+  <div class="row-copy">
+    <h3>内框</h3>
+    <p>蝶翅与花头一隔一地排开，把中心的声部线围住。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/butterfly-07.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+  </div>
+</section>
+
+<section class="chapter" id="drum" data-theme="drum" data-page="themes/04-长鼓舞.html">
+  <header class="chapter-head">
+    <div class="chapter-id"><span class="chapter-no">叁</span><span class="chapter-en">LONG DRUM DANCE</span></div>
+    <div class="chapter-copy"><h2>长鼓舞</h2><p>长鼓是器物。鼓身、鼓面、鼓点各有各的形，画面把三者叠在一个 X 上。</p></div>
+    <span class="chapter-count">6 层</span>
+  </header>
+  <div class="rows">
+    <article class="row is-plain" data-cat="original" data-key="drum" data-no="03" data-name="外框方块" data-theme="长鼓舞" data-desc="普通装饰图，不作解释。" data-source="" data-page="themes/04-长鼓舞.html" data-plain="1">
+  <span class="row-no">03</span>
+  <div class="row-copy">
+    <h3>外框方块</h3>
+    <p>普通装饰图，不作解释。</p>
+    <span class="row-tag tag-original">原创装饰</span>
+  </div>
+  
+</article>
+    <article class="row is-plain" data-cat="original" data-key="drum" data-no="05" data-name="内框图形" data-theme="长鼓舞" data-desc="普通装饰图，不作解释。" data-source="" data-page="themes/04-长鼓舞.html" data-plain="1">
+  <span class="row-no">05</span>
+  <div class="row-copy">
+    <h3>内框图形</h3>
+    <p>普通装饰图，不作解释。</p>
+    <span class="row-tag tag-original">原创装饰</span>
+  </div>
+  
+</article>
+    <article class="row" data-cat="sound" data-key="drum" data-no="06" data-name="三框" data-theme="长鼓舞" data-desc="三重方框一层层收进，框距按鼓点分组，像拍打时一次比一次紧。" data-source="自创：按鼓点分组" data-page="themes/04-长鼓舞.html" data-img="assets/theme-pattern/thumbs/drum-06.webp" data-full="assets/theme-pattern/display/drum-06.webp" role="button" tabindex="0" aria-label="打开 三框 的说明">
+  <span class="row-no">06</span>
+  <div class="row-copy">
+    <h3>三框</h3>
+    <p>三重方框一层层收进，框距按鼓点分组，像拍打时一次比一次紧。</p>
+    <span class="row-tag tag-sound">声音与结构</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/drum-06.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="drum" data-no="07" data-name="内框花纹" data-theme="长鼓舞" data-desc="山形锯齿与菱形回钩一正一反地连续，借瑶锦花边的横向节奏。" data-source="参考：瑶锦二方连续（锯齿+菱形回纹）" data-page="themes/04-长鼓舞.html" data-img="assets/theme-pattern/thumbs/drum-07.webp" data-full="assets/theme-pattern/display/drum-07.webp" role="button" tabindex="0" aria-label="打开 内框花纹 的说明">
+  <span class="row-no">07</span>
+  <div class="row-copy">
+    <h3>内框花纹</h3>
+    <p>山形锯齿与菱形回钩一正一反地连续，借瑶锦花边的横向节奏。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/drum-07.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="drum" data-no="08" data-name="鼓花" data-theme="长鼓舞" data-desc="八角花与八瓣花叠在鼓面中心，鼓身交叉后形成旋转感。" data-source="参考：瑶族八角花/八瓣花" data-page="themes/04-长鼓舞.html" data-img="assets/theme-pattern/thumbs/drum-08.webp" data-full="assets/theme-pattern/display/drum-08.webp" role="button" tabindex="0" aria-label="打开 鼓花 的说明">
+  <span class="row-no">08</span>
+  <div class="row-copy">
+    <h3>鼓花</h3>
+    <p>八角花与八瓣花叠在鼓面中心，鼓身交叉后形成旋转感。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/drum-08.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="architecture" data-key="drum" data-no="09" data-name="鼓身" data-theme="长鼓舞" data-desc="两只细腰鼓交叉成 X，保留鼓皮、腰线和彩绘的分段。" data-source="参考：长鼓鼓身彩绘" data-page="themes/04-长鼓舞.html" data-img="assets/theme-pattern/thumbs/drum-09.webp" data-full="assets/theme-pattern/display/drum-09.webp" role="button" tabindex="0" aria-label="打开 鼓身 的说明">
+  <span class="row-no">09</span>
+  <div class="row-copy">
+    <h3>鼓身</h3>
+    <p>两只细腰鼓交叉成 X，保留鼓皮、腰线和彩绘的分段。</p>
+    <span class="row-tag tag-architecture">建筑与器物</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/drum-09.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+  </div>
+</section>
+
+<section class="chapter" id="bridge" data-theme="bridge" data-page="themes/05-风雨桥.html">
+  <header class="chapter-head">
+    <div class="chapter-id"><span class="chapter-no">肆</span><span class="chapter-en">WIND-RAIN BRIDGE</span></div>
+    <div class="chapter-copy"><h2>富川风雨桥</h2><p>风雨桥是建筑。窗棂、瓦檐、翘角被拆成边饰，桥亭只留在中心。</p></div>
+    <span class="chapter-count">5 层</span>
+  </header>
+  <div class="rows">
+    <article class="row" data-cat="architecture" data-key="bridge" data-no="03" data-name="外框花纹" data-theme="富川风雨桥" data-desc="桥廊木窗的格心，方框套方框，像从窗里看出去。" data-source="参考：富川风雨桥木窗照片" data-page="themes/05-风雨桥.html" data-img="assets/theme-pattern/thumbs/bridge-03.webp" data-full="assets/theme-pattern/display/bridge-03.webp" role="button" tabindex="0" aria-label="打开 外框花纹 的说明">
+  <span class="row-no">03</span>
+  <div class="row-copy">
+    <h3>外框花纹</h3>
+    <p>桥廊木窗的格心，方框套方框，像从窗里看出去。</p>
+    <span class="row-tag tag-architecture">建筑与器物</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/bridge-03.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="architecture" data-key="bridge" data-no="04" data-name="内框花纹" data-theme="富川风雨桥" data-desc="窗棂的十字格与井字格密排，做出桥廊的进深。" data-source="参考：富川风雨桥木窗照片" data-page="themes/05-风雨桥.html" data-img="assets/theme-pattern/thumbs/bridge-04.webp" data-full="assets/theme-pattern/display/bridge-04.webp" role="button" tabindex="0" aria-label="打开 内框花纹 的说明">
+  <span class="row-no">04</span>
+  <div class="row-copy">
+    <h3>内框花纹</h3>
+    <p>窗棂的十字格与井字格密排，做出桥廊的进深。</p>
+    <span class="row-tag tag-architecture">建筑与器物</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/bridge-04.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="architecture" data-key="bridge" data-no="05" data-name="最外框花纹" data-theme="富川风雨桥" data-desc="檐口瓦片的正负形，一排压一排，收住最外圈。" data-source="参考：风雨桥瓦檐照片" data-page="themes/05-风雨桥.html" data-img="assets/theme-pattern/thumbs/bridge-05.webp" data-full="assets/theme-pattern/display/bridge-05.webp" role="button" tabindex="0" aria-label="打开 最外框花纹 的说明">
+  <span class="row-no">05</span>
+  <div class="row-copy">
+    <h3>最外框花纹</h3>
+    <p>檐口瓦片的正负形，一排压一排，收住最外圈。</p>
+    <span class="row-tag tag-architecture">建筑与器物</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/bridge-05.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="architecture" data-key="bridge" data-no="06" data-name="内框房檐" data-theme="富川风雨桥" data-desc="四角翘起的屋檐，正负形各取一半，拼成四片飞檐。" data-source="参考：风雨桥翼角照片" data-page="themes/05-风雨桥.html" data-img="assets/theme-pattern/thumbs/bridge-06.webp" data-full="assets/theme-pattern/display/bridge-06.webp" role="button" tabindex="0" aria-label="打开 内框房檐 的说明">
+  <span class="row-no">06</span>
+  <div class="row-copy">
+    <h3>内框房檐</h3>
+    <p>四角翘起的屋檐，正负形各取一半，拼成四片飞檐。</p>
+    <span class="row-tag tag-architecture">建筑与器物</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/bridge-06.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="architecture" data-key="bridge" data-no="07" data-name="角落内框花纹" data-theme="富川风雨桥" data-desc="从房檐起翘和瓦当取形，做角部的填充纹。" data-source="参考：风雨桥翼角与瓦当" data-page="themes/05-风雨桥.html" data-img="assets/theme-pattern/thumbs/bridge-07.webp" data-full="assets/theme-pattern/display/bridge-07.webp" role="button" tabindex="0" aria-label="打开 角落内框花纹 的说明">
+  <span class="row-no">07</span>
+  <div class="row-copy">
+    <h3>角落内框花纹</h3>
+    <p>从房檐起翘和瓦当取形，做角部的填充纹。</p>
+    <span class="row-tag tag-architecture">建筑与器物</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/bridge-07.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+  </div>
+</section>
+
+<section class="chapter" id="panwang" data-theme="panwang" data-page="themes/06-盘王大歌.html">
+  <header class="chapter-head">
+    <div class="chapter-id"><span class="chapter-no">伍</span><span class="chapter-en">PANWANG DA GE</span></div>
+    <div class="chapter-copy"><h2>盘王大歌</h2><p>盘王大歌是歌书。页框、七任曲的环、盘王印的方心，组成一套可读的版式。</p><p class="chapter-note">盘王印的图证主要在连南、乳源；这里只作形制参照，不写成富川本地实物。</p></div>
+    <span class="chapter-count">5 层</span>
+  </header>
+  <div class="rows">
+    <article class="row" data-cat="traditional" data-key="panwang" data-no="02" data-name="内框花纹" data-theme="盘王大歌" data-desc="盘王印外圈的粗细线，一粗一细交替，像朱文与白文的印边。" data-source="参考：盘王印外圈线" data-page="themes/06-盘王大歌.html" data-img="assets/theme-pattern/thumbs/panwang-02.webp" data-full="assets/theme-pattern/display/panwang-02.webp" role="button" tabindex="0" aria-label="打开 内框花纹 的说明">
+  <span class="row-no">02</span>
+  <div class="row-copy">
+    <h3>内框花纹</h3>
+    <p>盘王印外圈的粗细线，一粗一细交替，像朱文与白文的印边。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/panwang-02.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="panwang" data-no="03" data-name="外框角落花纹" data-theme="盘王大歌" data-desc="盘王印章型的角块，四角压住，给页框一个落印的位置。" data-source="参考：盘王印章形纹" data-page="themes/06-盘王大歌.html" data-img="assets/theme-pattern/thumbs/panwang-03.webp" data-full="assets/theme-pattern/display/panwang-03.webp" role="button" tabindex="0" aria-label="打开 外框角落花纹 的说明">
+  <span class="row-no">03</span>
+  <div class="row-copy">
+    <h3>外框角落花纹</h3>
+    <p>盘王印章型的角块，四角压住，给页框一个落印的位置。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/panwang-03.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="panwang" data-no="04" data-name="外框花纹" data-theme="盘王大歌" data-desc="盘王经典纹样的横向带，三角与联珠交替，围住七任曲的环。" data-source="参考：盘王经典纹样" data-page="themes/06-盘王大歌.html" data-img="assets/theme-pattern/thumbs/panwang-04.webp" data-full="assets/theme-pattern/display/panwang-04.webp" role="button" tabindex="0" aria-label="打开 外框花纹 的说明">
+  <span class="row-no">04</span>
+  <div class="row-copy">
+    <h3>外框花纹</h3>
+    <p>盘王经典纹样的横向带，三角与联珠交替，围住七任曲的环。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/panwang-04.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="panwang" data-no="05" data-name="内框花" data-theme="盘王大歌" data-desc="大八角花形，八出放射，是盘王印里最常见的花心。" data-source="参考：大八角花形纹" data-page="themes/06-盘王大歌.html" data-img="assets/theme-pattern/thumbs/panwang-05.webp" data-full="assets/theme-pattern/display/panwang-05.webp" role="button" tabindex="0" aria-label="打开 内框花 的说明">
+  <span class="row-no">05</span>
+  <div class="row-copy">
+    <h3>内框花</h3>
+    <p>大八角花形，八出放射，是盘王印里最常见的花心。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/panwang-05.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="panwang" data-no="06" data-name="中心" data-theme="盘王大歌" data-desc="方心外方内八角，中心一点收住。形制参照连南、乳源的盘王印，不作本地实物。" data-source="参考：盘王印（连南/乳源）" data-page="themes/06-盘王大歌.html" data-img="assets/theme-pattern/thumbs/panwang-06.webp" data-full="assets/theme-pattern/display/panwang-06.webp" role="button" tabindex="0" aria-label="打开 中心 的说明">
+  <span class="row-no">06</span>
+  <div class="row-copy">
+    <h3>中心</h3>
+    <p>方心外方内八角，中心一点收住。形制参照连南、乳源的盘王印，不作本地实物。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/panwang-06.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+  </div>
+</section>
+
+<section class="chapter" id="brocade" data-theme="brocade" data-page="themes/07-富川织锦.html">
+  <header class="chapter-head">
+    <div class="chapter-id"><span class="chapter-no">陆</span><span class="chapter-en">YAO BROCADE</span></div>
+    <div class="chapter-copy"><h2>瑶族织锦</h2><p>织锦是经纬。万字、菱格、锯齿、挑花都按经线显花的逻辑排。</p></div>
+    <span class="chapter-count">6 层</span>
+  </header>
+  <div class="rows">
+    <article class="row" data-cat="traditional" data-key="brocade" data-no="02" data-name="内框花纹" data-theme="瑶族织锦" data-desc="据织锦边饰重画的折线带，锯齿与小花交替。" data-source="参考：富川瑶锦边饰" data-page="themes/07-富川织锦.html" data-img="assets/theme-pattern/thumbs/brocade-02.webp" data-full="assets/theme-pattern/display/brocade-02.webp" role="button" tabindex="0" aria-label="打开 内框花纹 的说明">
+  <span class="row-no">02</span>
+  <div class="row-copy">
+    <h3>内框花纹</h3>
+    <p>据织锦边饰重画的折线带，锯齿与小花交替。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/brocade-02.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="brocade" data-no="03" data-name="内框中间花纹" data-theme="瑶族织锦" data-desc="菱形花按八出排开，像经线显花后的放射。" data-source="参考：瑶锦菱形花" data-page="themes/07-富川织锦.html" data-img="assets/theme-pattern/thumbs/brocade-03.webp" data-full="assets/theme-pattern/display/brocade-03.webp" role="button" tabindex="0" aria-label="打开 内框中间花纹 的说明">
+  <span class="row-no">03</span>
+  <div class="row-copy">
+    <h3>内框中间花纹</h3>
+    <p>菱形花按八出排开，像经线显花后的放射。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/brocade-03.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="brocade" data-no="04" data-name="中心" data-theme="瑶族织锦" data-desc="白框挑花里的卍字与十字变体，是织锦的中心花。中心直接用织好的挑花，不再另起一版。" data-source="参考：瑶锦挑花中心" data-page="themes/07-富川织锦.html" data-img="assets/theme-pattern/thumbs/brocade-04.webp" data-full="assets/theme-pattern/display/brocade-04.webp" role="button" tabindex="0" aria-label="打开 中心 的说明">
+  <span class="row-no">04</span>
+  <div class="row-copy">
+    <h3>中心</h3>
+    <p>白框挑花里的卍字与十字变体，是织锦的中心花。中心直接用织好的挑花，不再另起一版。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/brocade-04.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="brocade" data-no="05" data-name="内框左右花纹" data-theme="瑶族织锦" data-desc="卍字与回纹的连续带，左右各一条，像织片的经向边。" data-source="参考：瑶锦万字连续纹" data-page="themes/07-富川织锦.html" data-img="assets/theme-pattern/thumbs/brocade-05.webp" data-full="assets/theme-pattern/display/brocade-05.webp" role="button" tabindex="0" aria-label="打开 内框左右花纹 的说明">
+  <span class="row-no">05</span>
+  <div class="row-copy">
+    <h3>内框左右花纹</h3>
+    <p>卍字与回纹的连续带，左右各一条，像织片的经向边。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/brocade-05.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="brocade" data-no="06" data-name="外框上下花纹" data-theme="瑶族织锦" data-desc="万字与菱格一上一下压边，是织锦里常见的收口。" data-source="参考：瑶锦万字+菱格" data-page="themes/07-富川织锦.html" data-img="assets/theme-pattern/thumbs/brocade-06.webp" data-full="assets/theme-pattern/display/brocade-06.webp" role="button" tabindex="0" aria-label="打开 外框上下花纹 的说明">
+  <span class="row-no">06</span>
+  <div class="row-copy">
+    <h3>外框上下花纹</h3>
+    <p>万字与菱格一上一下压边，是织锦里常见的收口。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/brocade-06.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+    <article class="row" data-cat="traditional" data-key="brocade" data-no="08" data-name="内框角落花纹" data-theme="瑶族织锦" data-desc="角落的小块嵌色方格，不单独成纹，只负责收角。" data-source="参考：瑶锦角落嵌色" data-page="themes/07-富川织锦.html" data-img="assets/theme-pattern/thumbs/brocade-08.webp" data-full="assets/theme-pattern/display/brocade-08.webp" role="button" tabindex="0" aria-label="打开 内框角落花纹 的说明">
+  <span class="row-no">08</span>
+  <div class="row-copy">
+    <h3>内框角落花纹</h3>
+    <p>角落的小块嵌色方格，不单独成纹，只负责收角。</p>
+    <span class="row-tag tag-traditional">传统纹样</span>
+  </div>
+  <img class="row-thumb" src="assets/theme-pattern/thumbs/brocade-08.webp" alt="" width="420" height="420" loading="eager" decoding="async">
+</article>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <p>内容据六章图层与田野笔记整理；分类只说明来源，不判断价值。</p>
+  <p><a href="themes/01-潇贺古道.html">回到潇贺古道</a> · <a href="motifs-layers.html">看整幅分层</a> · <a href="https://demos.gsap.com/demo/cursor-tracking-image-preview/" target="_blank" rel="noopener">动效参考</a></p>
+</footer>
+
+<div class="preview" id="preview" aria-hidden="true">
+  <div class="preview-frame"><img id="previewImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt=""></div>
+  <div class="preview-cap"><span class="pno" id="previewNo"></span><b id="previewName"></b><span id="previewTheme"></span></div>
+</div>
+
+<dialog id="detail" aria-labelledby="detailTitle">
+  <button class="detail-close" id="detailClose" type="button" aria-label="关闭">×</button>
+  <div class="detail-grid">
+    <figure class="detail-figure">
+      <img id="detailImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="">
+      <figcaption id="detailCap"></figcaption>
+    </figure>
+    <div class="detail-copy">
+      <p class="detail-kicker" id="detailKicker"></p>
+      <h2 id="detailTitle"></h2>
+      <p class="detail-tag" id="detailTag"></p>
+      <p class="detail-desc" id="detailDesc"></p>
+      <p class="detail-source" id="detailSource"></p>
+      <div class="detail-links">
+        <a id="detailTheme" href="#">回到专题</a>
+        <a id="detailLayers" href="motifs-layers.html">整幅分层</a>
+        <a id="detailFull" href="#" target="_blank" rel="noopener">看大图</a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script src="assets/js/gsap.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.row'));
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('.chapter'));
+  var filters = Array.prototype.slice.call(document.querySelectorAll('.filter'));
+  var countEl = document.getElementById('count');
+  var preview = document.getElementById('preview');
+  var pImg = document.getElementById('previewImg');
+  var pNo = document.getElementById('previewNo');
+  var pName = document.getElementById('previewName');
+  var pTheme = document.getElementById('previewTheme');
+  var detail = document.getElementById('detail');
+  var dImg = document.getElementById('detailImg');
+  var dCap = document.getElementById('detailCap');
+  var dKicker = document.getElementById('detailKicker');
+  var dTitle = document.getElementById('detailTitle');
+  var dTag = document.getElementById('detailTag');
+  var dDesc = document.getElementById('detailDesc');
+  var dSource = document.getElementById('detailSource');
+  var dTheme = document.getElementById('detailTheme');
+  var dLayers = document.getElementById('detailLayers');
+  var dFull = document.getElementById('detailFull');
+  var dClose = document.getElementById('detailClose');
+  var backLink = document.getElementById('backLink');
+  var lastFocus = null;
+  var total = rows.length;
+
+  var CAT = {
+    traditional: '传统纹样',
+    architecture: '建筑与器物',
+    sound: '声音与结构',
+    original: '原创装饰'
+  };
+
+  /* ── 筛选 ────────────────────────────────────────────── */
+  function applyFilter(cat) {
+    var shown = 0;
+    rows.forEach(function (row) {
+      var on = cat === 'all' || row.dataset.cat === cat;
+      row.hidden = !on;
+      if (on) shown++;
+    });
+    chapters.forEach(function (sec) {
+      var secRows = Array.prototype.slice.call(sec.querySelectorAll('.row'));
+      var has = secRows.some(function (r) { return !r.hidden; });
+      sec.hidden = !has;
+      var n = secRows.filter(function (r) { return !r.hidden; }).length;
+      var tag = sec.querySelector('.chapter-count');
+      if (tag) tag.textContent = (cat === 'all') ? secRows.length + ' 层' : n + ' / ' + secRows.length + ' 层';
+    });
+    filters.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.filter === cat));
+    });
+    countEl.textContent = '显示 ' + shown + ' / ' + total;
+    hidePreview();
+    if (window.gsap && !reduce) {
+      var vis = rows.filter(function (r) { return !r.hidden; });
+      gsap.fromTo(vis, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: .34, stagger: .012, ease: 'power2.out', overwrite: true });
+    }
+  }
+  filters.forEach(function (b) {
+    b.addEventListener('click', function () { applyFilter(b.dataset.filter); });
+  });
+
+  /* ── 跟随预览 ────────────────────────────────────────── */
+  var gx = null, gy = null, gr = null;
+  var px = 0, py = 0, lastX = 0;
+  if (window.gsap && fine && !reduce) {
+    gx = gsap.quickTo(preview, 'x', { duration: .48, ease: 'power3' });
+    gy = gsap.quickTo(preview, 'y', { duration: .48, ease: 'power3' });
+    gr = gsap.quickTo(preview, 'rotate', { duration: .55, ease: 'power3' });
+    gsap.set(preview, { xPercent: 0, yPercent: 0, rotate: 0 });
+  }
+
+  function setPreview(row) {
+    pImg.src = row.dataset.img;
+    pImg.alt = row.dataset.theme + ' ' + row.dataset.name + ' 图层';
+    pNo.textContent = row.dataset.no;
+    pName.textContent = row.dataset.name;
+    pTheme.textContent = row.dataset.theme;
+  }
+
+  function movePreview(e) {
+    if (!preview.classList.contains('is-on')) return;
+    var w = 300, h = 340, pad = 24;
+    var x = e.clientX + pad;
+    var y = e.clientY + pad;
+    if (x + w > innerWidth - 12) x = e.clientX - w - pad;
+    if (y + h > innerHeight - 12) y = e.clientY - h - pad;
+    x = Math.max(12, x);
+    y = Math.max(12, y);
+    if (gx) { gx(x); gy(y); gr(Math.max(-4, Math.min(4, (e.clientX - lastX) * .08))); }
+    else { preview.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)'; }
+    lastX = e.clientX;
+  }
+
+  function showPreview(e) {
+    if (!fine || reduce) return;
+    preview.classList.add('is-on');
+    preview.style.visibility = 'visible';
+    if (window.gsap && gx) {
+      gsap.killTweensOf(preview);
+      gsap.fromTo(preview, { autoAlpha: 0, scale: .92, rotate: -2 },
+        { autoAlpha: 1, scale: 1, rotate: 0, duration: .38, ease: 'power3.out', overwrite: 'auto' });
+    } else {
+      preview.style.opacity = '1';
+    }
+    movePreview(e);
+  }
+
+  function hidePreview() {
+    preview.classList.remove('is-on');
+    if (window.gsap && gx && !reduce) {
+      gsap.to(preview, { autoAlpha: 0, scale: .94, duration: .2, ease: 'power2.in', overwrite: 'auto' });
+    } else {
+      preview.style.opacity = '0';
+      preview.style.visibility = 'hidden';
+    }
+  }
+
+  rows.forEach(function (row) {
+    if (row.dataset.plain === '1' || !row.dataset.img) return;
+    row.addEventListener('pointerenter', function (e) {
+      if (e.pointerType === 'touch') return;
+      setPreview(row);
+      showPreview(e);
+    });
+    row.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'touch') return;
+      movePreview(e);
+    });
+    row.addEventListener('pointerleave', hidePreview);
+  });
+  window.addEventListener('scroll', hidePreview, { passive: true });
+  window.addEventListener('blur', hidePreview);
+
+  /* ── 详情 ────────────────────────────────────────────── */
+  function openDetail(row) {
+    if (row.dataset.plain === '1') return;
+    lastFocus = row;
+    dImg.src = row.dataset.img;
+    dImg.alt = row.dataset.theme + ' ' + row.dataset.name + ' 图层';
+    dCap.textContent = row.dataset.theme + ' · 第 ' + row.dataset.no + ' 层';
+    dKicker.textContent = row.dataset.theme + ' · ' + row.dataset.no;
+    dTitle.textContent = row.dataset.name;
+    dTag.textContent = CAT[row.dataset.cat] || '';
+    dTag.className = 'detail-tag tag-' + row.dataset.cat;
+    dDesc.textContent = row.dataset.desc;
+    dSource.textContent = row.dataset.source ? '依据：' + row.dataset.source : '';
+    dTheme.textContent = '回到' + row.dataset.theme;
+    dTheme.href = row.dataset.page;
+    dLayers.href = 'motifs-layers.html?theme=' + row.dataset.key;
+    dFull.href = row.dataset.full || row.dataset.img;
+    dFull.hidden = !row.dataset.full;
+    hidePreview();
+    if (typeof detail.showModal === 'function') detail.showModal();
+    else detail.setAttribute('open', '');
+    document.documentElement.classList.add('is-dialog');
+    setTimeout(function () { dClose.focus(); }, 30);
+  }
+
+  rows.forEach(function (row) {
+    if (row.dataset.plain === '1') return;
+    row.addEventListener('click', function () { openDetail(row); });
+    row.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        openDetail(row);
+      }
+    });
+  });
+
+  function closeDetail() {
+    if (detail.open) detail.close();
+    else detail.removeAttribute('open');
+    document.documentElement.classList.remove('is-dialog');
+    if (lastFocus) { lastFocus.focus(); lastFocus = null; }
+  }
+  dClose.addEventListener('click', closeDetail);
+  detail.addEventListener('click', function (e) {
+    if (e.target === detail) closeDetail();
+  });
+  detail.addEventListener('close', function () {
+    document.documentElement.classList.remove('is-dialog');
+  });
+
+  /* ── 章导航高亮 ──────────────────────────────────────── */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.chapters a'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        navLinks.forEach(function (a) {
+          if (a.getAttribute('href') === '#' + en.target.id) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-38% 0px -52% 0px' });
+    chapters.forEach(function (s) { io.observe(s); });
+  }
+
+  /* ── 从专题页进来：定位到对应章 ──────────────────────── */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  var q = new URLSearchParams(location.search);
+  var keys = ['nushu', 'butterfly', 'drum', 'bridge', 'panwang', 'brocade'];
+  var key = q.get('theme');
+  if (!key) {
+    var n = parseInt(q.get('open'), 10);
+    if (!isNaN(n) && n >= 0 && n < keys.length) key = keys[n];
+  }
+  if (key) {
+    var sec = document.getElementById(key);
+    if (sec) {
+      backLink.href = sec.dataset.page;
+      var targetTimer = 0;
+      var jump = function () {
+        sec.scrollIntoView({ behavior: 'auto', block: 'start' });
+        sec.classList.add('is-target');
+        clearTimeout(targetTimer);
+        targetTimer = setTimeout(function () { sec.classList.remove('is-target'); }, 1800);
+      };
+      jump();
+      if (document.readyState === 'complete') jump();
+      else window.addEventListener('load', jump, { once: true });
+      setTimeout(jump, 300);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(jump);
+    }
+  }
+
+  /* ── 首屏轻入 ────────────────────────────────────────── */
+  if (window.gsap && !reduce) {
+    gsap.from('.masthead h1, .masthead-copy, .toolbar', {
+      autoAlpha: 0, y: 16, duration: .7, stagger: .08, ease: 'power3.out'
+    });
+  }
+})();
+</script>
+</body>
+</html>

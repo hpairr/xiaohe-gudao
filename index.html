@@ -1612,10 +1612,11 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
    但它是兄弟节点、不在字的祖先链上，不影响。）
    ============================================================ */
 .h6{
+  background:#F2EDE2!important;
   --t-size:min(19vw,38svh);      /* 题名定稿字号：四字合起来约 76vw；上限用 svh，宽屏才不至于被压小 */
   /* 2026-11-07：首屏换成视频抽帧——潇贺古道沿线河谷航拍。
      来源、裁切与调色见 ui/封面候选/README.md；换图只改这一行。 */
-  --h6-photo:url("assets/img/hero-cover-paint.jpg");
+  --h6-photo:none;   /* 2026-11-07：首屏改用 canvas 线条动画，不再用图片 */
   --dim:0;                       /* 起手不压暗：照片原样显示，滚动时才压到墨 */
   --veil:0;                      /* 纸从正中心铺开的进度 */
   --tscale:1.7;                  /* 题名缩放（走字号，不用 transform） */
@@ -1624,12 +1625,12 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   --rule:0;                      /* 落款上方那道细线（路） */
   --cue:1;                       /* 开场滑动提示 */
   position:relative;z-index:2;
-  height:280svh;min-height:280svh;
+  height:320svh;min-height:320svh;
   background:var(--paper);color:var(--ink);
 }
 .h6-pin{
   position:sticky;top:0;height:100svh;overflow:hidden;isolation:isolate;
-  background:var(--ink-2);
+  background:#F2EDE2!important;
 }
 /* 照片层与题名共用这一组参数 —— 单一来源，任何一边改动都会露字 */
 .h6-photo,.h6-title{
@@ -1639,9 +1640,21 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   background-repeat:no-repeat;
   background-attachment:fixed;
 }
-.h6-photo{position:absolute;inset:0;z-index:0}
+.h6-photo{display:none}
+
+/* ===== 2026-11-07 首屏动效：线条汇聚成字，末尾淡出、实心字淡入 ===== */
+.h6-foot{opacity:var(--gate,0)!important}
+.h6-lines{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block;
+  opacity:1}
+.h6-title{
+  color:var(--ink)!important;
+  -webkit-text-fill-color:var(--ink)!important;
+  background-image:none!important;
+  opacity:var(--gate,0);
+}
+.h6-title,.h6-typewrap,.h6-title::after{display:none!important}
 /* 一整层墨：只压照片，不压纸（纸在它上面） */
-.h6-dim{
+.h6-dim{display:none!important;
   position:absolute;inset:0;z-index:1;
   background:var(--ink-2);        /* 与站内深色底同一支墨，别另开一个黑 */
   opacity:var(--dim);
@@ -1650,7 +1663,7 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
 /* 一张纸从正中心按圆放大，直到盖满整屏 —— 与六章舞台同一种擦除：
    只写 transform（合成器属性），不做均匀淡化，也不用 clip-path（每帧重画整屏）。
    直径由 JS 按对角线算好写进 --veil-size，scale:1 时正好盖住四角。 */
-.h6-veil{
+.h6-veil{display:none!important;
   position:absolute;z-index:2;left:50%;top:50%;
   width:var(--veil-size,150vmax);height:var(--veil-size,150vmax);
   margin:calc(var(--veil-size,150vmax) / -2) 0 0 calc(var(--veil-size,150vmax) / -2);
@@ -1843,12 +1856,10 @@ html.no-js .route .path-water{opacity:.62}
   <!-- ========== 00 首屏：一整张风景 · 压暗到墨，再化进纸里 ========== -->
   <section class="h6" id="hero" data-tone="dark" aria-label="潇贺古道">
     <div class="h6-pin">
+      <canvas class="h6-lines" aria-hidden="true"></canvas>
       <div class="h6-photo" aria-hidden="true"></div>
       <div class="h6-dim" aria-hidden="true"></div>
       <div class="h6-veil" aria-hidden="true"></div>
-      <div class="h6-typewrap">
-        <h1 class="h6-title" data-text="潇贺古道">潇贺古道</h1>
-      </div>
       <div class="h6-foot">
         <i class="h6-rule" aria-hidden="true"></i>
         <p class="h6-cap">潇贺古道有声文化数据库<em>XIAOHE ANCIENT ROAD</em></p>
@@ -2795,5 +2806,289 @@ html.no-js .route .path-water{opacity:.62}
    所以这里不再做指针视差。留空占位，免得后来人又加回去。 */
 </script>
 <script src="assets/leave-guard.js" defer></script>
-</body>
-</html>
+
+<script src="https://unpkg.com/opentype.js@1.3.4/dist/opentype.js"></script>
+<script>
+/* 首屏：物理线条（SEEK + TANGENT + 轻微自转），滚到底线条淡出、实心字淡入 */
+(function(){
+  const hero = document.getElementById('hero');
+  const cvs  = document.querySelector('.h6-lines');
+  if (!hero || !cvs) return;
+  const ctx = cvs.getContext('2d');
+  const DPR = Math.min(1.25, devicePixelRatio || 1);
+  const PAL = ['#1D2652','#B8862F','#A9362E','#4C6C8B','#15120F','#5E3F55'];
+  const PAPER = '#F2EDE2';
+  const TEXT = '潇贺古道';
+
+  const FIRST_N = 0, TOTAL_N = 120;
+  const BURST_P0 = 0.04, BURST_P1 = 0.22;
+  const SAMPLE = 4, TAN_K = 6;
+  const HIST_DIST = 2.2, HIST_MAX = 40;
+  const SEEK = 0.020, TANGENT = 0.050, WANDER = 0.060;
+  const DRAG = 0.930, VMAX = 2.6;
+  const SPIN_MIN = 0.008, SPIN_MAX = 0.022;
+  const SIDE = 130;
+
+  let W = 0, H = 0, contours = [], lines = [], font = null, pSmooth = 0, pVel = 0;
+  const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
+  const smooth = (a,b,x)=>{const t=clamp((x-a)/(b-a||1),0,1);return t*t*(3-2*t);};
+  const FORCE = new URLSearchParams(location.search).get('hp');
+
+  function fit(){
+    const r = cvs.getBoundingClientRect();
+    W = r.width; H = r.height;
+    cvs.width = W*DPR; cvs.height = H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+
+  function build(font){
+    fit();
+    const size = Math.min(W/4.6, H/2.6);
+    const adv = font.getAdvanceWidth(TEXT, size);
+    const d = font.getPath(TEXT,(W-adv)/2,H/2+size*0.34,size).toPathData(2);
+    const chunks = d.split('M').filter(Boolean).map(x=>'M'+x);
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.style.cssText='position:absolute;width:0;height:0;overflow:hidden';
+    document.body.appendChild(svg);
+
+    contours = [];
+    chunks.forEach(pd=>{
+      const el = document.createElementNS('http://www.w3.org/2000/svg','path');
+      el.setAttribute('d',pd); svg.appendChild(el);
+      const L = el.getTotalLength();
+      if (L < 46) return;
+      const n = Math.max(8, Math.floor(L/SAMPLE));
+      const pts = [];
+      for (let i=0;i<n;i++){ const q = el.getPointAtLength(i/n*L); pts.push({x:q.x,y:q.y,tx:0,ty:0}); }
+      for (let i=0;i<n;i++){
+        const a = pts[(i-TAN_K+n)%n], b = pts[(i+TAN_K)%n];
+        const dx = b.x-a.x, dy = b.y-a.y, m = Math.hypot(dx,dy)||1;
+        pts[i].tx = dx/m; pts[i].ty = dy/m;
+      }
+      contours.push({pts, len:L});
+    });
+    svg.remove();
+    seed();
+    warm(420);
+  }
+
+  function warm(n){
+    const p0 = FORCE !== null ? parseFloat(FORCE) : 0;
+    for (let i=0;i<n;i++) lines.forEach(f=>{ if (p0 >= f.appear) step(f, p0); });
+  }
+
+  function pointOn(c,s){
+    s = ((s%c.len)+c.len)%c.len;
+    const f = s/c.len*c.pts.length;
+    const i = Math.floor(f)%c.pts.length, j = (i+1)%c.pts.length;
+    const k = f-Math.floor(f), a = c.pts[i], b = c.pts[j];
+    let tx = a.tx+(b.tx-a.tx)*k, ty = a.ty+(b.ty-a.ty)*k;
+    const m = Math.hypot(tx,ty)||1;
+    return {x:a.x+(b.x-a.x)*k, y:a.y+(b.y-a.y)*k, tx:tx/m, ty:ty/m};
+  }
+
+  function edgePoint(){
+    const side = Math.floor(Math.random()*4), pad = 120+Math.random()*320;
+    if (side===0) return {x:Math.random()*W, y:-pad};
+    if (side===1) return {x:W+pad, y:Math.random()*H};
+    if (side===2) return {x:Math.random()*W, y:H+pad};
+    return {x:-pad, y:Math.random()*H};
+  }
+
+  function seed(){
+    if (!contours.length) return;
+    const total = contours.reduce((a,c)=>a+c.len,0);
+    const slots = [];
+    contours.forEach((c,ci)=>{
+      const n = Math.max(1, Math.round(TOTAL_N*c.len/total));
+      for (let i=0;i<n;i++) slots.push({ci, s:(i/n)*c.len + Math.random()*c.len/n*0.8});
+    });
+    for (let i=slots.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [slots[i],slots[j]]=[slots[j],slots[i]]; }
+
+    lines = slots.slice(0,TOTAL_N).map((sl,i)=>{
+      const first = i < FIRST_N;
+      const appear = first ? 0 : BURST_P0 + (BURST_P1-BURST_P0)*((i-FIRST_N)/Math.max(1,TOTAL_N-FIRST_N));
+      const pos = edgePoint();   // 一律从屏幕外进场
+      const endPt = pointOn(contours[sl.ci], sl.s);
+      return {
+        ci: sl.ci, s: sl.s, appear,
+        ex: endPt.x, ey: endPt.y,
+        sx: pos.x, sy: pos.y,
+        x: pos.x, y: pos.y,
+        vx:(Math.random()-0.5)*1.2, vy:(Math.random()-0.5)*1.2,
+        color: PAL[Math.floor(Math.random()*PAL.length)],
+        w: (1.2+Math.random()*1.6)*1.5,
+        spin: (Math.random()<0.5?-1:1)*(SPIN_MIN+Math.random()*(SPIN_MAX-SPIN_MIN)),
+        hist: [], lx: 0, ly: 0
+      };
+    });
+  }
+
+  function step(f,p){
+    const c = contours[f.ci];
+
+    // 沿轮廓走（这是笔画的推进，不是追目标）
+    f.s += 1.2;
+    const g = pointOn(c, f.s);
+
+    // 入场：从屏幕外的起点插值到"当前轮廓点"，纯滚动驱动
+    const t = Math.max(0, Math.min(1, (p - f.appear) / Math.max(0.05, 1 - f.appear)));
+    const e = t*t*(3-2*t);
+
+    f.x = f.sx + (g.x - f.sx) * e;
+    f.y = f.sy + (g.y - f.sy) * e;
+
+    if (Math.hypot(f.x-f.lx, f.y-f.ly) > HIST_DIST){
+      f.hist.push({x:f.x, y:f.y});
+      if (f.hist.length > HIST_MAX) f.hist.shift();
+      f.lx = f.x; f.ly = f.y;
+    }
+  }
+
+  function seg(list, color, w){
+    if (list.length < 3) return;
+    ctx.beginPath();
+    ctx.moveTo(list[0].x, list[0].y);
+    for (let i=1;i<list.length;i++) ctx.lineTo(list[i].x, list[i].y);
+    ctx.strokeStyle = color; ctx.lineWidth = w;
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.stroke();
+  }
+
+  let started = false, T0 = 0;
+  const DUR = 4000;                      // 播完用时（毫秒）
+  const kick = () => { if (!started){ started = true; T0 = performance.now(); } };
+  addEventListener('wheel', kick, { passive: true });
+  addEventListener('scroll', kick, { passive: true });
+
+  function progress(){
+    if (FORCE !== null) return parseFloat(FORCE);
+    if (!started) return 0;              // 没动滚轮之前，停在第一帧
+    const x = clamp((performance.now() - T0) / DUR, 0, 1);
+    return x*x*(3-2*x);
+  }
+
+  let lastDrawn = -1;
+  function tick(){
+    const target = progress();
+    pSmooth = target;
+
+    // 只有"还没开始"时才跳过重绘；开始之后线条要一直沿着字游
+    if (!started && Math.abs(pSmooth - lastDrawn) < 0.0004){
+      requestAnimationFrame(tick);
+      return;
+    }
+    lastDrawn = pSmooth;
+
+    ctx.fillStyle = PAPER;
+    ctx.fillRect(0,0,W,H);
+
+    lines.forEach(f=>{
+      if (pSmooth < f.appear) return;
+      step(f, pSmooth);
+      const pts = f.hist.concat([{x:f.x, y:f.y}]);
+      let cur = [];
+      for (let i=0;i<pts.length;i++){
+        if (pts[i].x === null){ seg(cur, f.color, f.w); cur = []; continue; }
+        cur.push(pts[i]);
+      }
+      seg(cur, f.color, f.w);
+    });
+
+    const out = clamp((pSmooth - 0.80) / 0.12, 0, 1);   // 线条淡出
+    const inn = clamp((pSmooth - 0.82) / 0.13, 0, 1);   // 字淡入
+    hero.style.setProperty('--lines-op', (1-out).toFixed(3));
+    hero.style.setProperty('--title-op', inn.toFixed(3));
+
+    requestAnimationFrame(tick);
+  }
+
+  addEventListener('resize', ()=>{ if (font) build(font); });
+
+  opentype.load('assets/fonts/NotoSerifSC-Bold.ttf', (err,f)=>{
+    if (err){ console.error(err); return; }
+    font = f; build(f); tick();
+  });
+})();
+</script>
+
+<script>
+/* 独立检测器：只看画布，不碰动效代码。
+   指标：① 墨迹落在文字区域内的比例  ② 画面帧间差异（是否静下来）
+   两者都满足 → --gate 从 0 升到 1：线条淡出、文字淡入。 */
+(function(){
+  const hero = document.getElementById('hero');
+  const cvs  = document.querySelector('.h6-lines');
+  if (!hero || !cvs) return;
+
+  const probe = document.createElement('canvas');
+  probe.width = 96; probe.height = 60;
+  const pctx = probe.getContext('2d', { willReadFrequently: true });
+
+  let prev = null, still = 0, gate = 0, doneAt = 0;
+  let inside = 0, stat = { inside: 0, still: 0 };
+
+  const FORCE = new URLSearchParams(location.search).get('hp');
+  const T0 = performance.now();
+  const DUR = 1800;
+  function scrollProgress(){
+    if (FORCE !== null) return parseFloat(FORCE);
+    const x = Math.min(1, Math.max(0, (performance.now() - T0) / DUR));
+    return x*x*(3-2*x);
+  }
+
+  function step(){
+    // 1) 缩到 96×60 读像素
+    pctx.clearRect(0, 0, probe.width, probe.height);
+    try { pctx.drawImage(cvs, 0, 0, probe.width, probe.height); } catch(e){ return; }
+    const img = pctx.getImageData(0, 0, probe.width, probe.height).data;
+
+    // 2) 帧间差异（静下来 = 动效基本停了）
+    let diff = 0;
+    if (prev){
+      for (let i = 0; i < img.length; i += 4) diff += Math.abs(img[i] - prev[i]);
+      diff /= (img.length / 4);
+    }
+    prev = new Uint8ClampedArray(img);
+    if (prev && diff < 1.2) still++; else still = 0;
+
+    // 3) 反过来查：数"背景里的墨"（文字带以外的留白区）
+    const W = probe.width, H = probe.height;
+    const x0 = W * 0.07, x1 = W * 0.93, y0 = H * 0.24, y1 = H * 0.76;
+    let inkIn = 0, inkOut = 0;
+    for (let y = 0; y < H; y++){
+      for (let x = 0; x < W; x++){
+        const v = img[(y * W + x) * 4];
+        if (v < 200){                     // 有颜色（比纸深）
+          if (x >= x0 && x <= x1 && y >= y0 && y <= y1) inkIn++;
+          else inkOut++;
+        }
+      }
+    }
+    const total = inkIn + inkOut;
+    const bgRatio = total > 30 ? inkOut / total : 1;   // 背景残留比例
+
+    // 4) 判定：滚到后段 + 背景里几乎没墨了
+    const p = scrollProgress();
+    const done = (p > 0.5 && bgRatio < 0.05);
+
+    gate += ((done ? 1 : 0) - gate) * 0.10;              // 平滑过渡
+    hero.style.setProperty('--gate', gate.toFixed(3));
+
+    /* —— 和黑色题名强关联：字没出来就别想滚出首屏 —— */
+    const footEl = hero.querySelector('.h6-foot');
+    const footOp = footEl ? parseFloat(getComputedStyle(footEl).opacity) : 1;
+    const shown = footOp > 0.98;
+    if (shown && !doneAt) doneAt = performance.now();
+    hero.dataset.detect = 'bg=' + bgRatio.toFixed(3) + ' still=' + still;
+
+    requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
+})();
+</script>
+
+
+</body></html>

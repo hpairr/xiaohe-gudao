@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" class="no-js">
 <head>
 <meta charset="utf-8">
@@ -11,11 +11,12 @@ if(location.search.indexOf('arrive=')>-1){
     var v=document.getElementById('arrivalVeil'),t=document.getElementById('arrivalTitle');
     document.documentElement.classList.add('is-revealing');
     window.setTimeout(function(){
+      document.documentElement.classList.add('is-iris');
       document.documentElement.classList.remove('is-arriving','is-revealing','is-arrival-landed');
       if(v)v.style.display='none';
       if(t)t.style.display='none';
     },680);
-  },6000);
+  },2500);
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -104,8 +105,11 @@ if(location.search.indexOf('arrive=')>-1){
         <div class="story-head"><h2 id="bsTitle">二十一个基本动作</h2><span class="en-tag">The basic vocabulary</span></div>
         <p class="bs-lede">握鼓十种、鼓花四种、步法七种。教学片由蒋丙莲演示，点右边动作名，影片跳到该动作；原片万一加载不出来，自动改用同一位置的静帧。</p>
 
-        <!-- 教学片 18 MB 随仓库一起发布（video/04-changgu-basics.mp4）。
-             二十一张静帧（assets/dance-frames/）是用它截的：既能当封面，也是断网/加载失败时的兜底。
+        <!-- 教学片不随仓库发布：原片 18 MB 留在本机 video/04-changgu-basics.mp4，
+             线上（GitHub Pages）拿不到文件，自动退成同一位置的 21 张静帧，右侧动作表照样能点。
+             二十一张静帧（assets/dance-frames/）是从原片截的：既能当封面，也是断网/加载失败时的兜底。
+             原片地址：抖音「龙女爱分享」《第一部分 长鼓舞基础》https://www.douyin.com/video/7287820631314337080
+             以后若把片子放到 B 站／对象存储，改 dance.js 顶部的 VIDEO_SRC 即可，不用动这里。
              重新截图：python tools/make_video_stills.py dance -->
         <div class="bs-console">
           <div class="bs-screen">
@@ -118,7 +122,7 @@ if(location.search.indexOf('arrive=')>-1){
               </video>
               <img class="bs-still" data-bs-still hidden alt="">
             </figure>
-            <p class="bs-cap"><span>蒋丙莲 · 长鼓舞基础教学</span><span>21 个动作 / 01:56</span></p>
+            <p class="bs-cap"><span>蒋丙莲 · 长鼓舞基础教学</span><span>21 个动作 / 01:56 · <a href="https://www.douyin.com/video/7287820631314337080" target="_blank" rel="noopener">原片 ↗</a></span></p>
             <div class="bs-tape" data-bs-tape aria-hidden="true">
               <span class="bs-fill"></span>
               <span class="bs-play"></span>
@@ -379,3 +383,7 @@ if(location.search.indexOf('arrive=')>-1){
 <script src="assets/motif-entry.js" data-motif-index="2" defer></script>
 </body>
 </html>
+
+
+
+
