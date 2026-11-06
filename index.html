@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" class="no-js">
 <head>
 <meta charset="utf-8">
@@ -1615,8 +1615,8 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   --t-size:min(19vw,38svh);      /* 题名定稿字号：四字合起来约 76vw；上限用 svh，宽屏才不至于被压小 */
   /* 2026-11-07：首屏换成视频抽帧——潇贺古道沿线河谷航拍。
      来源、裁切与调色见 ui/封面候选/README.md；换图只改这一行。 */
-  --h6-photo:url("assets/img/hero-cover-1600.jpg");
-  --dim:.32;                     /* 起手就压 32%：照片只当暗底，不追清晰度 */
+  --h6-photo:url("assets/img/hero-cover-paint.jpg");
+  --dim:0;                       /* 起手不压暗：照片原样显示，滚动时才压到墨 */
   --veil:0;                      /* 纸从正中心铺开的进度 */
   --tscale:1.7;                  /* 题名缩放（走字号，不用 transform） */
   --t-box:1;                     /* 题名占几行字高（窄屏排 2×2 时是 2） */
@@ -1661,16 +1661,9 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   will-change:transform;
   pointer-events:none;
 }
-.h6-grain{
-  position:absolute;inset:0;z-index:4;pointer-events:none;
-  background-image:
-    radial-gradient(ellipse 76% 74% at 50% 46%,
-      transparent 40%, color-mix(in srgb,var(--ink-2) 72%,transparent) 100%),
-    url("assets/patterns/paper.svg");
-  background-size:100% 100%, 200px 200px;
-  background-repeat:no-repeat, repeat;
-  opacity:calc((1 - var(--veil)) * .92);
-}
+/* 2026-11-07：原来的 .h6-grain（纸纤维乱线 + 径向暗角）已删除。
+   用户反馈「乱划线的黑色背景」和「暗色氛围很诡异」——
+   首屏不再叠任何纹理与暗角，照片按原样显示，压暗只保留滚动时那一条。 */
 .h6-typewrap{
   position:absolute;inset:0;z-index:3;
   display:flex;align-items:center;justify-content:center;
@@ -1726,9 +1719,9 @@ html.js .topbar .top-year{transition:opacity .45s var(--ease),transform .45s var
   display:flex;flex-direction:column;align-items:center;gap:11px;
   opacity:var(--cue);
   font:9px/1 var(--f-en);letter-spacing:.34em;text-transform:uppercase;
-  color:rgba(242,237,226,.78);text-shadow:0 1px 10px rgba(7,10,8,.55);
+  color:rgba(242,237,226,.82);text-shadow:0 1px 10px rgba(7,10,8,.6);
 }
-.h6-cue i{position:relative;display:block;width:1px;height:46px;background:rgba(242,237,226,.24);overflow:hidden}
+.h6-cue i{position:relative;display:block;width:1px;height:46px;background:rgba(242,237,226,.30);overflow:hidden}
 .h6-cue i::after{
   content:"";position:absolute;left:0;top:0;width:1px;height:45%;background:var(--paper);
   animation:h6cue 2.6s var(--ease-io) infinite;
@@ -1848,12 +1841,11 @@ html.no-js .route .path-water{opacity:.62}
 
 <main>
   <!-- ========== 00 首屏：一整张风景 · 压暗到墨，再化进纸里 ========== -->
-  <section class="h6" id="hero" data-tone="light" aria-label="潇贺古道">
+  <section class="h6" id="hero" data-tone="dark" aria-label="潇贺古道">
     <div class="h6-pin">
       <div class="h6-photo" aria-hidden="true"></div>
       <div class="h6-dim" aria-hidden="true"></div>
       <div class="h6-veil" aria-hidden="true"></div>
-      <div class="h6-grain" aria-hidden="true"></div>
       <div class="h6-typewrap">
         <h1 class="h6-title" data-text="潇贺古道">潇贺古道</h1>
       </div>
@@ -2275,7 +2267,7 @@ html.no-js .route .path-water{opacity:.62}
   function setHero(p) {
     /* 亮度是独立的一条线：跟着滚动一路压到黑（0→1），不另设阶段、不延后。
        纸、缩放、落款都还是原来那套时间。 */
-    const dim = .32 + .68 * smoothstep(0, 1, p);  /* 照片（与字）的亮度：起手 32%，滚到 100% */
+    const dim = smoothstep(0, 1, p);              /* 照片（与字）的亮度：起手不压暗，滚到 100% */
     const veil = smoothstep(0.05, 0.62, p);      /* 纸从正中心铺开 */
     const shrink = smoothstep(0.05, 0.82, p);    /* 大字：1.7 → 1，慢慢拉到定稿 */
     /* 倍数上限：宽屏放得开，四个字被切掉两边也读得出"比屏幕大"；

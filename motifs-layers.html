@@ -38,12 +38,23 @@
   root.style.setProperty('--boot-fg', t.fg);
   var mt = document.querySelector('meta[name="theme-color"]');
   if (mt) mt.setAttribute('content', t.bg);
+  function preload(href) {
+    var l = document.createElement('link');
+    l.rel = 'preload';
+    l.as = 'image';
+    l.href = href;
+    document.head.appendChild(l);
+  }
   /* 图案整图（≈250~340KB）提前开始下载，别等 fill() 才发请求 */
-  var pre = document.createElement('link');
-  pre.rel = 'preload';
-  pre.as = 'image';
-  pre.href = 'assets/img/motifs/m' + (KEYS.indexOf(key) + 1) + '-' + key + '.webp';
-  document.head.appendChild(pre);
+  preload('assets/img/motifs/m' + (KEYS.indexOf(key) + 1) + '-' + key + '.webp');
+  /* 各层（188×188，合计 250~300KB）也提前要：它们才是「换页首帧」上要看见的东西。
+     只要在 <head> 里就发请求，首绘时大概率已经解码完，落点那一帧就不会空。
+     层数写在这里、与 #layer-data 里的清单是两处，selftest 用 layerPreloadCount 反查。 */
+  var LANE = { nushu: 7, butterfly: 7, drum: 9, bridge: 7, panwang: 6, brocade: 8 };
+  window.__MO_LAYER_COUNT = LANE;
+  for (var li = 1; li <= LANE[key]; li++) {
+    preload('assets/theme-pattern/layers/' + key + '-layer-' + ('0' + li).slice(-2) + '.png');
+  }
 })();
 </script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20261106a">
@@ -88,10 +99,15 @@ img{max-width:100%}
   width:100%;height:100%;object-fit:cover;
   opacity:0;transition:opacity .18s linear;
 }
+/* 第一帧不要过渡：图案要么已经在，要么还没有；从 0 淡入的那 120ms
+   正是「转到详情页闪一下」的来源（首帧空白 → 图案慢慢浮上来）。 */
+.mo-plate.is-first .base,.mo-plate.is-first .mo-stack img{transition:none}
 .mo-stack{position:absolute;inset:0;z-index:1}
 .mo-stack img{
   position:absolute;inset:0;width:100%;height:100%;
-  transition:opacity .12s linear;
+  /* 与 .base 同长：两层同时反着淡，合成后总不透明度一直是 1，
+     否则半路会出现「图案先暗一下再亮回来」的第二次闪 */
+  transition:opacity .18s linear;
 }
 
 /* ── 左：编号与名字 ─────────────────────────────────────────── */
@@ -315,7 +331,9 @@ function fill(i){
   baseImg.src='assets/img/motifs/m'+(i+1)+'-'+t.k+'.webp';
   baseImg.alt=t.cn+'图案';
 
-  /* 整图没解码之前，先让各层叠出同一幅画（层次序比整图低一层） */
+  /* 整图没解码之前，先让各层叠出同一幅画（层次序比整图低一层）。
+     首帧就位、且不要过渡：直接从 1 开始，不做 0→1 的淡入。 */
+  plate.classList.add('is-first');
   baseReady=false;
   baseImg.style.opacity='0';
   var token=++baseToken;
@@ -327,9 +345,15 @@ function fill(i){
   stack.textContent='';
   ls.forEach(function(L,n){
     var im=document.createElement('img');
-    im.src=LAYER_DIR+L.file;im.alt='';im.decoding='async';im.loading='eager';
+    im.src=LAYER_DIR+L.file;im.alt='';
+    /* sync：七层要在同一帧里就位。async 会让它们摊到好几帧解码，
+       落点那一下就是「图案一层层叠上来」，看着像闪。图很小，同步解码不亏。 */
+    im.decoding='sync';im.loading='eager';
     im.dataset.i=String(n);
-    im.style.opacity='0';
+    im.style.opacity='1';
+    /* 供测量用：PerformanceObserver('element') 能拿到这一层真正上屏的时间，
+       用来核对「首绘 → 图案上屏」是不是同一帧（elementtiming 不影响渲染） */
+    im.setAttribute('elementtiming','mo-layer');
     stack.appendChild(im);
   });
 
@@ -375,9 +399,15 @@ function isolate(n){
   for(var j=0;j<rows.length;j++) rows[j].setAttribute('aria-pressed',(+rows[j].dataset.i===n)?'true':'false');
 }
 
-/* 内容浮入：等图案版式这一帧算完再起跑（两帧 rAF），不会在版式未定时先浮字 */
+/* 内容浮入：等图案版式这一帧算完再起跑（两帧 rAF），不会在版式未定时先浮字。
+   第二帧起撤掉「首帧无过渡」，之后整图换清晰版才有交叉淡入。 */
 function revealNow(){
-  requestAnimationFrame(function(){requestAnimationFrame(function(){detail.classList.add('is-in');});});
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      detail.classList.add('is-in');
+      plate.classList.remove('is-first');
+    });
+  });
 }
 
 /* ── 版式：图案居中，左侧名字，右侧解释 ────────────────────── */
@@ -453,6 +483,9 @@ async function runSelfTest(){
 
   var imgs=[].slice.call(stack.querySelectorAll('img'));
   await whenLoaded(imgs,5000);
+  /* 预载层数（head 里写死的表）必须与清单一致，否则首帧会缺层 */
+  var LANE=window.__MO_LAYER_COUNT||{};
+  chk('layerPreloadCount',LANE[t.k]===(LAYERS[t.k]||[]).length,LANE[t.k]+'/'+((LAYERS[t.k]||[]).length));
   /* 整图就位后各层才让位；没就位时是「各层叠出整幅」的状态 */
   var twb=Date.now();
   while(!baseReady&&Date.now()-twb<3000){await new Promise(function(r){setTimeout(r,40);});}
