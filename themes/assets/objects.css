@@ -66,10 +66,10 @@
 }
 .atlas-strip::-webkit-scrollbar{display:none}
 .atlas-strip:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
-.atlas-track{display:flex;gap:13px;width:max-content}
+.atlas-track{display:flex;align-items:flex-end;gap:13px;width:max-content}
 
 .bthumb{
-  flex:0 0 auto;width:132px;padding:0;border:0;background:none;color:inherit;
+  flex:0 0 auto;width:150px;padding:0;border:0;background:none;color:inherit;
   text-align:left;cursor:pointer;scroll-snap-align:center;
 }
 .bthumb-media{
@@ -91,11 +91,11 @@
   letter-spacing:.1em;opacity:.6;font-variant-numeric:tabular-nums;
 }
 .bthumb:hover img{transform:scale(1.04)}
-.bthumb[aria-pressed="true"]{width:224px}
+.bthumb[aria-pressed="true"]{width:460px}
 .bthumb[aria-pressed="true"] .bthumb-media{border-color:var(--accent)}
 .bthumb[aria-pressed="true"] img{filter:none;transform:none}
-.bthumb[aria-pressed="true"] span{opacity:1;font-size:13px}
-.bthumb[aria-pressed="true"] span b{opacity:.9;color:var(--accent)}
+.bthumb[aria-pressed="true"] span{opacity:1;font-size:17px;margin-top:10px}
+.bthumb[aria-pressed="true"] span b{font-size:11.5px;margin-top:4px;opacity:.9;color:var(--accent)}
 .bthumb:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
 
 /* 详情：不再放大图，只留释文；中间那张已经在相片条里放大 */
@@ -210,8 +210,10 @@ table.roster tr.is-cur button.rn{color:var(--accent);border-bottom-color:var(--a
   .axis-phase b i{display:none}
   .axis-line,.axis-tick{top:56px}
   .axis-cursor{top:22px;bottom:22px}
-  .bthumb{width:104px}
-  .bthumb[aria-pressed="true"]{width:168px}
+  .bthumb{width:96px}
+  .bthumb[aria-pressed="true"]{width:300px}
+  .bthumb[aria-pressed="true"] span{font-size:14px}
+  .bthumb[aria-pressed="true"] span b{font-size:10px}
   .atlas-detail{gap:14px;margin-top:14px}
   .atlas-struct .stat{display:block;margin:0 0 2px}
 
