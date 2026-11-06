@@ -285,7 +285,7 @@ table.roster tr.is-cur button.rn{color:var(--accent);border-bottom-color:var(--a
   .atlas-axis{height:112px;margin-bottom:12px}
   .axis-phase{top:30px;bottom:40px}
   .axis-phase b{bottom:-26px;gap:7px;font-size:9px}
-  .axis-phase b i{font-size:8px}
+  .axis-phase b i{display:none}
   .axis-line,.axis-tick{top:56px}
   .axis-cursor{top:22px;bottom:22px}
   .bthumb{width:118px}

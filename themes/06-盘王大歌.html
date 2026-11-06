@@ -88,6 +88,68 @@ if(location.search.indexOf('arrive=')>-1){
     <span class="hero-coord">湖南 · 江华 · 05 / 06</span>
   </div>
 </header>
+<section class="story-block songbook-block" data-step="歌" id="songbookSection">
+  <div class="wrap">
+    <div class="story-grid">
+      <aside class="story-rail" aria-hidden="true">
+        <span class="story-no">歌</span>
+        <span class="story-en">Editions</span>
+        <i></i>
+      </aside>
+      <div class="story-main">
+        <div class="story-head"><h2>歌本 · 三个版本</h2><span class="en-tag">One book, three editions</span></div>
+        <p class="songbook-lede">《盘王大歌》有三十六段、二十四段与十二段三种版本，后两种是前一种的摘选本；三十六段本包括三十六歌、七曲，现存歌本约八千行，最早抄本为清乾隆年间。切一个版本，看书怎么变薄。</p>
+
+        <div class="songbook" id="songbookBook">
+          <div class="sb-head">
+            <div class="sb-tabs" role="group" aria-label="选择版本">
+              <button class="sb-tab" type="button" data-v="36" aria-pressed="true"><b>36</b><span>三十六段本</span><em>全本</em></button>
+              <button class="sb-tab" type="button" data-v="24" aria-pressed="false"><b>24</b><span>二十四段本</span><em>摘选</em></button>
+              <button class="sb-tab" type="button" data-v="12" aria-pressed="false"><b>12</b><span>十二段本</span><em>摘选</em></button>
+            </div>
+            <dl class="sb-meta" aria-live="polite">
+              <dt>段数</dt><dd><b id="sbCount">36</b> 段</dd>
+              <dt>占全本</dt><dd id="sbRatio">100%</dd>
+              <dt>性质</dt><dd id="sbNature">全本 · 三十六歌、七曲</dd>
+              <dt>行数</dt><dd id="sbLinesMeta">约八千行</dd>
+            </dl>
+          </div>
+          <div class="sb-book">
+            <div class="sb-lines" id="sbLines" aria-hidden="true"></div>
+            <span class="sb-book-count"><b>36</b> 段</span>
+            <span class="sb-book-label">歌本 · PANWANG</span>
+          </div>
+          <div class="sb-chips">
+            <div class="sb-chipgroup">
+              <p class="sb-label">四部 · 唱本结构</p>
+              <div class="chips"><span>序歌</span><span>插歌</span><span>正歌</span><span>杂歌</span></div>
+            </div>
+            <div class="sb-chipgroup">
+              <p class="sb-label">七任曲 · 七支曲牌</p>
+              <div class="chips"><span>梅花曲</span><span>南花子</span><span>飞江南</span><span>相逢贤曲</span><span>万段曲</span><span>亚六曲</span><span>荷叶杯</span></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="sb-note">二十四段、十二段保留了哪一些段目，公开资料没有对应表；这里只按段数画，不臆造「删掉了哪几段」。四部据中国非物质文化遗产网项目页，版本、行数与七任曲据江华县人民政府《盘王大歌》。</p>
+
+        <div class="sb-names">
+          <div class="sb-names-head"><h3>三十六段本里，已经核到的歌名</h3><span>21 首 · 七类 · 官方页以「如」举例，不是完整段目表</span></div>
+          <div class="sb-groups">
+            <div class="sb-group"><h4>神话传说<span>6</span></h4><p>《远古天地人间》《盘古歌》《洪水淹天》《葫芦晓》《源流歌》《盘王登殿瑶人出世歌》</p></div>
+            <div class="sb-group"><h4>迁徙与居住<span>5</span></h4><p>《十二姓瑶人游天下》《千家峒歌》《桃源峒歌》《梅山峒歌》《过山根》</p></div>
+            <div class="sb-group"><h4>生产生活<span>1</span></h4><p>《放猎狗》</p></div>
+            <div class="sb-group"><h4>男女之情<span>3</span></h4><p>《梁山伯》《月亮亮》《夜深深》</p></div>
+            <div class="sb-group"><h4>历史人物传说<span>2</span></h4><p>《鲁班造寺》《彭祖歌》</p></div>
+            <div class="sb-group"><h4>祭祀歌<span>2</span></h4><p>《送神歌》《庙愿歌》</p></div>
+            <div class="sb-group"><h4>自然现象<span>2</span></h4><p>《天地暗》《北边暗》</p></div>
+          </div>
+          <p class="sb-note" style="margin-top:16px">其余段目名未见公开目录，暂不列；补到之后再加。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="story-block" data-step="01" id="story-01">
   <div class="wrap">
     <div class="story-grid">
@@ -160,68 +222,7 @@ if(location.search.indexOf('arrive=')>-1){
     </div>
   </div>
 </section>
-<section class="story-block songbook-block" data-step="04" id="songbookSection">
-  <div class="wrap">
-    <div class="story-grid">
-      <aside class="story-rail" aria-hidden="true">
-        <span class="story-no">04</span>
-        <span class="story-en">Editions</span>
-        <i></i>
-      </aside>
-      <div class="story-main">
-        <div class="story-head"><h2>歌本 · 三个版本</h2><span class="en-tag">One book, three editions</span></div>
-        <p class="songbook-lede">《盘王大歌》有三十六段、二十四段与十二段三种版本，后两种是前一种的摘选本；三十六段本包括三十六歌、七曲，现存歌本约八千行，最早抄本为清乾隆年间。切一个版本，看书怎么变薄。</p>
 
-        <div class="songbook" id="songbookBook">
-          <div class="sb-head">
-            <div class="sb-tabs" role="group" aria-label="选择版本">
-              <button class="sb-tab" type="button" data-v="36" aria-pressed="true"><b>36</b><span>三十六段本</span><em>全本</em></button>
-              <button class="sb-tab" type="button" data-v="24" aria-pressed="false"><b>24</b><span>二十四段本</span><em>摘选</em></button>
-              <button class="sb-tab" type="button" data-v="12" aria-pressed="false"><b>12</b><span>十二段本</span><em>摘选</em></button>
-            </div>
-            <dl class="sb-meta" aria-live="polite">
-              <dt>段数</dt><dd><b id="sbCount">36</b> 段</dd>
-              <dt>占全本</dt><dd id="sbRatio">100%</dd>
-              <dt>性质</dt><dd id="sbNature">全本 · 三十六歌、七曲</dd>
-              <dt>行数</dt><dd id="sbLinesMeta">约八千行</dd>
-            </dl>
-          </div>
-          <div class="sb-book">
-            <div class="sb-lines" id="sbLines" aria-hidden="true"></div>
-            <span class="sb-book-count"><b>36</b> 段</span>
-            <span class="sb-book-label">歌本 · PANWANG</span>
-          </div>
-          <div class="sb-chips">
-            <div class="sb-chipgroup">
-              <p class="sb-label">四部 · 唱本结构</p>
-              <div class="chips"><span>序歌</span><span>插歌</span><span>正歌</span><span>杂歌</span></div>
-            </div>
-            <div class="sb-chipgroup">
-              <p class="sb-label">七任曲 · 七支曲牌</p>
-              <div class="chips"><span>梅花曲</span><span>南花子</span><span>飞江南</span><span>相逢贤曲</span><span>万段曲</span><span>亚六曲</span><span>荷叶杯</span></div>
-            </div>
-          </div>
-        </div>
-
-        <p class="sb-note">二十四段、十二段保留了哪一些段目，公开资料没有对应表；这里只按段数画，不臆造「删掉了哪几段」。四部据中国非物质文化遗产网项目页，版本、行数与七任曲据江华县人民政府《盘王大歌》。</p>
-
-        <div class="sb-names">
-          <div class="sb-names-head"><h3>三十六段本里，已经核到的歌名</h3><span>21 首 · 七类 · 官方页以「如」举例，不是完整段目表</span></div>
-          <div class="sb-groups">
-            <div class="sb-group"><h4>神话传说<span>6</span></h4><p>《远古天地人间》《盘古歌》《洪水淹天》《葫芦晓》《源流歌》《盘王登殿瑶人出世歌》</p></div>
-            <div class="sb-group"><h4>迁徙与居住<span>5</span></h4><p>《十二姓瑶人游天下》《千家峒歌》《桃源峒歌》《梅山峒歌》《过山根》</p></div>
-            <div class="sb-group"><h4>生产生活<span>1</span></h4><p>《放猎狗》</p></div>
-            <div class="sb-group"><h4>男女之情<span>3</span></h4><p>《梁山伯》《月亮亮》《夜深深》</p></div>
-            <div class="sb-group"><h4>历史人物传说<span>2</span></h4><p>《鲁班造寺》《彭祖歌》</p></div>
-            <div class="sb-group"><h4>祭祀歌<span>2</span></h4><p>《送神歌》《庙愿歌》</p></div>
-            <div class="sb-group"><h4>自然现象<span>2</span></h4><p>《天地暗》《北边暗》</p></div>
-          </div>
-          <p class="sb-note" style="margin-top:16px">其余段目名未见公开目录，暂不列；补到之后再加。</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 <section class="sound-line" id="sound" aria-labelledby="soundTitle">
   <div class="wrap sound-grid">
     <div class="sound-copy">
@@ -274,7 +275,7 @@ if(location.search.indexOf('arrive=')>-1){
       <h2 id="sourceTitle">资料来源</h2>
       <p class="ledger-note">本页每条事实的出处，逐条列出，可随时核对。完整来源说明见 <a href="../database.html#/about">「关于与来源」</a>。</p>
       <div class="ledger-meta">
-        <span>05 / Sources · 11 条</span>
+        <span>04 / Sources · 11 条</span>
         <a class="ledger-back" href="#main">回到页首 <span aria-hidden="true">↑</span></a>
       </div>
     </div>
