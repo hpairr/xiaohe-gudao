@@ -2,7 +2,8 @@
    ------------------------------------------------------------
    数据：富川县人民政府《富川风雨桥（27 座）》2024-03-19
         http://www.gxfc.gov.cn/fcgk/jdjj/t10824361.shtml
-   图版：贺州市生态环境局《富川风雨桥摄影展》（摄影：谭玉婷，2021）
+   图版：贺州市生态环境局《富川风雨桥摄影展》（摄影：谭玉婷，2021）25 张，
+        回澜一张由项目自备（2026-11-07），长塘迴龙一张据澎湃新闻。
         版权未获书面授权，仅作毕设非商业展示。
    交互：拖年表 / 拖相片条 / 点名录；键盘 ← → Home End。
    prefers-reduced-motion 下不做平滑滚动与淡入。
@@ -92,6 +93,7 @@
   var thumbs = [].slice.call(track.children);
 
   function credit(b) {
+    if (b.n === '回澜') return '图：项目自备（2026-11-07）';
     return b.n === '长塘迴龙'
       ? '图源：澎湃新闻《贺州这 27 座风雨桥》'
       : '摄影：谭玉婷 · 贺州市生态环境局《富川风雨桥摄影展》2021';
@@ -245,6 +247,40 @@
       select(Number(btn.getAttribute('data-i')));
     });
   });
+
+  /* ---------------- 查看大图 ---------------- */
+  var zoomBtn = detail.querySelector('.plate-zoom');
+  var lightbox = document.getElementById('bridgeLightbox');
+  if (zoomBtn && lightbox) {
+    var lbImg = lightbox.querySelector('img');
+    var lbCap = lightbox.querySelector('figcaption');
+    var lbClose = lightbox.querySelector('.bl-close');
+    var lastFocus = null;
+
+    var openLightbox = function () {
+      lastFocus = document.activeElement;
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = cap.textContent;
+      lightbox.hidden = false;
+      document.body.classList.add('is-lightbox');
+      lbClose.focus();
+    };
+    var closeLightbox = function () {
+      lightbox.hidden = true;
+      document.body.classList.remove('is-lightbox');
+      if (lastFocus) lastFocus.focus();
+    };
+
+    zoomBtn.addEventListener('click', openLightbox);
+    lbClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !lightbox.hidden) closeLightbox();
+    });
+  }
 
   select(0, { force: true, reveal: false });
 })();
