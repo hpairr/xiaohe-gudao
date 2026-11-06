@@ -1,7 +1,7 @@
 /* ==========================================================================
    专题页 · 内容组件（2026-11-07）
    --------------------------------------------------------------------------
-   05 风雨桥「桥谱 · 二十七座」、06 盘王大歌「歌本 · 三个版本」。
+   05 风雨桥「桥谱 · 二十七座」。
    只依赖 theme-experience.css 注入的 --main / --on / --accent / --surface，
    不写死任何章节色；两个组件都不画 SVG，图形全部由版式、照片与文字构成。
    ========================================================================== */
@@ -231,107 +231,11 @@ table.roster tr.is-cur button.rn{color:var(--accent);border-bottom-color:var(--a
 .atlas-note b{font-weight:500;opacity:1}
 
 /* --------------------------------------------------------------------------
-   二、歌本 / 三个版本
-   -------------------------------------------------------------------------- */
-.songbook-lede{
-  max-width:40em;margin:0 0 clamp(24px,4vh,38px);
-  font-size:clamp(15px,1.05vw,17.5px);line-height:1.95;text-wrap:pretty;
-}
-.songbook{border-top:1px solid var(--line);padding-top:20px}
-
-.sb-head{
-  display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;
-  gap:18px clamp(28px,5vw,80px);
-}
-.sb-tabs{display:flex;flex-wrap:wrap;gap:clamp(16px,2.4vw,36px);align-items:baseline}
-.sb-tab{
-  display:flex;align-items:baseline;gap:8px;
-  padding:2px 0 8px;border:0;border-bottom:1px solid transparent;
-  background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;
-  opacity:.5;transition:opacity .2s ease,color .2s ease,border-color .2s ease;
-}
-.sb-tab b{font-family:var(--serif);font-size:clamp(24px,2vw,32px);line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
-.sb-tab span{font-size:11.5px;letter-spacing:.06em}
-.sb-tab em{font-style:normal;font-size:9px;letter-spacing:.12em;opacity:.65}
-.sb-tab:hover{opacity:.9}
-.sb-tab[aria-pressed="true"]{opacity:1;color:var(--accent);border-bottom-color:var(--accent)}
-.sb-tab[aria-pressed="true"] em{opacity:1}
-.sb-tab:focus-visible{outline:1px solid var(--accent);outline-offset:3px}
-
-.sb-meta{
-  display:flex;flex-wrap:wrap;align-items:baseline;
-  gap:2px 0;margin:0;font-size:11.5px;line-height:1.85;
-}
-.sb-meta dt{opacity:.55;letter-spacing:.05em}
-.sb-meta dd{margin:0 26px 0 7px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.sb-meta dd b{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.01em}
-
-/* 歌本：行数就是段数，版本一换，书真的变薄 */
-.sb-book{
-  position:relative;margin-top:22px;max-width:880px;
-  padding:16px 18px 46px 22px;
-  border-left:3px solid var(--accent);
-  background:linear-gradient(to right,color-mix(in srgb,var(--on) 6%,transparent),transparent 72%);
-}
-.sb-lines{display:flex;flex-direction:column;gap:8px;max-width:760px}
-.sb-line{
-  height:2px;background:color-mix(in srgb,var(--on) 34%,transparent);
-  transform-origin:0 50%;
-}
-.sb-line:nth-child(4n+1){background:color-mix(in srgb,var(--on) 48%,transparent)}
-.sb-book-count{
-  position:absolute;left:22px;bottom:12px;
-  font-family:var(--serif);font-size:12px;letter-spacing:.08em;opacity:.65;
-}
-.sb-book-count b{font-size:24px;font-weight:700;margin-right:5px;color:var(--accent)}
-.sb-book-label{
-  position:absolute;right:14px;bottom:16px;
-  font-size:9px;letter-spacing:.22em;opacity:.4;
-}
-@media (prefers-reduced-motion:no-preference){
-  .sb-line{animation:sbIn .5s var(--ease) both;animation-delay:calc(var(--k,0) * 9ms)}
-}
-@keyframes sbIn{from{opacity:0;transform:scaleX(.2)}to{opacity:1;transform:scaleX(1)}}
-
-.sb-chips{
-  display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr);
-  gap:22px clamp(28px,4vw,58px);
-  margin-top:26px;padding-top:18px;border-top:1px solid var(--line-soft);
-}
-.sb-label{margin:0 0 8px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;opacity:.55}
-.sb-chips .chips{display:flex;flex-wrap:wrap;gap:6px}
-.sb-chips .chips span{
-  padding:4px 9px;border:1px solid var(--line-soft);font-size:11px;letter-spacing:.05em;opacity:.9;
-}
-
-.sb-note{
-  margin-top:22px;padding-top:14px;border-top:1px solid var(--line-soft);
-  font-size:10.5px;line-height:1.9;opacity:.62;max-width:64em;
-}
-
-.sb-names{margin-top:clamp(34px,5vh,54px);border-top:1px solid var(--line);padding-top:18px}
-.sb-names-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;margin-bottom:6px}
-.sb-names-head h3{font-size:clamp(19px,1.7vw,26px)}
-.sb-names-head span{font-size:10px;letter-spacing:.06em;opacity:.55}
-.sb-groups{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px clamp(24px,4vw,58px);margin-top:14px;
-}
-.sb-group h4{
-  font-family:var(--sans);font-weight:500;font-size:11.5px;letter-spacing:.08em;
-  padding-bottom:5px;border-bottom:1px solid var(--line-soft);margin-bottom:8px;
-}
-.sb-group h4 span{margin-left:8px;font-weight:400;letter-spacing:.03em;opacity:.5}
-.sb-group p{font-size:13px;line-height:1.95;opacity:.9}
-
-/* --------------------------------------------------------------------------
    三、窄屏
    -------------------------------------------------------------------------- */
 @media (max-width:1080px){
   .atlas-detail{grid-template-columns:minmax(0,1fr)}
   .atlas-plate img{aspect-ratio:16/9}
-  .sb-head{display:block}
-  .sb-meta{margin-top:10px}
 }
 @media (max-width:720px){
   .atlas-axis{height:112px;margin-bottom:12px}
@@ -344,15 +248,6 @@ table.roster tr.is-cur button.rn{color:var(--accent);border-bottom-color:var(--a
   .atlas-detail{gap:16px;margin-top:16px}
   .atlas-plate img{aspect-ratio:16/10}
   .atlas-struct .stat{display:block;margin:0 0 2px}
-  .sb-tabs{gap:12px}
-  .sb-tab b{font-size:24px}
-  .sb-tab em{display:none}
-  .sb-meta dd{margin-right:18px}
-  .sb-groups{grid-template-columns:minmax(0,1fr)}
-  .sb-lines{gap:7px;max-width:none}
-  .sb-book{padding:14px 14px 44px 18px}
-  .sb-book-count{left:18px}
-  .sb-chips{grid-template-columns:minmax(0,1fr)}
 
   /* 名录：手机上改成两行一条，不再横向截断 */
   .roster-wrap{overflow:visible}
